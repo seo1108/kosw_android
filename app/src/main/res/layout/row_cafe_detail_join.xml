@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/box_of_row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="15dp">
+
+    <kr.co.photointerior.kosw.widget.KoswTextView
+        android:id="@+id/txt_cafename"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:paddingBottom="5dp"
+        android:text="카페이름"
+        android:textAlignment="viewStart"
+        android:textColor="#000000"
+        android:textSize="@dimen/sp_18"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <kr.co.photointerior.kosw.widget.KoswTextView
+        android:id="@+id/txt_open_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="가입일"
+        android:textColor="#000"
+        android:textSize="@dimen/sp_15"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_cafename" />
+</android.support.constraint.ConstraintLayout>

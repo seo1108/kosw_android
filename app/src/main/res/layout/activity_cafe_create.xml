@@ -138,7 +138,7 @@
             <kr.co.photointerior.kosw.widget.KoswTextView
                 android:id="@+id/txt_privacy"
                 android:layout_width="match_parent"
-                android:layout_height="18dp"
+                android:layout_height="25dp"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="32dp"

@@ -1,13 +1,13 @@
 package kr.co.photointerior.kosw.ui;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -28,16 +28,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CafeMainActivity extends BaseUserActivity {
+public class CafeMainActivity extends BaseActivity {
     private String TAG = LogUtils.makeLogTag(CafeMainActivity.class);
     private Acceptor mAcceptor;
-    private RecyclerView mRecyclerViewMine, getmRecyclerViewMy;
+    private RecyclerView mRecyclerViewMine, mRecyclerViewMy;
     private CafeMineAdapter mMineAdapter;
+    private CafeMyAdapter mMyAdapter;
     private ViewGroup mRootView;
 
     private List<Cafe> mCAdminList = new ArrayList<>();
     private List<Cafe> mCJoinList = new ArrayList<>();
-    private List<Cafe> mCafeList = new ArrayList<>();
+
+    private Button btnMake, btnFind, btnGuide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,21 +55,54 @@ public class CafeMainActivity extends BaseUserActivity {
 
     @Override
     protected void findViews() {
+        btnMake = findViewById(R.id.btn_make_cafe);
+        btnMake.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callActivity(CafeCreateActivity.class, false);
+            }
+        });
+
+        btnFind = findViewById(R.id.btn_find_cafe);
+        btnFind.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        btnGuide = findViewById(R.id.btn_cafe_guide);
+        btnGuide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         mRecyclerViewMine = findViewById(R.id.recycler_view_mine);
         mRecyclerViewMine.setLayoutManager(
+                new LinearLayoutManager(this,
+                        LinearLayoutManager.VERTICAL, false));
+
+        mRecyclerViewMy = findViewById(R.id.recycler_view_my);
+        mRecyclerViewMy.setLayoutManager(
                 new LinearLayoutManager(this,
                         LinearLayoutManager.VERTICAL, false));
     }
 
     @Override
     protected void attachEvents() {
-
     }
 
     @Override
     protected void setInitialData() {
         mMineAdapter = new CafeMineAdapter(this, mCAdminList);
         mRecyclerViewMine.setAdapter(mMineAdapter);
+        mRecyclerViewMine.setNestedScrollingEnabled(false);
+
+        mMyAdapter = new CafeMyAdapter(this, mCJoinList);
+        mRecyclerViewMy.setAdapter(mMyAdapter);
+        mRecyclerViewMy.setNestedScrollingEnabled(false);
     }
 
 
@@ -124,7 +159,7 @@ public class CafeMainActivity extends BaseUserActivity {
 
         @Override
         public CafeMineAdapter.CafeMineHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = inflater.inflate(R.layout.row_cafe_list, parent, false);
+            View view = inflater.inflate(R.layout.row_cafe_detail_mine, parent, false);
             CafeMineAdapter.CafeMineHolder viewHolder = new CafeMineAdapter.CafeMineHolder(view, viewType);
             return viewHolder;
         }
@@ -134,6 +169,12 @@ public class CafeMainActivity extends BaseUserActivity {
             Cafe item = getItem(position);
             String cafename = item.getCafename();
             holder.tvCafename.setText(cafename);
+
+            String opendate = item.getOpendate();
+            holder.tvOpendate.setText("개설일: " + opendate);
+
+            String memcnt = item.getTotal();
+            holder.tvMemcnt.setText("멤버: " + memcnt + "명");
         }
 
         @Override
@@ -147,6 +188,9 @@ public class CafeMainActivity extends BaseUserActivity {
 
         class CafeMineHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             TextView tvCafename;
+            TextView tvOpendate;
+            TextView tvMemcnt;
+            Button btnInvite;
 
             public CafeMineHolder(View view, int viewType) {
                 super(view);
@@ -155,12 +199,72 @@ public class CafeMainActivity extends BaseUserActivity {
 
             private void pickupViews(int type) {
                 tvCafename = itemView.findViewById(R.id.txt_cafename);
-                tvCafename.setOnClickListener(this);
+                tvOpendate = itemView.findViewById(R.id.txt_open_date);
+                tvMemcnt = itemView.findViewById(R.id.txt_member);
+                btnInvite = itemView.findViewById(R.id.btn_invite);
             }
 
                 @Override
                 public void onClick(View view) {
                 }
+        }
+    }
+
+    class CafeMyAdapter extends RecyclerView.Adapter<CafeMyAdapter.CafeMyHolder> {
+        private Context context;
+        private List<Cafe> list;
+        private LayoutInflater inflater;
+        //private ItemClickListener itemClickListener;
+
+        CafeMyAdapter(Context context, List<Cafe> list){
+            this.context = context;
+            inflater = LayoutInflater.from(context);
+            this.list = list;
+        }
+
+        @Override
+        public CafeMyAdapter.CafeMyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = inflater.inflate(R.layout.row_cafe_detail_join, parent, false);
+            CafeMyAdapter.CafeMyHolder viewHolder = new CafeMyAdapter.CafeMyHolder(view, viewType);
+            return viewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(CafeMyAdapter.CafeMyHolder holder, int position) {
+            Cafe item = getItem(position);
+            String cafename = item.getCafename();
+            holder.tvCafename.setText(cafename);
+
+            String opendate = item.getOpendate();
+            holder.tvOpendate.setText("가입일: " + opendate);
+        }
+
+        @Override
+        public int getItemCount() {
+            return list.size();
+        }
+
+        public Cafe getItem(int id) {
+            return list.get(id);
+        }
+
+        class CafeMyHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+            TextView tvCafename;
+            TextView tvOpendate;
+
+            public CafeMyHolder(View view, int viewType) {
+                super(view);
+                pickupViews(viewType);
+            }
+
+            private void pickupViews(int type) {
+                tvCafename = itemView.findViewById(R.id.txt_cafename);
+                tvOpendate = itemView.findViewById(R.id.txt_open_date);
+            }
+
+            @Override
+            public void onClick(View view) {
+            }
         }
     }
 
