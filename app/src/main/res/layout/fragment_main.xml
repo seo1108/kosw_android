@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:id="@+id/box_toady_amt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/txt_toady_amt"
+            android:layout_alignBottom="@+id/txt_toady_amt"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_18"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iv2101"
+                    android:layout_width="24dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/top_gold" />
+
+                <kr.co.photointerior.kosw.widget.KoswTextView
+                    android:id="@+id/tv2101"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="제다이님"
+                    android:textColor="@android:color/white"
+                    android:textSize="11dp"
+                    app:fontFamily="sans-serif" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_18"
+                android:layout_marginTop="@dimen/cardview_default_elevation"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iv2102"
+                    android:layout_width="24dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/top_green"/>
+
+                <kr.co.photointerior.kosw.widget.KoswTextView
+                    android:id="@+id/tv2102"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:singleLine="true"
+                    android:text="chrky1213122121님"
+                    android:textColor="@android:color/white"
+                    android:textSize="11dp"
+                    app:fontFamily="sans-serif" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_18"
+                android:layout_marginTop="@dimen/cardview_default_elevation"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iv2103"
+                    android:layout_width="24dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/top_red"/>
+
+                <kr.co.photointerior.kosw.widget.KoswTextView
+                    android:id="@+id/tv2103"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:singleLine="true"
+                    android:text="하록선장님"
+                    android:textColor="@android:color/white"
+                    android:textSize="11dp"
+                    app:fontFamily="sans-serif" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txt_toady_amt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_12"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:letterSpacing="-.01"
+            android:lineSpacingExtra="0dp"
+            android:textAlignment="center"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/sp_100"
+            android:textStyle="bold"
+            tools:text="304" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txt_building_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-4dp"
+                android:includeFontPadding="false"
+                android:textAlignment="center"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold"
+                tools:text="@string/txt_today_floors" />
+
+            <TextView
+                android:id="@+id/koswTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-4dp"
+                android:includeFontPadding="false"
+                android:text="@string/txt_today_floors"
+                android:textAlignment="center"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold" />
+        </LinearLayout>
+        <Button
+            android:id="@+id/extract_db"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Extract DB"
+            android:background="@color/color_999999"
+            android:visibility="gone"/>
+
+
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/koswStepTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:textAlignment="center"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/sp_14"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+        <kr.co.photointerior.kosw.widget.KoswTextView
+            android:id="@+id/txt_user_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/txt_toady_amt"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentTop="false"
+            android:layout_marginLeft="@dimen/dp_12"
+            android:lines="2"
+            android:textColor="@color/colorWhite"
+            android:textSize="11dp"
+            tools:text="제다이님(-2단계): 7계단 더 오르면 살이 빠져요 " />
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_marginLeft="@dimen/dp_12"
+            android:layout_marginTop="@dimen/dp_2"
+            android:gravity="top|left"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv4101"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/dp_4"
+                app:srcCompat="@drawable/club_1"/>
+
+            <ImageView
+                android:id="@+id/iv4102"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/dp_4"
+                app:srcCompat="@drawable/club_2"/>
+
+            <ImageView
+                android:id="@+id/iv4103"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/dp_4"
+                app:srcCompat="@drawable/club_3"/>
+
+            <ImageView
+                android:id="@+id/iv4104"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/dp_4"
+                app:srcCompat="@drawable/club_4"/>
+
+            <ImageView
+                android:id="@+id/iv4105"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/dp_4"
+                app:srcCompat="@drawable/club_5"/>
+        </TableRow>
+
+        <RelativeLayout
+            android:id="@+id/box_character"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/box_toady_amt"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/img_character"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/img_runc_place_holder_1" />
+
+            <ImageView
+                android:id="@+id/img_tree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/box_tree_text"
+                android:layout_alignBottom="@+id/box_tree_text"
+                android:layout_marginRight="16dp"
+                android:layout_toLeftOf="@+id/box_tree_text"
+                android:scaleType="center"
+                android:src="@drawable/ic_tree"
+                app:srcCompat="@drawable/ic_tree"/>
+
+            <LinearLayout
+                android:id="@+id/box_noti_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/dp_14"
+                android:layout_marginTop="@dimen/dp_56"
+                android:gravity="right"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txt_noti_one"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    android:lines="1"
+                    android:maxLength="24"
+                    android:maxLines="1"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/sp_11"
+                    android:textStyle="bold"
+                    tools:text="계단왕 시스템 점검"/>
+
+                <TextView
+                    android:id="@+id/txt_noti_two"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    android:lines="1"
+                    android:maxLength="24"
+                    android:maxLines="1"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/sp_11"
+                    android:textStyle="bold"
+                    tools:text="디자인팀 이벤트 진행예정"/>
+
+                <TextView
+                    android:id="@+id/txt_noti_three"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    android:lines="1"
+                    android:maxLength="24"
+                    android:maxLines="1"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/sp_11"
+                    android:textStyle="bold"
+                    tools:text="감자님이 레드저지를 획득"/>
+
+                <TextView
+                    android:id="@+id/txt_noti_four"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    android:lines="1"
+                    android:maxLength="24"
+                    android:maxLines="1"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/sp_11"
+                    android:textStyle="bold"
+                    tools:text="하록선장님이 레드닷 저지를 획득"/>
+
+                <TextView
+                    android:id="@+id/txt_noti_five"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    android:lines="1"
+                    android:maxLength="24"
+                    android:maxLines="1"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/sp_11"
+                    android:textStyle="bold"
+                    tools:text="하록선장님이 레드닷 저지를 획득"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/box_tree_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/img_character"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/dp_14"
+                android:layout_marginBottom="@dimen/dp_42"
+                android:gravity="right"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/txt_tree_one"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="right"
+                    android:includeFontPadding="false"
+                    android:maxLength="24"
+                    android:text="지구를 살리는 계단왕"
+                    android:textColor="@color/tab_text_color_normal"
+                    android:textSize="@dimen/sp_11"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/txt_tree_two"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="right"
+                    android:includeFontPadding="false"
+                    android:maxLength="24"
+                    android:text="현재 1명 사용 중"
+                    android:textColor="@color/tab_text_color_normal"
+                    android:textSize="@dimen/sp_11"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/txt_tree_three"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="right"
+                    android:includeFontPadding="false"
+                    android:maxLength="24"
+                    android:text="1그루 나무를 심었습니다 "
+                    android:textColor="@color/tab_text_color_normal"
+                    android:textSize="@dimen/sp_11"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/txt_tree_four"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="right"
+                    android:includeFontPadding="false"
+                    android:maxLength="24"
+                    android:text="2.3t 의 이산화탄소를"
+                    android:textColor="@color/tab_text_color_normal"
+                    android:textSize="@dimen/sp_11"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/txt_tree_five"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="right"
+                    android:includeFontPadding="false"
+                    android:maxLength="24"
+                    android:text="감축 시켰습니다."
+                    android:textColor="@color/tab_text_color_normal"
+                    android:textSize="@dimen/sp_11"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/box_character"
+            android:paddingBottom="@dimen/dp_16"
+            android:background="@color/colorWhite">
+
+            <kr.co.photointerior.kosw.widget.RowActivityRecord
+                android:id="@+id/row_record_floor"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_42"
+                app:recordAmt="0"
+                app:recordAmtColor="@color/color_f75e5e"
+                app:recordIcon="@drawable/ic_floor"
+                app:recordTitle="@string/txt_total_floor"
+                app:recordUnit="F" />
+
+            <kr.co.photointerior.kosw.widget.RowActivityRecord
+                android:id="@+id/row_record_calorie"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_42"
+                android:layout_below="@+id/row_record_floor"
+                app:recordAmt="0"
+                app:recordAmtColor="@color/color_1ec700"
+                app:recordIcon="@drawable/ic_calorie"
+                app:recordTitle="@string/txt_calorie"
+                app:recordUnit="kcal" />
+
+            <kr.co.photointerior.kosw.widget.RowActivityRecord
+                android:id="@+id/row_record_life"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_42"
+                android:layout_below="@+id/row_record_calorie"
+                app:recordAmt="0"
+                app:recordAmtColor="@color/color_ffcd00"
+                app:recordBg="@color/colorWhite"
+                app:recordIcon="@drawable/ic_health"
+                app:recordTitle="@string/txt_health"
+                app:recordUnit="sec" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txt_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:alpha=".8"
+        android:background="@color/color_cccccc"
+        android:minWidth="@dimen/dp_100"
+        android:padding="8dp"
+        android:textColor="#000"
+        android:textSize="@dimen/sp_16"
+        android:visibility="gone"/>
+</LinearLayout>

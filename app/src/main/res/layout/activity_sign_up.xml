@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:context=".ui.SignUpActivity">
+
+    <kr.co.photointerior.kosw.widget.KoswTextView
+        android:id="@+id/title_signup"
+        android:layout_width="wrap_content"
+        android:layout_height="52sp"
+        android:gravity="center"
+        android:text="@string/txt_sing_up"
+        android:textColor="@color/color_1a1a1a"
+        android:textSize="@dimen/sp_20"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <kr.co.photointerior.kosw.widget.KoswEditText
+        android:id="@+id/input_email"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_border_bottom_cccccc"
+        android:hint="@string/txt_email"
+        android:inputType="textEmailAddress"
+        android:maxLength="32"
+        android:maxLines="1"
+        android:paddingBottom="5dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:singleLine="true"
+        android:textCursorDrawable="@null"
+        android:textSize="@dimen/sp_18"
+        app:layout_constraintBottom_toTopOf="@+id/input_pwd"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_signup"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <kr.co.photointerior.kosw.widget.KoswEditText
+        android:id="@+id/input_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:background="@drawable/button_border_bottom_cccccc"
+        android:hint="@string/txt_pwd"
+        android:inputType="textPassword"
+        android:maxLength="16"
+        android:maxLines="1"
+        android:paddingBottom="5dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:singleLine="true"
+        android:textCursorDrawable="@null"
+        android:textSize="@dimen/sp_18"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_email" />
+
+
+    <kr.co.photointerior.kosw.widget.KoswEditText
+        android:id="@+id/input_pwd_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:background="@drawable/button_border_bottom_cccccc"
+        android:hint="@string/txt_pwd_confirm"
+        android:inputType="textPassword"
+        android:maxLength="16"
+        android:maxLines="1"
+        android:paddingBottom="5dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:singleLine="true"
+        android:textCursorDrawable="@null"
+        android:textSize="@dimen/sp_18"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_pwd" />
+
+    <kr.co.photointerior.kosw.widget.KoswEditText
+        android:id="@+id/input_name"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:background="@drawable/button_border_bottom_cccccc"
+        android:hint="@string/txt_user_name"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:maxLength="32"
+        android:maxLines="1"
+        android:paddingBottom="5dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:singleLine="true"
+        android:textCursorDrawable="@null"
+        android:textSize="@dimen/sp_18"
+        app:layout_constraintBottom_toTopOf="@+id/input_company_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_pwd_confirm"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <kr.co.photointerior.kosw.widget.KoswEditText
+        android:id="@+id/input_company_name"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:background="@drawable/button_border_bottom_cccccc"
+        android:ellipsize="end"
+        android:enabled="false"
+        android:hint="@string/txt_user_company"
+        android:inputType="text"
+        android:maxLength="20"
+        android:maxLines="1"
+        android:paddingBottom="5dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:singleLine="true"
+        android:textColor="@color/color_1a1a1a"
+        android:textCursorDrawable="@null"
+        android:textSize="@dimen/sp_18"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_name" />
+
+    <RelativeLayout
+        android:id="@+id/box_input_depart"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/button_border_bottom_cccccc"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_company_name"
+        app:layout_constraintVertical_bias="0.0">
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/spinner_depart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.AppCompatSpinner>
+    </RelativeLayout>
+
+    <kr.co.photointerior.kosw.widget.KoswButton
+        android:id="@+id/btn_signup"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:background="@drawable/button_border_1a1a1a"
+        android:text="@string/txt_sing_up_new"
+        android:textColor="@color/text_btn_click"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/box_input_depart" />
+
+    <!--<kr.co.photointerior.kosw.widget.RoundedCornerLayout-->
+        <!--android:id="@+id/ac_login_fl_kakao_login"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:layout_marginEnd="80dp"-->
+        <!--android:layout_marginStart="80dp"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:layout_marginTop="70dp"-->
+        <!--android:background="@drawable/kakao_btn"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/input_pwd"-->
+        <!--app:layout_constraintVertical_bias="0.100000024">-->
+
+        <!--<com.kakao.usermgmt.LoginButton-->
+            <!--android:id="@+id/com_kakao_login"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="20dp"-->
+            <!--android:layout_marginRight="20dp"-->
+            <!--android:layout_marginTop="15dp"-->
+            <!--android:visibility="gone"/>-->
+    <!--</kr.co.photointerior.kosw.widget.RoundedCornerLayout>-->
+
+    <kr.co.photointerior.kosw.widget.KoswTextView
+        android:id="@+id/input_warn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:text="@string/warn_account_invalid"
+        android:textColor="@color/color_f75e5e"
+        android:textSize="@dimen/sp_12"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_signup" />
+
+    <RelativeLayout
+        android:id="@+id/box_signup_guide"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/input_warn"
+        app:layout_constraintTop_toBottomOf="@+id/input_warn">
+
+        <kr.co.photointerior.kosw.widget.KoswTextView
+            android:id="@+id/btn_provision_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="6dp"
+            android:gravity="bottom"
+            android:text="@string/txt_provision_view"
+            android:textColor="@color/text_btn_click"
+            android:textSize="@dimen/sp_14" />
+
+        <kr.co.photointerior.kosw.widget.KoswTextView
+            android:id="@+id/check_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btn_provision_view"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginBottom="0dp"
+            android:paddingTop="5dp"
+            android:text="@string/txt_provision_agree"
+            android:textColor="@color/color_545454"
+            android:textSize="@dimen/sp_12" />
+
+        <ImageView
+            android:id="@+id/check_agree"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="220dp"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/button_border_545454_2dp" />
+
+        <ImageView
+            android:id="@+id/check_provision_view"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_below="@+id/check_agree"
+            android:layout_marginTop="@dimen/dp_16"
+            android:background="@drawable/ic_check"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/ic_top_arrow" />
+</android.support.constraint.ConstraintLayout>

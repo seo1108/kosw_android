@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#00C5EE</color>
+    <color name="colorPrimaryDark">#00C5EE</color>
+    <color name="colorAccent">#F28922</color>
+
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorGray">#CCCCCC</color>
+    <color name="colorDarkGray">#525158</color>
+    <color name="colorMediumGray">#D8D8D8</color>
+
+    <color name="color_1a1a1a">#1a1a1a</color>
+    <color name="color_f75e5e">#f75e5e</color>
+    <color name="color_545454">#545454</color>
+    <color name="color_999999">#999999</color>
+    <color name="color_00c5ed">#00C5ED</color>
+    <color name="color_555555">#555555</color>
+    <color name="color_ed4524">#ed4524</color>
+    <color name="color_1ec700">#1ec700</color>
+    <color name="color_ffcd00">#ffcd00</color>
+    <color name="color_38c1ec">#38c1ec</color>
+    <color name="color_35c2ef">#35c2ef</color>
+    <color name="color_cccccc">#CCCCCC</color>
+
+    <color name="list_divider">#E0E0E0</color>
+    <color name="light_black">#666666</color>
+    <color name="tab_text_normal">#757575</color>
+    <color name="tab_text_select">#FFFFFF</color>
+    <color name="tab_text_color_selected">#5196FF</color>
+    <color name="tab_text_color_normal">#7A7A7A</color>
+    <color name="pad_char">#9E9E9E</color>
+    <color name="logo_bg">#5096FF</color>
+    <color name="logo_bg_light">#7bA4D7</color>
+    <color name="color_FFEE96BF">#EE96BF</color>
+    <color name="color_FFF28922">#F28922</color>
+    <color name="color_FFF5DF13">#F5DF13</color>
+    <color name="color_A937AE41">#FF37AE41</color>
+    <color name="color_FF35BAEC">#35BAEC</color>
+    <color name="color_FF223285">#223285</color>
+    <color name="color_592885">#592885</color>
+    <color name="color_FF888A8B">#888A8B</color>
+    <color name="color_FF52341C">#52341C</color>
+    <color name="color_FF201F20">#201F20</color>
+    <color name="color_FFCCECFC">#CCECFC</color>
+</resources>

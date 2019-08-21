@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingEnd="@dimen/dp_14"
+    android:paddingStart="@dimen/dp_14"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/dp_32"
+        android:paddingTop="@dimen/dp_12">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_20"
+            android:layout_marginStart="@dimen/dp_20">
+
+            <TextView
+                android:id="@+id/txt_unique_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:text="고유코드란?"
+                android:textColor="@color/color_1a1a1a"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_unique_code"
+                android:includeFontPadding="false"
+                android:text="비콘(계단왕앱 사용이 가능한 비콘)이 설치된 건물 또는 장소를 나타내는 고유 번호입니다."
+                android:textColor="@color/color_1a1a1a"
+                android:textSize="@dimen/sp_14" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_2"
+            android:layout_marginBottom="@dimen/dp_26"
+            android:layout_marginTop="@dimen/dp_20"
+            android:background="@color/colorGray" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_20"
+            android:layout_marginStart="@dimen/dp_20">
+
+            <TextView
+                android:id="@+id/txt_char"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:text="캐릭터 소개"
+                android:textColor="@color/color_1a1a1a"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_tit_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_char"
+                android:includeFontPadding="false"
+                android:text="1.다이어트 하는 캐릭터"
+                android:textColor="@color/color_1a1a1a"
+                android:textSize="@dimen/sp_14" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_tit_1"
+            android:layout_marginTop="@dimen/dp_8"
+            android:background="@drawable/img_help" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_20"
+            android:layout_marginStart="@dimen/dp_20"
+            android:layout_marginTop="@dimen/dp_10"
+            android:includeFontPadding="false"
+            android:text="하루 사용자가 달성한 총 층수가 10층 이상일 때 한 단계 앞으로, 3일 동안 사용자가 달성한 총 증수가 0증인 경우 한 단계 뒤로, 캐릭터가 바뀝니다."
+            android:textColor="@color/color_1a1a1a"
+            android:textSize="@dimen/sp_14" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_2"
+            android:layout_marginBottom="@dimen/dp_26"
+            android:layout_marginTop="@dimen/dp_20"
+            android:background="@color/colorGray" />
+
+        <TextView
+            android:id="@+id/txt_tit_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:text="2.티셔츠(Jersey), 실시간 변화, 경쟁구조"
+            android:textColor="@color/color_1a1a1a"
+            android:textSize="@dimen/sp_14" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_8"
+            android:background="@drawable/img_help1" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_20"
+            android:layout_marginStart="@dimen/dp_20"
+            android:layout_marginTop="@dimen/dp_10"
+            android:includeFontPadding="false"
+            android:text="일간 또는 주간, 나의 랭킹에 따라 멋진 운동복(jersey)을 획득할 수 있습니다."
+            android:textColor="@color/color_1a1a1a"
+            android:textSize="@dimen/sp_14" />
+    </LinearLayout>
+
+</ScrollView>

@@ -1,0 +1,10 @@
+storePassword : kosw!3@4
+alias : photointerior
+keyPassword : kosw!3@4
+
+
+debug keystore finger print
+	keytool -exportcert -list -v -alias androiddebugkey -keystore ~/.android/debug.keystore
+
+release keystore finger print
+    keytool -exportcert -list -v -alias photointerior -keystore kosw.keystore

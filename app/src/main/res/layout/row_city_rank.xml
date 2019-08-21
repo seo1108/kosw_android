@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/box_of_row"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_44"
+    android:background="@drawable/button_border_bottom_cccccc"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+    <!-- 개인, 그룹랭킹 1,2,3위 이외와 제일 상단 내 랭킹 row -->
+    <TextView
+        android:id="@+id/tv1101"
+        android:layout_width="84dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_6"
+        android:gravity="center"
+        android:text="2019.08.08"
+        android:textAlignment="center"
+        android:textColor="@color/color_555555"
+        android:textSize="@dimen/sp_15"
+        android:textStyle="bold"/>
+
+
+    <TextView
+        android:id="@+id/tv1102"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="닉네임"
+        android:textAlignment="center"
+        android:textColor="@color/colorDarkGray"
+        android:textSize="@dimen/sp_15"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/tv1103"
+        android:layout_width="@dimen/dp_62"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dp_24"
+        android:gravity="center_vertical|right"
+        android:text="50,000F"
+        android:textAlignment="textEnd"
+        android:textColor="@color/colorDarkGray"
+        android:textSize="@dimen/sp_15"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/tv1104"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dp_24"
+        android:layout_weight="1"
+        android:gravity="center_vertical|right"
+        android:text="대한민국"
+        android:textAlignment="center"
+        android:textColor="@color/colorDarkGray"
+        android:textSize="@dimen/sp_15"
+        android:textStyle="bold"/>
+
+</LinearLayout>

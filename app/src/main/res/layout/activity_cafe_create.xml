@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorWhite"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/sv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="50dp">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorWhite"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/title_signup"
+                android:layout_width="wrap_content"
+                android:layout_height="52sp"
+                android:gravity="center"
+                android:text="@string/txt_make_cafe"
+                android:textColor="@color/color_1a1a1a"
+                android:textSize="@dimen/sp_20"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/name_linearlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/button_border_bottom_cccccc"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@+id/title_signup">
+
+                <kr.co.photointerior.kosw.widget.KoswEditText
+                    android:id="@+id/input_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:hint="카페 이름"
+                    android:maxLength="50"
+                    android:maxLines="1"
+                    android:paddingStart="10dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:singleLine="true"
+                    android:textColor="#000"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/sp_16"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <kr.co.photointerior.kosw.widget.KoswEditText
+                    android:id="@+id/input_name_length"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="5dp"
+                    android:background="@null"
+                    android:gravity="end"
+                    android:hint="0/50"
+                    android:maxLines="1"
+                    android:paddingStart="10dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="10dp"
+                    android:singleLine="true"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/sp_14"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/desc_linearlayout"
+                android:layout_width="match_parent"
+                android:layout_height="125dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/button_border_bottom_cccccc"
+                android:orientation="horizontal"
+                android:paddingTop="5dp"
+                app:layout_constraintTop_toBottomOf="@+id/name_linearlayout">
+
+                <kr.co.photointerior.kosw.widget.KoswEditText
+                    android:id="@+id/input_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="start"
+                    android:hint="카페 설명"
+                    android:maxLength="200"
+                    android:maxLines="10"
+                    android:paddingStart="10dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="10dp"
+                    android:textColor="#000"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/sp_16"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <kr.co.photointerior.kosw.widget.KoswEditText
+                    android:id="@+id/input_desc_length"
+                    android:layout_width="wrap_content"
+                    android:layout_height="120dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@null"
+                    android:gravity="bottom"
+                    android:hint="0/200"
+                    android:maxLines="1"
+                    android:paddingStart="10dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="10dp"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/sp_14"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+            </LinearLayout>
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/txt_privacy"
+                android:layout_width="match_parent"
+                android:layout_height="18dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="32dp"
+                android:text="@string/txt_set_privacy"
+                android:textAlignment="viewStart"
+                android:textColor="#000"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/desc_linearlayout" />
+
+            <LinearLayout
+                android:id="@+id/privacy_hide_linearlayout"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal"
+                android:paddingTop="5dp"
+                app:layout_constraintTop_toBottomOf="@+id/txt_privacy">
+
+                <kr.co.photointerior.kosw.widget.KoswTextView
+                    android:layout_width="335dp"
+                    android:layout_height="38dp"
+                    android:layout_gravity=""
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="5dp"
+                    android:text="@string/txt_privacy_hide"
+                    android:textColor="#000"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/sp_16"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <CheckBox
+                    android:id="@+id/check_privacy_hide"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="30dp"
+                    android:button="@drawable/checkbox_custom"
+                    android:checked="false"
+                    android:scaleX="1.2"
+                    android:scaleY="1.2" />
+            </LinearLayout>
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/txt_privacy_hide"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity=""
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="32dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_border_bottom_dot_cccccc"
+                android:gravity="start"
+                android:paddingTop="5dp"
+                android:paddingBottom="15dp"
+                android:text="@string/txt_privacy_hide_exp"
+                android:textColor="#000"
+                android:textCursorDrawable="@null"
+                android:textSize="@dimen/sp_14"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/privacy_hide_linearlayout" />
+
+            <LinearLayout
+                android:id="@+id/privacy_open_linearlayout"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal"
+                android:paddingTop="5dp"
+                app:layout_constraintTop_toBottomOf="@+id/txt_privacy_hide">
+
+                <kr.co.photointerior.kosw.widget.KoswTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:layout_gravity=""
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="5dp"
+                    android:text="@string/txt_privacy_open"
+                    android:textColor="#000"
+                    android:textCursorDrawable="@null"
+                    android:textSize="@dimen/sp_16"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <CheckBox
+                    android:id="@+id/check_privacy_open"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="30dp"
+                    android:button="@drawable/checkbox_custom"
+                    android:checked="false"
+                    android:scaleX="1.2"
+                    android:scaleY="1.2" />
+            </LinearLayout>
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/txt_privacy_open"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity=""
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="32dp"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:paddingTop="5dp"
+                android:paddingBottom="15dp"
+                android:text="@string/txt_privacy_open_exp"
+                android:textColor="#000"
+                android:textCursorDrawable="@null"
+                android:textSize="@dimen/sp_14"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/privacy_open_linearlayout" />
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/txt_privacy_dot_line"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="15dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_border_bottom_dot_cccccc"
+                android:textColor="#000"
+                android:textCursorDrawable="@null"
+                android:textSize="@dimen/sp_14"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_privacy_open" />
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/txt_choose_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="32dp"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:paddingTop="5dp"
+                android:paddingBottom="15dp"
+                android:text="@string/txt_recommend_message"
+                android:textColor="@color/color_ed4524"
+                android:textCursorDrawable="@null"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_privacy_dot_line" />
+
+            <ImageView
+                android:id="@+id/img_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="150dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_choose_message" />
+
+            <kr.co.photointerior.kosw.widget.KoswButton
+                android:id="@+id/btn_change"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/button_border_1a1a1a"
+                android:text="@string/txt_regist_logo"
+                android:textColor="@color/text_btn_click"
+                android:textSize="@dimen/sp_16"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/img_logo" />
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/txt_info_message"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:paddingTop="5dp"
+                android:paddingBottom="15dp"
+                android:text="@string/txt_logo_recommend"
+                android:textCursorDrawable="@null"
+                android:textSize="@dimen/sp_12"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_change" />
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/txt_cate_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity=""
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="32dp"
+                android:gravity="start"
+                android:paddingTop="10dp"
+                android:paddingBottom="5dp"
+                android:text="@string/txt_regist_category_message"
+                android:textColor="#000"
+                android:textCursorDrawable="@null"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_info_message" />
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/txt_cate_ex"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity=""
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="32dp"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:paddingTop="5dp"
+                android:paddingBottom="15dp"
+                android:text="@string/txt_category_ex"
+                android:textColor="#000"
+                android:textCursorDrawable="@null"
+                android:textSize="@dimen/sp_14"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_cate_message" />
+
+            <LinearLayout
+                android:id="@+id/add_cate1_linearlayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="32dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_cate_ex">
+
+                <RelativeLayout
+                    android:id="@+id/box_add_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/button_border_bottom_cccccc">
+
+                    <LinearLayout
+                        android:id="@+id/box_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <kr.co.photointerior.kosw.widget.KoswEditText
+                            android:id="@+id/txt_cate_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:hint="분류명 입력"
+                            android:paddingStart="10dp"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:singleLine="true"
+                            android:textColor="#000"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/sp_16"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/add_cate_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_add_black" />
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/category_linearlayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="0dp"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"></LinearLayout>
+
+            </LinearLayout>
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/txt_cate_user_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity=""
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="32dp"
+                android:gravity="start"
+                android:paddingTop="10dp"
+                android:paddingBottom="5dp"
+                android:text="@string/txt_regist_category_user_message"
+                android:textColor="#000"
+                android:textCursorDrawable="@null"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/add_cate1_linearlayout" />
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/txt_cate_user_ex"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity=""
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="32dp"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:paddingTop="5dp"
+                android:paddingBottom="15dp"
+                android:text="@string/txt_category_user_ex"
+                android:textColor="#000"
+                android:textCursorDrawable="@null"
+                android:textSize="@dimen/sp_14"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_cate_user_message" />
+
+            <kr.co.photointerior.kosw.widget.KoswEditText
+                android:id="@+id/txt_cate_user_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_border_bottom_cccccc"
+                android:hint="분류명 입력"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:singleLine="true"
+                android:textColor="#000"
+                android:textCursorDrawable="@null"
+                android:textSize="@dimen/sp_16"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_cate_user_ex" />
+
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/txt_cate_info1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="32dp"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:text="@string/txt_category_done1"
+                android:textColor="@color/color_ed4524"
+                android:textCursorDrawable="@null"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_cate_user_title" />
+
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/txt_cate_info2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="42dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="30dp"
+                android:layout_weight="1"
+                android:gravity="top"
+                android:paddingBottom="15dp"
+                android:text="@string/txt_category_done2"
+                android:textColor="@color/color_ed4524"
+                android:textCursorDrawable="@null"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_cate_info1" />
+
+
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <kr.co.photointerior.kosw.widget.KoswButton
+        android:id="@+id/btn_make_cafe"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/button_border_1a1a1a"
+        android:text="@string/txt_make_cafe"
+        android:textColor="@color/text_btn_click"
+        android:textSize="@dimen/sp_16"
+        android:layout_alignParentBottom="true"
+        app:layout_constraintTop_toBottomOf="@+id/sv" />
+</RelativeLayout>

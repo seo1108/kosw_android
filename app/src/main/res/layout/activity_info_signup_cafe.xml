@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/title_box"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorBlack">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="카페 가입하기/탈퇴하기"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/sp_18"
+            android:textStyle="bold"/>
+
+        <ImageView
+            android:id="@+id/popup_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/dp_14"
+            android:src="@drawable/ic_w_close" />
+    </RelativeLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <kr.co.photointerior.kosw.widget.KoswTextView
+            android:id="@+id/title_signup"
+            android:layout_width="0dp"
+            android:layout_height="40sp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:gravity="center"
+            android:text="회사와 부서를 선택해 주세요 "
+            android:textAlignment="viewStart"
+            android:textColor="@color/color_1a1a1a"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <RelativeLayout
+            android:id="@+id/box_input_company"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/button_border_bottom_cccccc"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title_signup">
+
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/spinner_company"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="8dp">
+
+            </android.support.v7.widget.AppCompatSpinner>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/box_input_depart"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/button_border_bottom_cccccc"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/box_input_company">
+
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/spinner_depart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="8dp">
+
+            </android.support.v7.widget.AppCompatSpinner>
+        </RelativeLayout>
+
+        <kr.co.photointerior.kosw.widget.KoswButton
+            android:id="@+id/btn_signup"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="58dp"
+            android:background="@drawable/button_border_1a1a1a"
+            android:text="카페 가입하기"
+            android:textColor="@color/text_btn_click"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/box_input_depart" />
+
+        <kr.co.photointerior.kosw.widget.KoswTextView
+            android:id="@+id/input_warn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:text="@string/warn_account_invalid"
+            android:textColor="@color/color_f75e5e"
+            android:textSize="@dimen/sp_12"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_signup"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <kr.co.photointerior.kosw.widget.KoswTextView
+            android:id="@+id/txt_comment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:text="가입후 담당자 승인 처리가 진행됩니다"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/input_warn" />
+
+
+    </android.support.constraint.ConstraintLayout>
+
+</LinearLayout>

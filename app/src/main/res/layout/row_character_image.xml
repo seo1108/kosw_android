@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kr.co.photointerior.kosw.widget.CircleImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/dp_136"
+    android:layout_height="@dimen/dp_136"
+    android:layout_marginRight="@dimen/dp_2"
+    android:background="@drawable/circle"
+    app:srcCompat="@drawable/img_character1" />

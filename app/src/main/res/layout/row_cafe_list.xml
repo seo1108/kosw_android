@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/box_of_row"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_42"
+    android:layout_marginEnd="14dp"
+    android:layout_marginStart="14dp"
+    android:orientation="horizontal"
+    android:background="@drawable/button_border_bottom_777777">
+
+    <TextView
+        android:id="@+id/txt_cafename"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="1dp"
+        android:gravity="center"
+        android:text=""
+        android:textColor="@color/color_555555"
+        android:textSize="@dimen/sp_16" />
+</LinearLayout>

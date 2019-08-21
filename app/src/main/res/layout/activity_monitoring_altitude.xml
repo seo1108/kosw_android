@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <ImageView
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:srcCompat="@drawable/ic_top_arrow" />
+
+    <kr.co.photointerior.kosw.widget.KoswTextView
+        android:id="@+id/title_signup"
+        android:layout_width="wrap_content"
+        android:layout_height="56sp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="테스트"
+        android:textColor="@color/color_1a1a1a"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txt_current_floor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_signup"
+        android:layout_marginBottom="@dimen/dp_8"
+        android:layout_marginTop="@dimen/dp_8"
+        android:gravity="center"
+        android:textColor="@color/color_1a1a1a"
+        android:textSize="32dp"
+        tools:text="20층"/>
+
+    <TextView
+        android:id="@+id/txt_prev_altitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_current_floor"
+        android:layout_marginBottom="@dimen/dp_8"
+        android:layout_marginTop="@dimen/dp_8"
+        android:gravity="center"
+        android:textColor="@color/color_1a1a1a"
+        android:textSize="32dp"
+        tools:text="20.23m" />
+
+    <TextView
+        android:id="@+id/txt_current_altitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_prev_altitude"
+        android:layout_marginBottom="@dimen/dp_8"
+        android:layout_marginTop="@dimen/dp_8"
+        android:gravity="center"
+        android:textColor="@color/color_1a1a1a"
+        android:textSize="32dp"
+        tools:text="20.23m" />
+
+    <TextView
+        android:id="@+id/txt_current_beacon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_current_altitude"
+        android:layout_marginBottom="@dimen/dp_8"
+        android:layout_marginTop="@dimen/dp_8"
+        android:gravity="center"
+        android:textColor="@color/color_1a1a1a"
+        android:textSize="14dp"
+        tools:text="20.23m" />
+
+    <TextView
+        android:id="@+id/txt_current_updownmsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_current_beacon"
+        android:layout_marginBottom="@dimen/dp_8"
+        android:layout_marginTop="@dimen/dp_8"
+        android:gravity="center"
+        android:textColor="@color/color_1a1a1a"
+        android:textSize="18dp"
+        tools:text="20.23m"
+        android:visibility="visible"/>
+
+    <LinearLayout
+        android:id="@+id/box_of_rate_input"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_below="@+id/txt_current_updownmsg"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="비율 : "
+            android:textSize="@dimen/dp_18"
+            android:textColor="#000"/>
+        <EditText
+            android:id="@+id/input_rate"
+            android:inputType="numberDecimal"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:hint="0.3333"
+            android:textSize="@dimen/dp_18"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="#000"/>
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="SAVE"
+            android:textSize="@dimen/dp_18"
+            android:textColor="#000"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_start_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/box_of_rate_input"
+        android:layout_marginTop="@dimen/dp_16"
+        android:paddingEnd="@dimen/dp_24"
+        android:paddingStart="@dimen/dp_24"
+        android:layout_centerHorizontal="true"
+        android:text="START"
+        android:textSize="20dp" />
+</RelativeLayout>

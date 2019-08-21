@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/black_bg"
+    android:paddingLeft="30dp"
+    android:paddingRight="30dp">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/bg_round_color_white_3dp">
+
+        <RelativeLayout
+            android:id="@+id/top_box"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="10dp">
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="50dp"
+                android:text="@string/txt_title_guide"
+                android:textColor="@color/light_black"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold"/>
+
+            <ImageView
+                android:id="@+id/btn_close"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/button_close_click_black"
+                android:visibility="invisible"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/center_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/top_box">
+
+            <LinearLayout
+                android:id="@+id/time_box"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="80dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <kr.co.photointerior.kosw.widget.KoswTextView
+                    android:id="@+id/text_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/sp_14"
+                    tools:text="@string/txt_signup_success"/>
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/btn_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/center_box"
+            android:background="#E0E0E0"
+            android:visibility="invisible"/>
+
+        <RelativeLayout
+            android:id="@+id/bottom_box"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_below="@+id/btn_line"
+            android:layout_centerInParent="true">
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/btn_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/btn_center"
+                android:gravity="center"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="10dp"
+                android:textSize="@dimen/sp_14"
+                android:text="@string/txt_cancel"
+                android:textColor="@color/button_keypad_click"/>
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/btn_center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/btn_right"
+                android:gravity="center"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="10dp"
+                android:text="@string/txt_update"
+                android:textColor="@color/button_keypad_click"/>
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/btn_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="center"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="10dp"
+                android:text="@string/txt_update"
+                android:textSize="@dimen/sp_14"
+                android:textColor="@color/button_keypad_click"/>
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>

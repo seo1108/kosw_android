@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="16dp">
+
+    <LinearLayout
+        android:id="@+id/content_box"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/txt_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_20"
+            android:layout_marginStart="@dimen/dp_20"
+            android:layout_marginTop="@dimen/dp_24"
+            android:includeFontPadding="false"
+            android:textColor="@color/color_1a1a1a"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold"
+            tools:text="서비스 점검으로 일시적 사용이 제한됩니다." />
+
+        <TextView
+            android:id="@+id/txt_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_20"
+            android:layout_marginStart="@dimen/dp_20"
+            android:layout_marginTop="@dimen/dp_8"
+            android:includeFontPadding="false"
+            android:textColor="@color/color_999999"
+            android:textSize="@dimen/sp_16"
+            tools:text="2018.04.09." />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_16"
+            android:background="@drawable/button_border_bottom_dot_777777" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_border_bottom_cccccc"
+            android:paddingBottom="@dimen/dp_16"
+            android:scrollbars="none">
+
+            <TextView
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dp_20"
+                android:layout_marginStart="@dimen/dp_20"
+                tools:text="서비스 점검으로 일시적 사용이 제한됩니다.\사용에 제한이 있을 수 있으니 유의 해주세요.\n일시:2018.04.12. 24:00~0200am\n점검내용:서버점검\n문의:계단왕 담당자 이메일"
+                android:textColor="@color/color_1a1a1a"
+                android:textSize="@dimen/sp_16" />
+        </ScrollView>
+    </LinearLayout>
+</LinearLayout>

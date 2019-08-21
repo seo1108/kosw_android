@@ -1,0 +1,20 @@
+#keystore SHA-1 finger print
+keytool -exportcert -list -v -alias androiddebugkey -keystore ~/.android/debug.keystore
+
+#Project-id
+kingofstairs-a7b14
+
+#Web API Key
+AIzaSyAqrVg6gMZI5T9LzrKwF-toXESdNgEDn4k
+
+#Server-key
+AAAAcZd9rm4:APA91bFKiBb0EetPyxT4vel__5w1wTkjWyIArmaMq5kqJZkfosA-I-zRuoestcjudJDmFCi2V4gT-ihBLItGAXjZlSz_WlGu0UDCyksDkZMS9G_WIeabzlXruiQrKqBWBQaCk2vAokcG
+
+#Sender-id
+487872900718
+
+#Test tokens
+#갤럭시S7 token
+dFIqZp2t5f4:APA91bGqT2p030t3AatUnmypepOouX2nv3apyPn1zPA-xlFq3y5igk6zGn5bruiui1aWf4udb1RSg-FZmLuYWi3aRgjQeuscpSG3znaPFxfr-vAU7-rZgv4QqbL3hi5jmFqJWtLEam71
+#Nexus
+d5sHVPzja0c:APA91bFRINWU0alLrPJdp-8bnAeouU8VxF2Pz3_ZOflyoLEojJmPD4aXV0ni7q2wmX4IPNFHpRR9jVm3US3qWs07TVQgF98KorHHWUqLfexAWs2T2j4JJTxKnzMw68QgdaPH2vwDO3jW

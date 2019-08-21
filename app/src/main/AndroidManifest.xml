@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          tools:node="replace"
+          package="kr.co.photointerior.kosw">-->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+            package="kr.co.photointerior.kosw">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
+        android:required="false"/>
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_ADMIN"
+        android:required="false"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true"/>
+
+    <application
+        android:name="kr.co.photointerior.kosw.global.KoswApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBkR1H_VybNvbKqehC8oRXzspYv97xK_hY"/>
+
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="5add5ff03c0d53c83ef1050013df76e8"/>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="kr.co.photointerior.kosw.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_path" />
+        </provider>
+
+
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.SplashActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.FullScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.GPSAcceptActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.FullScreen"/>
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.MakeCafeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.LoginActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name="kr.co.photointerior.kosw.social.kakao.KakaoSignupActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <!--<activity
+            android:name="kr.co.photointerior.kosw.ui.MainActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar">
+            <intent-filter>
+                <action android:name="kr.co.photointerior.kosw.PUSH_NOTIFICATION_ACTION"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="kr.co.photointerior.kosw.PUSH_RECEIVE_ACTION"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>-->
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.MainActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar">
+            <intent-filter>
+                <action android:name="kr.co.photointerior.kosw.PUSH_NOTIFICATION_ACTION"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="kr.co.photointerior.kosw.PUSH_RECEIVE_ACTION"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <!--<activity
+            android:name="kr.co.photointerior.kosw.ui.FitnessActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+        </activity>-->
+
+
+
+
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.PushActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar">
+        </activity>
+
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.BuildingSelectActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.SignUpActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.SignUpExtraInfoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.FindPasswordActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.InfoSettingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.InfoSettingProfileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.InfoSettingPasswordActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.InfoSettingStairAddActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.InfoSettingStairViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.InfoSettingGoupActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.InfoSignupCafeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.NoticeEventActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.NoticeInputActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.HelpActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+        <!--
+        <activity
+            android:name=".ui.NoticeEventActivity"
+            android:screenOrientation="portrait"
+            android:autoRemoveFromRecents="true"
+            android:excludeFromRecents="true"
+            android:theme="@style/Kosw.NoActionbar" />
+        -->
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.ProvisionActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.NoticeRankingActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.MonitoringActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.MonitoringAltitudeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.DummyActivity"
+            android:excludeFromRecents="true"
+            android:taskAffinity=":avoidSmartManager"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.AvoidSmartManagerActivity"
+            android:excludeFromRecents="true"
+            android:taskAffinity=":avoidSmartManager"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.CafeChangeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.CafeCreateActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.CafeMainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+
+
+
+        <service android:name="kr.co.photointerior.kosw.service.fcm.FcmMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <service android:name="kr.co.photointerior.kosw.service.fcm.FcmInstanceIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+        <!--
+<service android:name=".service.beacon.BeaconRagingInRegionService"
+            tools:node="replace"
+            android:exported="false"/>
+        -->
+        <service
+            android:name="kr.co.photointerior.kosw.service.beacon.BeaconRagingInRegionService"
+            android:exported="false"/>
+        <service
+            android:name="kr.co.photointerior.kosw.service.beacon.StepSensorService"
+            android:exported="false"/>
+        <service
+            android:name="kr.co.photointerior.kosw.service.beacon.BeaconScanResumeService"
+            android:exported="false"/> <!-- <intent-filter> -->
+        <!-- <action android:name="kr.co.photointerior.kosw.BEACON_SERVICE" /> -->
+        <!-- </intent-filter> -->
+        <!-- </service> -->
+        <service
+            android:name="org.altbeacon.beacon.service.BeaconService"
+            android:exported="false"
+            tools:node="replace">
+            <meta-data
+                android:name="longScanForcingEnabled"
+                android:value="true"/>
+        </service>
+
+        <receiver
+            android:name="kr.co.photointerior.kosw.service.receiver.BootStartupReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="kr.co.photointerior.kosw.KOSW_SERVICE_RESTART_ACTION"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="kr.co.photointerior.kosw.service.receiver.AvoidSmartManagerReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="kr.co.photointerior.kosw.service.net.NetworkSchedulerService"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
+
+        <service
+            android:name="kr.co.photointerior.kosw.service.noti.NotiService"
+            android:enabled="true"
+            android:exported="true"/>
+
+        <service
+            android:name="kr.co.photointerior.kosw.service.stepcounter.StepCounterService"
+            android:enabled="true"
+            android:exported="true"/>
+
+        <receiver
+            android:name="com.google.android.gms.measurement.AppMeasurementReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.measurement.UPLOAD"/>
+                <action android:name="com.android.vending.INSTALL_REFERRER"/>
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.google.android.gms.measurement.AppMeasurementService"
+            android:enabled="true"
+            android:exported="false"/>
+    </application>
+
+</manifest>

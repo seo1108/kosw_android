@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/box_of_row"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_42"
+    android:layout_marginEnd="14dp"
+    android:layout_marginStart="14dp"
+    android:orientation="horizontal"
+    android:background="@drawable/button_border_bottom_777777">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/dp_22"
+        android:src="@drawable/ic_calorie" />
+
+    <TextView
+        android:id="@+id/txt_title"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/dp_6"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:text="칼로리"
+        android:textColor="@color/color_555555"
+        android:textSize="@dimen/sp_14" />
+
+    <TextView
+        android:id="@+id/txt_amt"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="6dp"
+        android:gravity="center_vertical"
+        tools:text="270"
+        android:textColor="@color/color_ed4524"
+        android:textSize="@dimen/sp_23"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txt_unit"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:text="kcal"
+        android:textColor="@color/color_555555"
+        android:layout_marginEnd="@dimen/dp_22"
+        android:textSize="@dimen/sp_14" />
+</LinearLayout>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite">
+
+    <RelativeLayout
+        android:id="@+id/box_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@+id/top_btn_box"
+        android:layout_marginEnd="@dimen/dp_14"
+        android:layout_marginStart="@dimen/dp_14"
+        android:paddingEnd="@dimen/dp_20"
+        android:paddingStart="@dimen/dp_20"
+        android:background="@drawable/button_border_bottom_cccccc">
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:dropDownWidth="wrap_content"
+            android:layout_marginEnd="@dimen/dp_20"
+            android:layout_marginStart="@dimen/dp_20"
+            android:spinnerMode="dropdown"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/txt_spinner"
+            android:layout_width="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_height="wrap_content"
+            android:text="@string/txt_ranking_private_spinner_0"
+            android:textColor="@color/color_1a1a1a"
+            android:textSize="@dimen/sp_18"/>
+
+        <ImageView
+            android:id="@+id/ic_select"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/ic_sel"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/box_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/box_spinner"
+        android:background="@color/colorWhite">
+
+        <kr.co.photointerior.kosw.widget.RowActivityRecord
+            android:id="@+id/row_record_calorie"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_42"
+            app:recordAmt="270"
+            app:recordAmtColor="@color/color_1a1a1a"
+            app:recordIcon="@drawable/ic_floor"
+            app:recordTitle="@string/txt_calorie"
+            app:recordUnit="kcal" />
+
+        <kr.co.photointerior.kosw.widget.RowActivityRecord
+            android:id="@+id/row_record_life"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_42"
+            android:layout_below="@+id/row_record_calorie"
+            app:recordAmt="72,00"
+            app:recordAmtColor="@color/color_1a1a1a"
+            app:recordIcon="@drawable/ic_my_calorie"
+            app:recordTitle="@string/txt_health"
+            app:recordUnit="sec" />
+
+        <kr.co.photointerior.kosw.widget.RowActivityRecord
+            android:id="@+id/row_record_ranking"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_42"
+            android:layout_below="@+id/row_record_life"
+            app:recordAmt="120"
+            app:recordAmtColor="@color/color_1a1a1a"
+            app:recordIcon="@drawable/ic_my_health"
+            app:recordTitle="@string/txt_ranking"
+            app:recordBg="@color/colorWhite"
+            app:recordUnit="pos" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/box_chart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/box_row"
+        android:layout_marginBottom="@dimen/dp_16"
+        android:orientation="vertical">
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/bar_chart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/drop_list_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/box_spinner"
+        android:layout_marginTop="-3dp"
+        android:layout_marginStart="13dp"
+        android:layout_marginEnd="13dp"
+        android:visibility="gone">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorWhite"
+            android:layout_margin="2dp"
+            android:padding="@dimen/dp_12"/>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:context=".ui.CodeAcceptActivity">
+
+    <ImageView
+        android:id="@+id/title_signup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.110000014"
+        app:srcCompat="@drawable/ic_logo" />
+
+    <ImageView
+        android:id="@+id/img_splash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_signup"
+        app:layout_constraintVertical_bias="0.13"
+        app:srcCompat="@drawable/img_splash4"/>
+
+    <kr.co.photointerior.kosw.widget.KoswEditText
+        android:id="@+id/input_code"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/button_border_bottom_cccccc"
+        android:hint="@string/txt_code"
+        android:inputType="numberSigned"
+        android:maxLength="7"
+        android:maxLines="1"
+        android:paddingStart="10dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="10dp"
+        android:singleLine="true"
+        android:textCursorDrawable="@null"
+        android:textSize="@dimen/sp_18"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_splash"
+        app:layout_constraintVertical_bias="0.050000012"/>
+
+    <kr.co.photointerior.kosw.widget.KoswTextView
+        android:id="@+id/tv_address"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/button_border_bottom_777777"
+        android:gravity="center_vertical"
+        android:text="건물 또는 등산로를 선택해주세요."
+        android:textAlignment="textStart"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/input_warn"
+        app:layout_constraintEnd_toStartOf="@+id/btn_map"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/input_code"
+        app:layout_constraintVertical_bias="0.51" />
+
+    <ImageButton
+        android:id="@+id/btn_gps"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button_bg_normal_gray_border"
+        android:paddingLeft="8dp"
+        android:paddingTop="8dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="8dp"
+        android:scaleType="fitXY"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/input_warn"
+        app:layout_constraintEnd_toStartOf="@+id/btn_map"
+        app:layout_constraintTop_toTopOf="@+id/input_code"
+        app:srcCompat="@drawable/baseline_place_black_48"/>
+
+    <ImageButton
+        android:id="@+id/btn_map"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:background="@drawable/button_bg_normal_gray_border"
+        android:paddingLeft="8dp"
+        android:paddingTop="8dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="8dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toTopOf="@+id/input_warn"
+        app:layout_constraintEnd_toEndOf="@+id/input_code"
+        app:layout_constraintTop_toTopOf="@+id/input_code"
+        app:srcCompat="@drawable/baseline_map_black_48"/>
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="주변검색"
+        android:textSize="10sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/btn_gps"
+        app:layout_constraintStart_toStartOf="@+id/btn_gps"
+        app:layout_constraintTop_toBottomOf="@+id/btn_gps"/>
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="지도검색"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="@+id/btn_map"
+        app:layout_constraintStart_toStartOf="@+id/btn_map"
+        app:layout_constraintTop_toBottomOf="@+id/btn_map"/>
+
+    <kr.co.photointerior.kosw.widget.KoswTextView
+        android:id="@+id/input_warn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="7dp"
+        android:text="@string/warn_code_invalid"
+        android:textColor="@color/color_f75e5e"
+        android:textSize="@dimen/sp_12"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_code"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <kr.co.photointerior.kosw.widget.KoswButton
+        android:id="@+id/btn_execute"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="7dp"
+        android:background="@drawable/button_border_1a1a1a"
+        android:text="@string/btn_txt_execute"
+        android:textColor="@color/text_btn_click"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_warn"
+        app:layout_constraintVertical_bias="0.15" />
+
+    <kr.co.photointerior.kosw.widget.KoswButton
+        android:id="@+id/btn_help_floor_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="52dp"
+        android:background="@null"
+        android:lineSpacingExtra="14sp"
+        android:text="@string/help_company_code"
+        android:textColor="@color/tab_text_normal"
+        android:textSize="14sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_execute"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_help_floor_code">
+
+        <kr.co.photointerior.kosw.widget.KoswTextView
+            android:id="@+id/koswTextView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="주의사항"
+            android:textSize="10sp"
+            android:textStyle="bold"/>
+
+        <kr.co.photointerior.kosw.widget.KoswTextView
+            android:id="@+id/koswTextView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:padding="0dp"
+            android:text="1. 계단이용시 위험하오니 뛰거나,핸드폰을 보면서 이동하지 않도록 주의 해 주십시요."
+            android:textSize="10sp"/>
+
+        <kr.co.photointerior.kosw.widget.KoswTextView
+            android:id="@+id/koswTextView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:padding="0dp"
+            android:text="2. 노약자 또는 어린이의 경우 보호자와 동행하고 무리한 이용을 삼가 해 주십시요."
+            android:textSize="10sp"/>
+
+        <kr.co.photointerior.kosw.widget.KoswTextView
+            android:id="@+id/koswTextView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="3. 과도한 계단이용을 자제하여 주시기 바랍니다."
+            android:textSize="10sp"/>
+    </LinearLayout>
+
+
+
+</android.support.constraint.ConstraintLayout>

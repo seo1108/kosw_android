@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:id="@+id/top_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/input_major"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:hint="major" />
+
+        <EditText
+            android:id="@+id/input_minor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:hint="minor" />
+
+        <Button
+            android:id="@+id/btn_set"
+            android:layout_width="64dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:background="@color/color_cccccc"
+            android:text="SET" />
+
+        <Button
+            android:id="@+id/btn_clear"
+            android:layout_width="64dp"
+            android:layout_height="wrap_content"
+            android:background="@color/color_cccccc"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:text="CLEAR" />
+
+        <Button
+            android:id="@+id/btn_endless"
+            android:layout_width="72dp"
+            android:layout_marginLeft="8dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:background="@color/color_cccccc"
+            android:text="ENDLESS" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/scan_taret"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_below="@+id/top_box"
+        android:textSize="16sp"
+        android:textColor="@color/colorWhite"
+        android:background="@color/color_cccccc" />
+    <TextView
+        android:id="@+id/target_uuid"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="8dp"
+        android:layout_below="@+id/scan_taret"
+        android:textSize="12sp"
+        android:background="@color/color_cccccc" />
+    <Button
+        android:id="@+id/btn_clear_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/target_uuid"
+        android:background="@color/color_cccccc"
+        android:text="CLEAR RESULT" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/btn_clear_result">
+        <TextView
+            android:id="@+id/scan_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:padding="12sp" />
+    </ScrollView>
+</RelativeLayout>

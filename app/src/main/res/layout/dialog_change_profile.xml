@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/title_box"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorBlack">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/txt_change_profile"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/sp_18"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/popup_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/dp_14"
+            android:src="@drawable/ic_w_close" />
+    </RelativeLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="14dp"
+            android:layout_marginStart="38dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
+            android:text="@string/txt_nick_amend"
+            android:textAlignment="viewStart"
+            android:textColor="@color/color_1a1a1a"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/nickname_box"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="34dp"
+            android:layout_marginStart="34dp"
+            android:layout_marginTop="8dp"
+
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView8">
+
+            <EditText
+                android:id="@+id/input_nickname"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_border_bottom_cccccc"
+                android:hint="@string/txt_nick"
+                android:inputType="text"
+                android:maxLength="32"
+                android:maxLines="1"
+                android:paddingBottom="5dp"
+                android:paddingEnd="4dp"
+                android:paddingStart="4dp"
+                android:paddingTop="5dp"
+                android:singleLine="true"
+                android:textColor="@color/color_999999"
+                android:textCursorDrawable="@null"
+                android:textSize="@dimen/sp_18" />
+
+            <kr.co.photointerior.kosw.widget.KoswButton
+                android:id="@+id/btn_check_dupl"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="64dp"
+                android:layout_height="46dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/button_border_1a1a1a"
+                android:text="@string/txt_confirm"
+                android:textColor="@color/text_btn_click"
+                android:textSize="@dimen/sp_14" />
+        </LinearLayout>
+
+        <kr.co.photointerior.kosw.widget.KoswTextView
+            android:id="@+id/input_warn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="34dp"
+            android:layout_marginStart="34dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/warn_available_nick"
+            android:textColor="@color/color_f75e5e"
+            android:textSize="@dimen/sp_12"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nickname_box"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="38dp"
+            android:layout_marginStart="38dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/txt_company_info"
+            android:textAlignment="viewStart"
+            android:textColor="@color/color_1a1a1a"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/input_warn" />
+
+        <TextView
+            android:id="@+id/input_company_name"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginEnd="34dp"
+            android:layout_marginStart="34dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/button_border_bottom_cccccc"
+            android:ellipsize="end"
+            android:enabled="false"
+            android:gravity="center_vertical"
+            android:maxLength="20"
+            android:maxLines="1"
+            android:paddingBottom="5dp"
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp"
+            android:paddingTop="5dp"
+            android:singleLine="true"
+            tools:text="포토인테리어"
+            android:textColor="@color/color_1a1a1a"
+            android:textSize="@dimen/sp_18"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+        <RelativeLayout
+            android:id="@+id/box_input_depart"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginEnd="34dp"
+            android:layout_marginStart="34dp"
+            android:background="@drawable/button_border_bottom_cccccc"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/input_company_name">
+
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/spinner_depart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true" />
+        </RelativeLayout>
+
+        <kr.co.photointerior.kosw.widget.KoswTextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="34dp"
+            android:layout_marginStart="34dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/txt_character"
+            android:textAlignment="viewStart"
+            android:textColor="@color/color_1a1a1a"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintBottom_toTopOf="@+id/recycler_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/box_input_depart" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="136dp"
+            android:layout_marginEnd="34dp"
+            android:layout_marginStart="34dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center_horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recycler_view"
+            app:layout_constraintVertical_bias="1.0">
+
+            <kr.co.photointerior.kosw.widget.KoswButton
+                android:id="@+id/btn_change"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="144dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="4dp"
+                android:background="@drawable/button_border_1a1a1a"
+                android:text="@string/txt_change"
+                android:textColor="@color/text_btn_click"
+                android:textSize="@dimen/sp_14" />
+
+            <kr.co.photointerior.kosw.widget.KoswButton
+                android:id="@+id/btn_cancel"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="144dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/button_border_1a1a1a"
+                android:text="@string/txt_cancel"
+                android:textColor="@color/text_btn_click"
+                android:textSize="@dimen/sp_14" />
+        </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
+
+    <!--<android.support.constraint.ConstraintLayout-->
+    <!--android:id="@+id/char_box"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginTop="16dp">-->
+
+
+    <!--</android.support.constraint.ConstraintLayout>-->
+</LinearLayout>

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:context=".ui.SignUpActivity">
+
+    <kr.co.photointerior.kosw.widget.KoswTextView
+        android:id="@+id/title_signup"
+        android:layout_width="wrap_content"
+        android:layout_height="52sp"
+        android:gravity="center"
+        android:text="카페개설(회사/단체)"
+        android:textColor="@color/color_1a1a1a"
+        android:textSize="@dimen/sp_20"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <kr.co.photointerior.kosw.widget.KoswEditText
+        android:id="@+id/input_name"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/button_border_bottom_cccccc"
+        android:hint="회사/단체 명"
+        android:inputType="textEmailAddress"
+        android:maxLength="32"
+        android:maxLines="1"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="5dp"
+        android:singleLine="true"
+        android:textCursorDrawable="@null"
+        android:textSize="@dimen/sp_18"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_signup"/>
+
+
+    <kr.co.photointerior.kosw.widget.KoswEditText
+        android:id="@+id/input_phone"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/button_border_bottom_cccccc"
+        android:hint="연락처(ex 0212341234)"
+        android:inputType="textEmailAddress"
+        android:maxLength="32"
+        android:maxLines="1"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="5dp"
+        android:singleLine="true"
+        android:textCursorDrawable="@null"
+        android:textSize="@dimen/sp_18"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_name" />
+
+    <kr.co.photointerior.kosw.widget.KoswEditText
+        android:id="@+id/input_hp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/button_border_bottom_cccccc"
+        android:hint="핸드폰 번호(ex 01012341234)"
+        android:inputType="textEmailAddress"
+        android:maxLength="32"
+        android:maxLines="1"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="5dp"
+        android:singleLine="true"
+        android:textCursorDrawable="@null"
+        android:textSize="@dimen/sp_18"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.39"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_phone" />
+
+    <kr.co.photointerior.kosw.widget.KoswTextView
+        android:id="@+id/input_hp_warn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:text="@string/warn_account_invalid"
+        android:textColor="@color/color_f75e5e"
+        android:textSize="@dimen/sp_12"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_hp" />
+
+    <kr.co.photointerior.kosw.widget.KoswEditText
+        android:id="@+id/input_admin"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/button_border_bottom_cccccc"
+        android:hint="담당자 명"
+        android:inputType="textEmailAddress"
+        android:maxLength="32"
+        android:maxLines="1"
+        android:paddingBottom="5dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:singleLine="true"
+        android:textCursorDrawable="@null"
+        android:textSize="@dimen/sp_18"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.406"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_hp_warn" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/c_saupja"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_admin">
+
+        <kr.co.photointerior.kosw.widget.KoswTextView
+            android:id="@+id/txt_saupja1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text='"계단왕 카페"는건물 내 회사 또는 단체를 위 한 것으로\n 사내 직원들의 계단 이용 장려를 위하여 만든 서비스 입니다.'
+            android:textAlignment="viewStart"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <kr.co.photointerior.kosw.widget.KoswTextView
+            android:id="@+id/txt_saupja2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="1.회사또는 단체 만의 집계가 가능합니다.\n  (관리자를 위한 관리자페이지 별도 제공)\n 2.부서별, 개인별 통계를 제공합니다.\n 3.회사 직원들을 대상으로 공지를 할 수 있습니다."
+            android:textAlignment="viewStart"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_saupja1"/>
+
+        <kr.co.photointerior.kosw.widget.KoswTextView
+            android:id="@+id/txt_saupja3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="계단왕의 모든 서비스는 무료서비스 입니다.\n 자세한 문의는 chsong97@gmail.com 메일주세요."
+            android:textAlignment="viewStart"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_saupja2"/>
+    </android.support.constraint.ConstraintLayout>
+
+    <kr.co.photointerior.kosw.widget.KoswButton
+        android:id="@+id/btn_signup"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/button_border_1a1a1a"
+        android:text="카페 개설하기"
+        android:textColor="@color/text_btn_click"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/c_saupja" />
+
+    <kr.co.photointerior.kosw.widget.KoswTextView
+        android:id="@+id/input_warn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:text="@string/warn_account_invalid"
+        android:textColor="@color/color_f75e5e"
+        android:textSize="@dimen/sp_12"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_signup"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/ic_top_arrow" />
+</android.support.constraint.ConstraintLayout>

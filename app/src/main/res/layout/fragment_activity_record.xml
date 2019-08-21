@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite">
+
+    <TextView
+        android:id="@+id/txt_activity_period"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        tools:text="2018.01.25~2018.05.30"
+        android:textColor="@color/color_545454"
+        android:layout_marginTop="-3dp"
+        android:textSize="@dimen/sp_15"
+        android:textStyle="bold" />
+
+
+    <RelativeLayout
+        android:id="@+id/box_summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_activity_period"
+        android:layout_marginTop="@dimen/dp_20">
+
+        <kr.co.photointerior.kosw.widget.RowActivityRecord
+            android:id="@+id/row_record_floor"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_42"
+            app:recordAmt="0"
+            app:recordAmtColor="@color/color_00c5ed"
+            app:recordIcon="@drawable/ic_my_floor"
+            app:recordTitle="@string/txt_total_floor"
+            app:recordUnit="F" />
+
+        <kr.co.photointerior.kosw.widget.RowActivityRecord
+            android:id="@+id/row_record_calorie"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_42"
+            android:layout_below="@+id/row_record_floor"
+            app:recordAmt="0"
+            app:recordAmtColor="@color/color_ed4524"
+            app:recordIcon="@drawable/ic_my_calorie"
+            app:recordTitle="@string/txt_calorie"
+            app:recordUnit="kcal" />
+
+        <kr.co.photointerior.kosw.widget.RowActivityRecord
+            android:id="@+id/row_record_life"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_42"
+            android:layout_below="@+id/row_record_calorie"
+            app:recordAmt="0"
+            app:recordAmtColor="@color/color_1ec700"
+            app:recordIcon="@drawable/ic_my_health"
+            app:recordTitle="@string/txt_health"
+            app:recordUnit="sec" />
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/box_summary"
+        android:layout_marginBottom="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_40"
+        android:fitsSystemWindows="true"
+        android:scrollbars="none" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/box_summary"
+        android:layout_marginBottom="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_42"
+        android:fitsSystemWindows="true"
+        android:scrollbars="none"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/box_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/box_summary"
+                android:orientation="vertical">
+
+                <kr.co.photointerior.kosw.widget.RowActivityRecordSummary
+                    android:id="@+id/txt_daily_avg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:recordTitle="매일평균"
+                    app:showLineBottom="false" />
+
+                <kr.co.photointerior.kosw.widget.RowActivityRecordSummary
+                    android:id="@+id/txt_high_score"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:recordTitle="최고기록 2018.04.25" />
+
+                <kr.co.photointerior.kosw.widget.RowActivityRecordDaily
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:recordTitle="2018.05.23" />
+
+                <kr.co.photointerior.kosw.widget.RowActivityRecordDaily
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:recordTitle="2018.05.22" />
+
+                <kr.co.photointerior.kosw.widget.RowActivityRecordDaily
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:recordTitle="2018.05.21" />
+
+                <kr.co.photointerior.kosw.widget.RowActivityRecordDaily
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:recordTitle="2018.05.20" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/box_menu_row"
+    android:layout_width="match_parent"
+    android:layout_height="68dp"
+    android:background="@drawable/button_border_bottom_dot_777777">
+
+    <LinearLayout
+        android:id="@+id/box_title"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/menu_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_20"
+            android:includeFontPadding="false"
+            android:text="활동기록"
+            android:textColor="@color/color_1a1a1a"
+            android:textSize="@dimen/sp_15" />
+
+        <TextView
+            android:id="@+id/menu_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_20"
+            android:includeFontPadding="false"
+            android:text="활동기록"
+            android:textColor="@color/color_999999"
+            android:textSize="@dimen/sp_12" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/dp_20"
+        android:src="@drawable/ic_arrow" />
+</RelativeLayout>

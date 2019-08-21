@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ui.MainActivity"
+    tools:showIn="@layout/app_bar_main">
+
+
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <!--<include layout="@layout/fragment_main"-->
+            <!--android:background="@color/colorPrimary" />-->
+        <!--<include layout="@layout/fragment_info_setting"-->
+            <!--android:background="@color/colorPrimary" />-->
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/txt_m"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="높이, 방향 , 걷기 ,시간"
+            android:textAlignment="textEnd"
+            tools:layout_editor_absoluteY="272dp"/>
+
+        <kr.co.photointerior.kosw.widget.KoswTextView
+            android:id="@+id/txt_height"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="높이: 0m"
+            android:textSize="24sp"/>
+
+        <kr.co.photointerior.kosw.widget.KoswTextView
+            android:id="@+id/txt_dir"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="방향 0"
+            android:textSize="24sp"/>
+
+        <kr.co.photointerior.kosw.widget.KoswTextView
+            android:id="@+id/txt_step"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="걷기: 0"
+            android:textSize="24sp"/>
+
+        <kr.co.photointerior.kosw.widget.KoswTextView
+            android:id="@+id/txt_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="시간: 0"
+            android:textSize="24sp"/>
+
+        <kr.co.photointerior.kosw.widget.KoswTextView
+            android:id="@+id/txt_addr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"/>
+
+        <kr.co.photointerior.kosw.widget.KoswTextView
+            android:id="@+id/txt_gps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"/>
+
+        <kr.co.photointerior.kosw.widget.KoswTextView
+            android:id="@+id/txt_log"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txt_count"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="40dp"
+        android:text="0"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/LayoutPause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="70dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btn_pause"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/circle"
+            android:backgroundTint="@color/cardview_light_background"
+            app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_lock_lock"/>
+
+        <TextView
+            android:id="@+id/tvPauseMent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="측정중이 아닙니다"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textSize="10sp"/>
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/dp_32">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/box_header"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_148">
+
+            <kr.co.photointerior.kosw.widget.CircleImageView
+                android:id="@+id/ic_character"
+                android:layout_width="@dimen/dp_108"
+                android:layout_height="@dimen/dp_108"
+                android:layout_marginBottom="22dp"
+                android:layout_marginStart="34dp"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/circle_00c5ed"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/info_box"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="@dimen/dp_22"
+                android:layout_marginEnd="@dimen/dp_34"
+                android:layout_marginStart="@dimen/dp_20"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ic_character"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/txt_user_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:includeFontPadding="false"
+                    android:lineSpacingExtra="-4dp"
+                    android:maxLines="5"
+                    android:textColor="@color/color_38c1ec"
+                    android:textSize="@dimen/sp_14"
+                    tools:text="kugie@rapids.kr" />
+            </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
+
+        <kr.co.photointerior.kosw.widget.MenuRow
+            android:id="@+id/btn_change_profile"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_56"
+            android:layout_marginEnd="@dimen/dp_14"
+            android:layout_marginStart="@dimen/dp_14"
+            app:menuTitle="@string/txt_change_profile"
+            app:menuTitleColor="@color/color_1a1a1a" />
+
+        <kr.co.photointerior.kosw.widget.MenuRow
+            android:id="@+id/btn_change_password"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_56"
+            android:layout_marginEnd="@dimen/dp_14"
+            android:layout_marginStart="@dimen/dp_14"
+            app:menuTitle="@string/txt_change_pwd"
+            app:menuTitleColor="@color/color_1a1a1a" >
+
+        </kr.co.photointerior.kosw.widget.MenuRow>
+
+        <kr.co.photointerior.kosw.widget.MenuRow
+            android:id="@+id/btn_menu_notice"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginStart="@dimen/dp_14"
+            android:layout_marginEnd="@dimen/dp_14"
+            app:menuIconRightHide="true"
+            app:menuTitle="@string/txt_notice"
+            app:menuTitleColor="@color/color_1a1a1a">
+
+        </kr.co.photointerior.kosw.widget.MenuRow>
+
+        <kr.co.photointerior.kosw.widget.MenuRow
+            android:id="@+id/btn_push_setting"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_56"
+            android:layout_marginEnd="@dimen/dp_14"
+            android:layout_marginStart="@dimen/dp_14"
+            app:menuIconRight="@drawable/ic_swip_on"
+            app:menuTitle="@string/txt_push_set"
+            app:menuTitleColor="@color/color_1a1a1a" />
+
+        <kr.co.photointerior.kosw.widget.MenuRow
+            android:id="@+id/btn_auto_tracking_setting"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_56"
+            android:layout_marginEnd="@dimen/dp_14"
+            android:layout_marginStart="@dimen/dp_14"
+            app:menuIconRight="@drawable/ic_swip_on"
+            app:menuTitle="@string/txt_auto_tracking_set"
+            app:menuTitleColor="@color/color_1a1a1a" />
+
+        <kr.co.photointerior.kosw.widget.MenuRow
+            android:id="@+id/btn_goup_building"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/dp_14"
+            android:layout_marginEnd="@dimen/dp_14"
+            android:visibility="gone"
+            app:menuTitle="@string/txt_goup_building"
+            app:menuTitleColor="@color/color_1a1a1a"/>
+
+
+        <kr.co.photointerior.kosw.widget.MenuRow
+            android:id="@+id/btn_share"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_56"
+            android:layout_marginEnd="@dimen/dp_14"
+            android:layout_marginStart="@dimen/dp_14"
+            app:menuIconRightHide="true"
+            app:menuTitle="@string/txt_share_to_friend"
+            app:menuTitleColor="@color/color_1a1a1a" />
+
+        <kr.co.photointerior.kosw.widget.MenuRow
+            android:id="@+id/btn_app_version"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_56"
+            android:layout_marginEnd="@dimen/dp_14"
+            android:layout_marginStart="@dimen/dp_14"
+            app:menuIconRightHide="true"
+            app:menuTitle="@string/txt_app_version"
+            app:menuTitleColor="@color/color_999999" />
+
+        <kr.co.photointerior.kosw.widget.MenuRow
+            android:id="@+id/btn_logout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_56"
+            android:layout_marginEnd="@dimen/dp_14"
+            android:layout_marginStart="@dimen/dp_14"
+            app:menuIconRightHide="true"
+            app:menuTitle="@string/txt_logout"
+            app:menuTitleColor="@color/color_1a1a1a" />
+
+        <kr.co.photointerior.kosw.widget.MenuRow
+            android:id="@+id/btn_withdraw"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_56"
+            android:layout_marginEnd="@dimen/dp_14"
+            android:layout_marginStart="@dimen/dp_14"
+            app:menuIconRightHide="true"
+            app:menuTitle="@string/txt_withdraw"
+            app:menuTitleColor="@color/color_1a1a1a" />
+
+        <kr.co.photointerior.kosw.widget.MenuRow
+            android:id="@+id/btn_menu_provision"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_56"
+            android:layout_marginEnd="@dimen/dp_14"
+            android:layout_marginStart="@dimen/dp_14"
+            app:menuIconRightHide="true"
+            app:menuTitle="@string/txt_provision"
+            app:menuTitleColor="@color/color_1a1a1a" />
+
+
+    </LinearLayout>
+</ScrollView>

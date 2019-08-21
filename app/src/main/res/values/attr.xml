@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircleImageView">
+        <attr name="civ_border_width" format="dimension" />
+        <attr name="civ_border_color" format="color" />
+        <attr name="civ_border_overlay" format="boolean" />
+        <!-- {@deprecated Use civ_circlebackground_color instead.} -->
+        <attr name="civ_fill_color" format="color" />
+        <attr name="civ_circle_background_color" format="color" />
+    </declare-styleable>
+
+    <attr name="recordBg" format="reference|integer" />
+    <attr name="recordIcon" format="reference|integer" />
+    <attr name="recordTitle" format="reference|string" />
+    <attr name="recordAmt" format="reference|string" />
+    <attr name="recordAmtColor" format="color" />
+    <attr name="recordUnit" format="reference|string" />
+
+    <attr name="showLineTop" format="boolean" />
+    <attr name="showLineBottom" format="boolean" />
+
+    <attr name="recordTextColor" format="color" />
+    <attr name="recordTextStyle" format="enum" >
+        <enum name="normal" value="0"/>
+        <enum name="bold" value="1"/>
+    </attr>
+
+    <declare-styleable name="RowActivityRecord">
+        <attr name="recordBg"/>
+        <attr name="recordIcon"/>
+        <attr name="recordTitle"/>
+        <attr name="recordAmt"/>
+        <attr name="recordAmtColor"/>
+        <attr name="recordUnit"/>
+    </declare-styleable>
+
+    <declare-styleable name="RowActivityRecordSummary">
+        <attr name="recordBg" />
+        <attr name="recordTitle" />
+        <attr name="showLineTop" />
+        <attr name="showLineBottom" />
+    </declare-styleable>
+
+    <declare-styleable name="RowActivityRecordDaily">
+        <attr name="recordBg" />
+        <attr name="recordTitle" />
+    </declare-styleable>
+
+    <declare-styleable name="RowRankingIndividualTop">
+        <attr name="recordBg" />
+        <attr name="recordIcon"/>
+    </declare-styleable>
+
+    <declare-styleable name="RowRankingIndividualMy">
+        <attr name="recordBg" />
+        <attr name="recordTextColor"/>
+        <attr name="recordTextStyle"/>
+    </declare-styleable>
+
+    <declare-styleable name="RowRankingIndividualExtra">
+        <attr name="recordBg" />
+        <attr name="recordTextColor"/>
+        <attr name="recordTextStyle"/>
+    </declare-styleable>
+
+    <declare-styleable name="RowRankingGroupTop">
+        <attr name="recordBg" />
+        <attr name="recordIcon"/>
+    </declare-styleable>
+
+    <declare-styleable name="RowRankingGroupMy">
+        <attr name="recordBg" />
+        <attr name="recordTextColor"/>
+        <attr name="recordTextStyle"/>
+    </declare-styleable>
+
+    <declare-styleable name="RowRankingGroupExtra">
+        <attr name="recordBg" />
+        <attr name="recordTextColor"/>
+        <attr name="recordTextStyle"/>
+    </declare-styleable>
+
+    <declare-styleable name="MenuRow">
+        <attr name="menuLayout" format="reference|integer" />
+        <attr name="menuTitle" format="reference|string" />
+        <attr name="menuTitleColor" format="color" />
+        <attr name="menuDesc" format="reference|string" />
+        <attr name="menuDescColor" format="color" />
+        <attr name="menuBg" format="color" />
+        <attr name="menuIconRight" format="reference|integer" />
+        <attr name="menuIconRightHide" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="MenuRowExtra">
+        <attr name="menuExtraLayout" format="reference|integer" />
+        <attr name="menuExtraTitle" format="reference|string" />
+        <attr name="menuExtraTitleColor" format="color" />
+        <attr name="menuExtraDesc" format="reference|string" />
+        <attr name="menuExtraDescColor" format="color" />
+        <attr name="menuExtraBg" format="color" />
+    </declare-styleable>
+
+</resources>

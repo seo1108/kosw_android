@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/colorWhite"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/title_box"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorBlack">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="건물 선택"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/sp_18"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/popup_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/dp_14"
+            android:src="@drawable/ic_w_close"/>
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/textView8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginStart="38dp"
+                    android:layout_marginTop="16dp"
+                    android:text="건물빌딩 검색"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/color_1a1a1a"
+                    android:textSize="@dimen/sp_14"
+                    app:layout_constraintBottom_toTopOf="@+id/nickname_box"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <LinearLayout
+                    android:id="@+id/nickname_box"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="34dp"
+                    android:layout_marginStart="34dp"
+                    android:layout_marginTop="8dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toTopOf="@+id/input_warn"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView8">
+
+                    <EditText
+                        android:id="@+id/input_nickname"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_border_bottom_cccccc"
+                        android:hint="건물 검색명을 입력해 주세요"
+                        android:inputType="text"
+                        android:maxLength="32"
+                        android:maxLines="1"
+                        android:paddingBottom="5dp"
+                        android:paddingEnd="4dp"
+                        android:paddingStart="4dp"
+                        android:paddingTop="5dp"
+                        android:singleLine="true"
+                        android:textColor="@color/color_999999"
+                        android:textCursorDrawable="@null"
+                        android:textSize="@dimen/sp_18" />
+
+                    <kr.co.photointerior.kosw.widget.KoswButton
+                        android:id="@+id/btn_check_dupl"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:layout_width="64dp"
+                        android:layout_height="46dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/button_border_1a1a1a"
+                        android:text="검색"
+                        android:textColor="@color/text_btn_click"
+                        android:textSize="@dimen/sp_14"/>
+                </LinearLayout>
+
+                <kr.co.photointerior.kosw.widget.KoswTextView
+                    android:id="@+id/input_warn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="34dp"
+                    android:layout_marginStart="34dp"
+                    android:text="@string/warn_available_nick"
+                    android:textColor="@color/color_f75e5e"
+                    android:textSize="@dimen/sp_12"
+                    android:visibility="invisible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/nickname_box"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="0dp"
+                    android:layout_height="260dp"
+                    android:layout_marginEnd="34dp"
+                    android:layout_marginStart="34dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/input_warn"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="32dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:gravity="center_horizontal">
+
+                <kr.co.photointerior.kosw.widget.KoswButton
+                    android:id="@+id/btn_change"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="144dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="4dp"
+                    android:background="@drawable/button_border_1a1a1a"
+                    android:text="확인"
+                    android:textColor="@color/text_btn_click"
+                    android:textSize="@dimen/sp_14"/>
+
+                <kr.co.photointerior.kosw.widget.KoswButton
+                    android:id="@+id/btn_cancel"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="144dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="4dp"
+                    android:background="@drawable/button_border_1a1a1a"
+                    android:text="@string/txt_cancel"
+                    android:textColor="@color/text_btn_click"
+                    android:textSize="@dimen/sp_14"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+    <!--<android.support.constraint.ConstraintLayout-->
+    <!--android:id="@+id/char_box"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginTop="16dp">-->
+
+
+    <!--</android.support.constraint.ConstraintLayout>-->
+</LinearLayout>

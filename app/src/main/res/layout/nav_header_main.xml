@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/menu_header"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_180"
+        android:background="@color/colorWhite"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/dp_16">
+
+        <kr.co.photointerior.kosw.widget.CircleImageView
+            android:id="@+id/circleImageView"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="94dp"
+            android:background="@drawable/circle_00c5ed"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/btn_navi_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="26dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/ic_close" />
+
+        <ImageView
+            android:id="@+id/btn_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginTop="46dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/circleImageView"
+            app:layout_constraintTop_toBottomOf="@+id/btn_navi_close"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/ic_top_set" />
+
+        <TextView
+            android:id="@+id/txt_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="132dp"
+            android:layout_marginStart="10dp"
+            android:includeFontPadding="false"
+            android:maxLength="8"
+            android:maxLines="1"
+            android:textColor="@color/color_1a1a1a"
+            android:textSize="@dimen/sp_18"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/circleImageView"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.80"
+            tools:text="하록선장님" />
+
+        <TextView
+            android:id="@+id/txt_email"
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:layout_marginStart="10dp"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:textColor="@color/color_999999"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/circleImageView"
+            app:layout_constraintTop_toBottomOf="@+id/txt_name"
+            app:layout_constraintVertical_bias="0.0"
+            tools:text="kugie@rapids.kr" />
+    </android.support.constraint.ConstraintLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/menu_header"
+        android:scrollbars="none">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <kr.co.photointerior.kosw.widget.MenuRow
+                android:id="@+id/menu_activity_gps"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginEnd="@dimen/dp_14"
+                android:layout_marginStart="@dimen/dp_14"
+                android:layout_marginTop="@dimen/dp_34"
+                app:menuTitle="@string/txt_activity_gps"
+                app:menuTitleColor="@color/color_1a1a1a"
+                android:visibility="gone"/>
+
+            <kr.co.photointerior.kosw.widget.MenuRow
+                android:id="@+id/menu_activity_record"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_below="@+id/menu_activity_gps"
+                android:layout_marginEnd="@dimen/dp_14"
+                android:layout_marginStart="@dimen/dp_14"
+                app:menuTitle="@string/txt_activity_record"
+                app:menuTitleColor="@color/color_1a1a1a" />
+
+            <kr.co.photointerior.kosw.widget.MenuRow
+                android:id="@+id/menu_analysis"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_below="@+id/menu_activity_record"
+                android:layout_marginEnd="@dimen/dp_14"
+                android:layout_marginStart="@dimen/dp_14"
+                app:menuTitle="@string/txt_analysis"
+                app:menuTitleColor="@color/color_1a1a1a" />
+
+            <kr.co.photointerior.kosw.widget.MenuRow
+                android:id="@+id/menu_ranking_private"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_below="@+id/menu_analysis"
+                android:layout_marginEnd="@dimen/dp_14"
+                android:layout_marginStart="@dimen/dp_14"
+                app:menuTitle="@string/txt_ranking_private"
+                app:menuTitleColor="@color/color_1a1a1a" />
+
+            <kr.co.photointerior.kosw.widget.MenuRow
+                android:id="@+id/menu_ranking_group"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_below="@+id/menu_ranking_private"
+                android:layout_marginEnd="@dimen/dp_14"
+                android:layout_marginStart="@dimen/dp_14"
+                app:menuTitle="@string/txt_ranking_group"
+                app:menuTitleColor="@color/color_1a1a1a" />
+
+            <kr.co.photointerior.kosw.widget.MenuRow
+                android:id="@+id/menu_ggr"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_below="@+id/menu_ranking_group"
+                android:layout_marginEnd="@dimen/dp_14"
+                android:layout_marginStart="@dimen/dp_14"
+                app:menuTitle="@string/txt_ggr"
+                app:menuTitleColor="@color/color_1a1a1a" />
+
+            <kr.co.photointerior.kosw.widget.MenuRow
+                android:id="@+id/menu_city_ranking"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_below="@+id/menu_ggr"
+                android:layout_marginEnd="@dimen/dp_14"
+                android:layout_marginStart="@dimen/dp_14"
+                app:menuTitle="@string/txt_city_ranking"
+                app:menuTitleColor="@color/color_1a1a1a" />
+
+            <kr.co.photointerior.kosw.widget.MenuRow
+                android:id="@+id/menu_cafe"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_below="@+id/menu_city_ranking"
+                android:layout_marginStart="@dimen/dp_14"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="@dimen/dp_14"
+                app:menuTitle="@string/txt_cafe"
+                app:menuTitleColor="@color/color_1a1a1a" />
+
+            <!--<LinearLayout
+                android:id="@+id/ll_cafe"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/menu_cafe"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+            <kr.co.photointerior.kosw.widget.MenuRow
+                android:id="@+id/menu_cafe_list"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginStart="@dimen/dp_44"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="@dimen/dp_14"
+                app:menuTitle="@string/txt_cafe_list"
+                app:menuTitleColor="@color/color_1a1a1a" />
+
+            <kr.co.photointerior.kosw.widget.MenuRow
+                android:id="@+id/menu_my_cafe"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginStart="@dimen/dp_44"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="@dimen/dp_14"
+                app:menuTitle="@string/txt_cafe_my_list"
+                app:menuTitleColor="@color/color_1a1a1a" />
+
+                <kr.co.photointerior.kosw.widget.MenuRow
+                    android:id="@+id/menu_make_cafe"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginStart="@dimen/dp_44"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="@dimen/dp_14"
+                    app:menuTitle="@string/txt_cafe_create"
+                    app:menuTitleColor="@color/color_1a1a1a" />
+
+                <kr.co.photointerior.kosw.widget.MenuRow
+                    android:id="@+id/menu_join_cafe"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginStart="@dimen/dp_44"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="@dimen/dp_14"
+                    app:menuTitle="@string/txt_cafe_join"
+                    app:menuTitleColor="@color/color_1a1a1a" />
+            </LinearLayout>-->
+
+            <kr.co.photointerior.kosw.widget.MenuRow
+                android:id="@+id/menu_signcafe"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_below="@+id/menu_cafe"
+                android:layout_marginEnd="@dimen/dp_14"
+                android:layout_marginStart="@dimen/dp_14"
+                app:menuTitle="@string/txt_signcafe"
+                app:menuTitleColor="@color/color_1a1a1a" />
+
+            <kr.co.photointerior.kosw.widget.MenuRow
+                android:id="@+id/menu_help"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_below="@+id/menu_signcafe"
+                android:layout_marginEnd="@dimen/dp_14"
+                android:layout_marginStart="@dimen/dp_14"
+                app:menuTitle="@string/txt_help"
+                app:menuTitleColor="@color/color_1a1a1a" />
+<!--
+            <kr.co.photointerior.kosw.widget.MenuRow
+                android:id="@+id/menu_provision"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_below="@+id/menu_help"
+                android:layout_marginEnd="@dimen/dp_14"
+                android:layout_marginStart="@dimen/dp_14"
+                app:menuTitle="@string/txt_provision"
+                app:menuTitleColor="@color/color_1a1a1a" />
+            <kr.co.photointerior.kosw.widget.MenuRow
+                android:id="@+id/menu_beacon"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_below="@+id/menu_signcafe"
+                android:layout_marginEnd="@dimen/dp_14"
+                android:layout_marginStart="@dimen/dp_14"
+                app:menuTitle="비콘신호 모니터링"
+                app:menuTitleColor="@color/color_1a1a1a"
+                android:visibility="gone"/>
+-->
+
+            <kr.co.photointerior.kosw.widget.MenuRow
+                android:id="@+id/menu_altitude"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_below="@+id/menu_help"
+                android:layout_marginEnd="@dimen/dp_14"
+                android:layout_marginStart="@dimen/dp_14"
+                app:menuTitle="TEST"
+                app:menuTitleColor="@color/color_1a1a1a"
+                android:visibility="invisible"/>
+
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>

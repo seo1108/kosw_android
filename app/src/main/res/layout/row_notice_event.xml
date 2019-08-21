@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/dp_80"
+    android:paddingStart="@dimen/dp_20"
+    android:paddingEnd="@dimen/dp_20"
+    android:paddingTop="@dimen/dp_6"
+    android:paddingBottom="@dimen/dp_6"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/txt_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="서비스 점검으로 일시적 사용이 제한됩니다.서비스 점검으로 일시적 사용이 제한됩니다."
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:lineSpacingMultiplier=".8"
+        android:textColor="@color/color_1a1a1a"
+        android:includeFontPadding="false"
+        android:textStyle="bold"
+        android:textSize="@dimen/sp_16" />
+
+    <TextView
+        android:id="@+id/txt_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="2018.04.09."
+        android:includeFontPadding="false"
+        android:layout_below="@+id/txt_title"
+        android:textColor="@color/color_999999"
+        android:textSize="@dimen/sp_16"/>
+</RelativeLayout>
+
+
