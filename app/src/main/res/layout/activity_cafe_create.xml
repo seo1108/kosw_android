@@ -161,6 +161,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/txt_privacy">
 
                 <kr.co.photointerior.kosw.widget.KoswTextView
+                    android:id="@+id/txt_hide"
                     android:layout_width="335dp"
                     android:layout_height="38dp"
                     android:layout_gravity=""
@@ -221,6 +222,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/txt_privacy_hide">
 
                 <kr.co.photointerior.kosw.widget.KoswTextView
+                    android:id="@+id/txt_open"
                     android:layout_width="wrap_content"
                     android:layout_height="38dp"
                     android:layout_gravity=""

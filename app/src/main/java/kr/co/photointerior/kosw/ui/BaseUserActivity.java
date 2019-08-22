@@ -92,6 +92,9 @@ public class BaseUserActivity extends BaseActivity {
      * @param nickname
      */
     public void tryKakaoLogin(final String openid, final String email, final String nickname){
+        AppUserBase user = DataHolder.instance().getAppUserBase();
+        user.setNickName(nickname);
+
         showSpinner("");
         UserService service =
                 new DefaultRestClient<UserService>(getBaseContext()).getClient(UserService.class);
@@ -113,7 +116,6 @@ public class BaseUserActivity extends BaseActivity {
                     base.setUserId(email);
                     //base.setUserId("k"+openid);
                     LogUtils.err(TAG, "login data :" + base.string());
-                    Log.d("99999999999", "login data :" + base.string());
                     if( base.isSuccess() ){
                         storeUserTokenAndMovesToGps(base);
                         //storeUserTokenAndMovesToMain(base);
@@ -200,8 +202,8 @@ public class BaseUserActivity extends BaseActivity {
         sendFcmToken();
 
 
-        callActivity(GPSAcceptActivity.class,null,true);
-        //callActivity(MainActivity.class,null,true);
+        //callActivity(GPSAcceptActivity.class,null,true);
+        callActivity(MainActivity.class,null,true);
     }
 
     private void sendFcmToken(){

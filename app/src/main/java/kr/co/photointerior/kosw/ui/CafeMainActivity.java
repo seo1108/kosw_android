@@ -1,6 +1,7 @@
 package kr.co.photointerior.kosw.ui;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +25,7 @@ import kr.co.photointerior.kosw.rest.model.DataHolder;
 import kr.co.photointerior.kosw.utils.Acceptor;
 import kr.co.photointerior.kosw.utils.KUtil;
 import kr.co.photointerior.kosw.utils.LogUtils;
+import kr.co.photointerior.kosw.widget.KoswTextView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,6 +42,7 @@ public class CafeMainActivity extends BaseActivity {
     private List<Cafe> mCJoinList = new ArrayList<>();
 
     private Button btnMake, btnFind, btnGuide;
+    private KoswTextView txt_privacy, txt_cafe_mine, txt_cafe_my;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,14 @@ public class CafeMainActivity extends BaseActivity {
 
     @Override
     protected void findViews() {
+        txt_privacy = findViewById(R.id.txt_privacy);
+        txt_cafe_mine = findViewById(R.id.txt_cafe_mine);
+        txt_cafe_my = findViewById(R.id.txt_cafe_my);
+        txt_privacy.setTypeface(txt_privacy.getTypeface(), Typeface.BOLD);
+        txt_cafe_mine.setTypeface(txt_cafe_mine.getTypeface(), Typeface.BOLD);
+        txt_cafe_my.setTypeface(txt_cafe_my.getTypeface(), Typeface.BOLD);
+
+
         btnMake = findViewById(R.id.btn_make_cafe);
         btnMake.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,12 +180,14 @@ public class CafeMainActivity extends BaseActivity {
             Cafe item = getItem(position);
             String cafename = item.getCafename();
             holder.tvCafename.setText(cafename);
+            holder.tvCafename.setTypeface(holder.tvCafename.getTypeface(), Typeface.BOLD);
 
             String opendate = item.getOpendate();
-            holder.tvOpendate.setText("개설일: " + opendate);
-
             String memcnt = item.getTotal();
-            holder.tvMemcnt.setText("멤버: " + memcnt + "명");
+
+            holder.tvOpendate.setText("개설일: " + opendate +"\n멤버: " + memcnt);
+
+            holder.btnInvite.setTypeface(holder.btnInvite.getTypeface(), Typeface.BOLD);
         }
 
         @Override
@@ -189,7 +202,8 @@ public class CafeMainActivity extends BaseActivity {
         class CafeMineHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             TextView tvCafename;
             TextView tvOpendate;
-            TextView tvMemcnt;
+            TextView tvInvite;
+            //TextView tvMemcnt;
             Button btnInvite;
 
             public CafeMineHolder(View view, int viewType) {
@@ -200,8 +214,9 @@ public class CafeMainActivity extends BaseActivity {
             private void pickupViews(int type) {
                 tvCafename = itemView.findViewById(R.id.txt_cafename);
                 tvOpendate = itemView.findViewById(R.id.txt_open_date);
-                tvMemcnt = itemView.findViewById(R.id.txt_member);
+                //tvMemcnt = itemView.findViewById(R.id.txt_member);
                 btnInvite = itemView.findViewById(R.id.btn_invite);
+                tvInvite = itemView.findViewById(R.id.txt_invite);
             }
 
                 @Override
@@ -234,6 +249,7 @@ public class CafeMainActivity extends BaseActivity {
             Cafe item = getItem(position);
             String cafename = item.getCafename();
             holder.tvCafename.setText(cafename);
+            holder.tvCafename.setTypeface(holder.tvCafename.getTypeface(), Typeface.BOLD);
 
             String opendate = item.getOpendate();
             holder.tvOpendate.setText("가입일: " + opendate);

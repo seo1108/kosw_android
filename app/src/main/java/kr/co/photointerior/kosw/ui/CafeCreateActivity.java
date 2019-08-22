@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Typeface;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -64,6 +65,7 @@ import kr.co.photointerior.kosw.utils.KUtil;
 import kr.co.photointerior.kosw.utils.LogUtils;
 import kr.co.photointerior.kosw.widget.KoswButton;
 import kr.co.photointerior.kosw.widget.KoswEditText;
+import kr.co.photointerior.kosw.widget.KoswTextView;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -84,6 +86,8 @@ public class CafeCreateActivity extends BaseActivity {
     private KoswButton btn_change, btn_make_cafe;
     private KoswEditText et_cate_title, et_cate_user_title;
     private LinearLayout category_linearlayout;
+
+    private KoswTextView txt_privacy, txt_hide, txt_open, txt_choose_message, txt_cate_message, txt_cate_user_message, txt_cate_info1, txt_cate_info2;
 
     private final int CAMERA_CODE = 1111;
     private final int GALLERY_CODE=1112;
@@ -112,6 +116,24 @@ public class CafeCreateActivity extends BaseActivity {
 
     @Override
     protected void findViews() {
+        txt_privacy = findViewById(R.id.txt_privacy);
+        txt_hide = findViewById(R.id.txt_hide);
+        txt_open = findViewById(R.id.txt_open);
+        txt_choose_message = findViewById(R.id.txt_choose_message);
+        txt_cate_message = findViewById(R.id.txt_cate_message);
+        txt_cate_user_message = findViewById(R.id.txt_cate_user_message);
+        txt_cate_info1 = findViewById(R.id.txt_cate_info1);
+        txt_cate_info2 = findViewById(R.id.txt_cate_info2);
+
+        txt_privacy.setTypeface(txt_privacy.getTypeface(), Typeface.BOLD);
+        txt_hide.setTypeface(txt_hide.getTypeface(), Typeface.BOLD);
+        txt_open.setTypeface(txt_open.getTypeface(), Typeface.BOLD);
+        txt_choose_message.setTypeface(txt_choose_message.getTypeface(), Typeface.BOLD);
+        txt_cate_message.setTypeface(txt_cate_message.getTypeface(), Typeface.BOLD);
+        txt_cate_user_message.setTypeface(txt_cate_user_message.getTypeface(), Typeface.BOLD);
+        txt_cate_info1.setTypeface(txt_cate_info1.getTypeface(), Typeface.BOLD);
+        txt_cate_info2.setTypeface(txt_cate_info2.getTypeface(), Typeface.BOLD);
+
         et_input_name = findViewById(R.id.input_name);
         et_name_length = findViewById(R.id.input_name_length);
 

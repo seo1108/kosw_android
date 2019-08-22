@@ -97,9 +97,15 @@ public class ServiceThread extends Thread{
                 if (!today_date.equals(lastSendDate)) {
                     readYesterdayHistoryData();
                 }
+            }catch (Exception e) {
+                e.printStackTrace();
+            }finally {
+                try {
+                    Thread.sleep(60*60*1000); //1시간에 한번 조회
+                } catch (Exception ex) {    }
+            }
 
-                Thread.sleep(60*60*1000); //1시간에 한번 조회
-            }catch (Exception e) {}
+
         }
     }
 
@@ -223,8 +229,6 @@ public class ServiceThread extends Thread{
         long startTime = calendar.getTimeInMillis();
 
         java.text.DateFormat dateFormat = getDateTimeInstance();
-        Log.d("999999999999999", "Range Start: " + dateFormat.format(startTime));
-        Log.d("999999999999999", "Range End: " + dateFormat.format(endTime));
 
         DataReadRequest readRequest =
                 new DataReadRequest.Builder()
@@ -253,7 +257,6 @@ public class ServiceThread extends Thread{
         // If the DataReadRequest object specified aggregated data, dataReadResult will be returned
         // as buckets containing DataSets, instead of just DataSets.
         if (dataReadResult.getBuckets().size() > 0) {
-            Log.d("99999999999999", "Number of returned buckets of DataSets is: " + dataReadResult.getBuckets().size());
             for (Bucket bucket : dataReadResult.getBuckets()) {
                 List<DataSet> dataSets = bucket.getDataSets();
                 for (DataSet dataSet : dataSets) {
@@ -261,7 +264,6 @@ public class ServiceThread extends Thread{
                 }
             }
         } else if (dataReadResult.getDataSets().size() > 0) {
-            Log.d("99999999999999", "Number of returned DataSets is: " + dataReadResult.getDataSets().size());
             for (DataSet dataSet : dataReadResult.getDataSets()) {
                 dumpDataSet(dataSet);
             }
@@ -273,16 +275,10 @@ public class ServiceThread extends Thread{
 
     // [START parse_dataset]
     private static void dumpDataSet(DataSet dataSet) {
-        Log.d("99999999999999", "[99] Data returned for Data type: " + dataSet.getDataType().getName());
         DateFormat dateFormat = getTimeInstance();
 
         for (DataPoint dp : dataSet.getDataPoints()) {
-            Log.d("99999999999999", "Data point:");
-            Log.d("99999999999999", "\tType: " + dp.getDataType().getName());
-            Log.d("99999999999999", "\tStart: " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
-            Log.d("99999999999999", "\tEnd: " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)));
             for (Field field : dp.getDataType().getFields()) {
-                Log.d("99999999999999", "\tField: " + field.getName() + " Value: " + dp.getValue(field));
                 //Toast.makeText(mContext, dp.getValue(field).toString(), Toast.LENGTH_LONG).show();
                 todayStep = dp.getValue(field).toString();
                 updateNotification();

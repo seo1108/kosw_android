@@ -216,7 +216,9 @@ public class MainFragment extends BaseFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("2222222", "RESULTCODE " + resultCode + "___" + Activity.RESULT_OK);
         if (resultCode == Activity.RESULT_OK) {
+            Log.d("2222222", "RESULTCODE1 " + requestCode + "___" + REQUEST_OAUTH_REQUEST_CODE);
             if (requestCode == REQUEST_OAUTH_REQUEST_CODE) {
                 readHistoryData();
             }
@@ -1026,12 +1028,16 @@ public class MainFragment extends BaseFragment {
                         .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
                         .build();
         if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(mActivity), fitnessOptions)) {
+            Log.d("22222", "has no permissions");
+
             GoogleSignIn.requestPermissions(
                     this,
                     REQUEST_OAUTH_REQUEST_CODE,
                     GoogleSignIn.getLastSignedInAccount(mActivity),
                     fitnessOptions);
         } else {
+            Log.d("22222", "has permissions");
+
             readHistoryData();
         }
 

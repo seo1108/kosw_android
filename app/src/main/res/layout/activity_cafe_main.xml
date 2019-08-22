@@ -176,7 +176,7 @@
                     android:background="@drawable/button_border_1a1a1a"
                     android:text="@string/txt_cafe_join"
                     android:textColor="@color/text_btn_click"
-                    android:textSize="@dimen/sp_16"
+                    android:textSize="@dimen/sp_14"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent" />

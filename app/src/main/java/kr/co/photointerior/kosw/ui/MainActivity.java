@@ -364,7 +364,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
 
 
-        //getAppKeyHash();
+        getAppKeyHash();
 
 
         // 계단 측정 서비스 실행
