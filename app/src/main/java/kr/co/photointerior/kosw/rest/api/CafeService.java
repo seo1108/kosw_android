@@ -31,7 +31,7 @@ public interface CafeService {
     Call<CafeMyAllList> selectMyCafeMainList(@QueryMap Map<String, Object> queryMap);
 
     /**
-     * 내가 카페 개설하기
+     * 카페 개설하기
      * @param queryMap
      * @return
      */
@@ -40,5 +40,12 @@ public interface CafeService {
     Call<ResponseBase> createCafe(@QueryMap Map<String, Object> queryMap, @Part MultipartBody.Part image);
     //Call<ResponseBase> createCafe(@QueryMap Map<String, Object> queryMap);
 
+    /**
+     * 카페 검색
+     * @param queryMap
+     * @return
+     */
+    @POST("api/cafe/openCafeList")
+    Call<CafeMainList> openCafeList(@QueryMap Map<String, Object> queryMap);
 
 }

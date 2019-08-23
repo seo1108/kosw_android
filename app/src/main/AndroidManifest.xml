@@ -252,7 +252,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/Kosw.NoActionbar"/>
 
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.CafeFindActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
 
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.CafeGuideActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
 
         <service android:name="kr.co.photointerior.kosw.service.fcm.FcmMessagingService">
             <intent-filter>

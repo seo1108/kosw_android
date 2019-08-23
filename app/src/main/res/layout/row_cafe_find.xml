@@ -5,6 +5,7 @@
     android:id="@+id/box_of_row"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/button_border_bottom_dot_cccccc"
     android:paddingBottom="15dp">
 
     <kr.co.photointerior.kosw.widget.KoswTextView
@@ -21,6 +22,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <kr.co.photointerior.kosw.widget.KoswEditText
+        android:id="@+id/txt_cafedesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="카페 설명"
+        android:textColor="#000"
+        android:textSize="@dimen/sp_14"
+        android:background="@null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_cafename" />
+
     <kr.co.photointerior.kosw.widget.KoswTextView
         android:id="@+id/txt_open_date"
         android:layout_width="match_parent"
@@ -30,43 +43,34 @@
         android:textSize="@dimen/sp_14"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_cafename" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_cafedesc" />
 
-    <!--<kr.co.photointerior.kosw.widget.KoswTextView
-        android:id="@+id/txt_member"
+    <LinearLayout
+        android:id="@+id/ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="5dp"
-        android:text="멤버"
-        android:textColor="#000"
-        android:textSize="@dimen/sp_15"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_open_date" />-->
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/txt_open_date">
 
-    <kr.co.photointerior.kosw.widget.KoswButton
-        android:id="@+id/btn_invite"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:background="@drawable/button_border_1a1a1a"
-        android:text="@string/txt_invite"
-        android:textColor="@color/text_btn_click"
-        android:textSize="@dimen/sp_14"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintTop_toBottomOf="@+id/txt_open_date" />
+        <kr.co.photointerior.kosw.widget.KoswTextView
+            android:id="@+id/txt_member"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:layout_weight="1.0"
+            android:text="멤버"
+            android:textColor="#000"
+            android:textSize="@dimen/sp_14" />
 
-    <kr.co.photointerior.kosw.widget.KoswTextView
-        android:id="@+id/txt_invite"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:paddingLeft="110dp"
-        android:text="@string/txt_invite_message"
-        android:textColor="@color/color_ed4524"
-        android:textSize="@dimen/sp_13"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_open_date" />
+        <kr.co.photointerior.kosw.widget.KoswTextView
+            android:id="@+id/txt_admin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:layout_weight="2.0"
+            android:text="관리자"
+            android:textColor="#000"
+            android:textSize="@dimen/sp_14" />
+    </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>

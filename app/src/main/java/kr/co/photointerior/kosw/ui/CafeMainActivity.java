@@ -32,7 +32,6 @@ import retrofit2.Response;
 
 public class CafeMainActivity extends BaseActivity {
     private String TAG = LogUtils.makeLogTag(CafeMainActivity.class);
-    private Acceptor mAcceptor;
     private RecyclerView mRecyclerViewMine, mRecyclerViewMy;
     private CafeMineAdapter mMineAdapter;
     private CafeMyAdapter mMyAdapter;
@@ -78,7 +77,7 @@ public class CafeMainActivity extends BaseActivity {
         btnFind.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                callActivity(CafeFindActivity.class, false);
             }
         });
 
@@ -86,7 +85,7 @@ public class CafeMainActivity extends BaseActivity {
         btnGuide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                callActivity(CafeGuideActivity.class, false);
             }
         });
 
@@ -187,7 +186,7 @@ public class CafeMainActivity extends BaseActivity {
 
             holder.tvOpendate.setText("개설일: " + opendate +"\n멤버: " + memcnt);
 
-            holder.btnInvite.setTypeface(holder.btnInvite.getTypeface(), Typeface.BOLD);
+            holder.tvInvite.setTypeface(holder.tvInvite.getTypeface(), Typeface.BOLD);
         }
 
         @Override

@@ -10,6 +10,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Location;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
@@ -684,8 +686,18 @@ public class StepThread extends Thread {
             return;
         }*/
 
-        if (mSaveStep <=  0 ) {
+        if (mSaveStep <=  10 ) {
             return;
+        }
+
+        MediaPlayer mMediaPlayer = new MediaPlayer();
+        Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.alert);
+        try {
+            mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+            mMediaPlayer.prepare();
+            mMediaPlayer.start();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
             //Toast.makeText(mContext, "Send to Server", Toast.LENGTH_SHORT).show();

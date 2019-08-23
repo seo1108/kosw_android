@@ -259,7 +259,6 @@ public class GPSAcceptActivity extends BaseUserActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("888888888888888888888", isSelectMode + "___");
         closeSpinner();
 
         if (requestCode == ResultType.BUILDING_SELECT.getValue()) {
@@ -546,7 +545,6 @@ public class GPSAcceptActivity extends BaseUserActivity {
                 LogUtils.err(TAG, response.raw().toString());
                 if(response.isSuccessful() && response.body().isSuccess()) {
                     mMapBuildingUser =  response.body() ;
-                    Log.d("99999999999999", "777777777777777777" + user.string());
                     tryLoginByTokenToMain();
 
                 }

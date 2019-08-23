@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,12 +20,15 @@ import kr.co.photointerior.kosw.pref.Pref;
 import kr.co.photointerior.kosw.pref.PrefKey;
 import kr.co.photointerior.kosw.rest.DefaultRestClient;
 import kr.co.photointerior.kosw.rest.api.App;
+import kr.co.photointerior.kosw.rest.api.CustomerService;
 import kr.co.photointerior.kosw.rest.api.UserService;
 import kr.co.photointerior.kosw.rest.model.AppUser;
 import kr.co.photointerior.kosw.rest.model.AppUserBase;
 import kr.co.photointerior.kosw.rest.model.Bbs;
 import kr.co.photointerior.kosw.rest.model.BbsOpen;
+import kr.co.photointerior.kosw.rest.model.Building;
 import kr.co.photointerior.kosw.rest.model.DataHolder;
+import kr.co.photointerior.kosw.rest.model.MapBuildingUser;
 import kr.co.photointerior.kosw.rest.model.ResponseBase;
 import kr.co.photointerior.kosw.social.kakao.KakaoSignupActivity;
 import kr.co.photointerior.kosw.utils.Acceptor;
@@ -40,6 +44,11 @@ import retrofit2.Response;
 public class BaseUserActivity extends BaseActivity {
     private String TAG = LogUtils.makeLogTag(BaseUserActivity.class);
     protected static Activity self;
+
+    private Building mBuilding = null ;
+    private static  int CUST_SEQ = DefaultCode.CUST_SEQ.getValue();
+    private MapBuildingUser mMapBuildingUser = null ;
+
     /**
      * 로그인 시도
      * @param email
@@ -92,9 +101,6 @@ public class BaseUserActivity extends BaseActivity {
      * @param nickname
      */
     public void tryKakaoLogin(final String openid, final String email, final String nickname){
-        AppUserBase user = DataHolder.instance().getAppUserBase();
-        user.setNickName(nickname);
-
         showSpinner("");
         UserService service =
                 new DefaultRestClient<UserService>(getBaseContext()).getClient(UserService.class);
@@ -117,8 +123,8 @@ public class BaseUserActivity extends BaseActivity {
                     //base.setUserId("k"+openid);
                     LogUtils.err(TAG, "login data :" + base.string());
                     if( base.isSuccess() ){
-                        storeUserTokenAndMovesToGps(base);
-                        //storeUserTokenAndMovesToMain(base);
+                        //storeUserTokenAndMovesToGps(base);
+                        storeUserValueDefault(base);
 
 
                     } /*else if ( base.getResponseCode().equals("1003") ) {
@@ -202,8 +208,136 @@ public class BaseUserActivity extends BaseActivity {
         sendFcmToken();
 
 
-        //callActivity(GPSAcceptActivity.class,null,true);
+        callActivity(GPSAcceptActivity.class,null,true);
         callActivity(MainActivity.class,null,true);
+    }
+
+    public void storeUserValueDefault(AppUserBase user){
+        DataHolder.instance().setAppUserBase(user);
+
+        Pref pref = Pref.instance();
+        pref.saveStringValue(PrefKey.USER_ID, user.getUserId());
+        pref.saveStringValue(PrefKey.USER_TOKEN, user.getUserToken());
+        pref.saveStringValue(PrefKey.USER_NICK, user.getNickName());
+        pref.saveStringValue(PrefKey.PUSH_RECEIVE_FLAG, user.getPushFlag());
+        pref.saveStringValue(PrefKey.USER_CHARACTER, user.getCharacterCode());
+        pref.saveStringValue(PrefKey.PUSH_RECEIVE_FLAG, user.getPushFlag());
+        pref.saveStringValue(PrefKey.COMPANY_LOGO, user.getCompanyLogo());
+        pref.saveStringValue(PrefKey.COMPANY_COLOR, user.getCompanyColor());
+        pref.saveStringValue(PrefKey.CHARACTER_MAIN, user.getMainCharFilename());
+        pref.saveStringValue(PrefKey.CHARACTER_SUB, user.getSubCharFilenane());
+        pref.saveStringValue(PrefKey.OPEN_ID, "k" + user.getOpenid());
+        pref.saveStringValue(PrefKey.LOGIN_TYPE, user.getLoginType());
+
+
+        // 도원빌딩 강제 매핑
+        pref.saveStringValue(PrefKey.BUILDING_SEQ, "118");
+        pref.saveStringValue(PrefKey.BUILDING_NAME, "도원빌딩");
+        pref.saveStringValue(PrefKey.BUILDING_ADDR, "대한민국 서울특별시 마포구 성산동");
+        pref.saveStringValue(PrefKey.BUILDING_LAT, "37.5666447");
+        pref.saveStringValue(PrefKey.BUILDING_LNG, "126.9122815");
+        pref.saveStringValue(PrefKey.BUILDING_CODE, "100001");
+        pref.saveStringValue(PrefKey.BUILDING_ID, "ChIJtwmC7eGYfDURUWALZJGt1bE");
+
+        if(user.getBeaconUuidList() != null) {
+            KsDbWorker.replaceUuid(getBaseContext(), user.getBeaconUuidList());//UUID 교체
+        }
+
+        initNotReadBbsStatus(user.getBbsSequences());//공지사항 읽음 상태 처리
+
+        Bundle bu = new Bundle();
+        bu.putSerializable("_TODAY_ACTIVITY_", user.getTodayActivity());
+
+
+        sendFcmToken();
+
+        tryDefaultLoginByTokenToMain();
+
+    }
+
+    private void tryDefaultLoginByTokenToMain() {
+
+        final String email = Pref.instance().getStringValue(PrefKey.USER_ID, "");
+        Map<String, Object> queryMap = KUtil.getDefaultQueryMap();
+        queryMap.put("id", email);
+        queryMap.put("build_seq", "118");
+        LogUtils.log(queryMap);
+        Call<AppUserBase> call =
+                new DefaultRestClient<UserService>(getBaseContext())
+                        .getClient(UserService.class).tryLoginByTokenAndIdBuild(queryMap);
+        call.enqueue(new Callback<AppUserBase>() {
+            @Override
+            public void onResponse(Call<AppUserBase> call, Response<AppUserBase> response) {
+                LogUtils.e(TAG, response.raw().toString());
+                AppUserBase user;
+                if(response.isSuccessful()){
+                    closeSpinner();
+
+                    user = response.body();
+                    if(user.isSuccess()){
+                        //LogUtils.e(TAG, "login data on splash=" + response.body().getTodayActivity().string());
+                        LogUtils.err(TAG, "login data on splash=" + response.body().string());
+                        if (mBuilding != null) {
+                            user.setBuild_seq(mBuilding.getBuildingSeq());
+                            user.setBuildingCode(mBuilding.getBuildingCode());
+                            user.setBuild_lat(mBuilding.getLatitude());
+                            user.setBuild_lng(mBuilding.getLongitude());
+                            user.setBuild_name(mBuilding.getBuildingName());
+                            user.setBuild_addr(mBuilding.getBuildingAddr());
+                            user.setPlace_id(mBuilding.getPlace_id());
+                            user.setCountry(mBuilding.getCountry());
+                            user.setCity(mBuilding.getCity());
+                            user.setBuild_floor_amt(mBuilding.getBuild_floor_amt()) ;
+                            user.setBuild_stair_amt(mBuilding.getBuild_stair_amt());
+                            user.setCountry(mBuilding.getCountry());
+                            user.setCity(mBuilding.getCity());
+                            user.setIsbuild(mBuilding.getIsbuild());
+
+                            // 도원빌딩 강제 매핑
+                            user.setBuild_seq("118");
+                            user.setBuildingCode("100001");
+                            user.setBuild_lat(37.5666447);
+                            user.setBuild_lng(126.9122815);
+                            user.setBuild_name("도원빌딩");
+                            user.setBuild_addr("대한민국 서울특별시 마포구 성산동");
+                            user.setPlace_id("ChIJtwmC7eGYfDURUWALZJGt1bE");
+
+                        }
+
+                        if (mMapBuildingUser != null) {
+                            user.setCust_seq(mMapBuildingUser.getCust_seq());
+                            user.setCust_name(mMapBuildingUser.getCust_name());
+                            user.setDept_seq(mMapBuildingUser.getDept_seq());
+                            user.setDept_name(mMapBuildingUser.getDept_name());
+
+                            // 도원빌딩 강제 매핑
+                            user.setCust_seq(50);
+                            user.setCust_name(mMapBuildingUser.getCust_name());
+                            user.setDept_seq(84);
+                            user.setDept_name(mMapBuildingUser.getDept_name());
+                        }
+
+                        storeUserTokenAndMovesToMain(user);
+                    }else{
+                        closeSpinner();
+
+                        callActivity(LoginActivity.class, true);
+                    }
+                }else{
+                    closeSpinner();
+
+                    callActivity(LoginActivity.class, true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AppUserBase> call, Throwable t) {
+                closeSpinner();
+
+                callActivity(LoginActivity.class, true);
+            }
+        });
+
     }
 
     private void sendFcmToken(){
@@ -314,6 +448,8 @@ public class BaseUserActivity extends BaseActivity {
         }
     }
 
+
+
     private void initNotReadBbsStatus(List<String> bbsSeqs){
         if(bbsSeqs != null) {
             /*for (String bbsSeq : bbsSeqs) {
@@ -350,8 +486,8 @@ public class BaseUserActivity extends BaseActivity {
                     if(user.isSuccess()){
                         //LogUtils.e(TAG, "login data on splash=" + response.body().getTodayActivity().string());
                         LogUtils.err(TAG, "login data on splash=" + response.body().string());
-                        storeUserTokenAndMovesToGps(user);
-                        //storeUserTokenAndMovesToMain(user);
+                        //storeUserTokenAndMovesToGps(user);
+                        storeUserValueDefault(user);
 
                     }else{
                         callActivity(LoginActivity.class, true);
