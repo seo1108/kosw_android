@@ -179,6 +179,7 @@ public class StepThread extends Thread {
                 checkFloor() ;
                 isTest = true;
             }
+
             // Repeat every 2 seconds
             handler.postDelayed(runnable, 100);
         }

@@ -424,76 +424,88 @@ public class MainFragment extends BaseFragment {
                     CafeMainList cafelist = response.body();
 
                     if (cafelist.isSuccess()) {
-                        mCMList = cafelist;
+                        if (null != cafelist.getCafelist()) {
+                            mCMList = cafelist;
 
-                        mActivity.toggleActionBarResources(true);
+                            mActivity.toggleActionBarResources(true);
 
-                        if (null == mCMList || mCMList.getCafelist().size() == 0) {
-                            title.setVisibility(View.GONE);
+                            if (null == mCMList || mCMList.getCafelist().size() == 0) {
+                                title.setVisibility(View.GONE);
 
+                                Picasso.with(mActivity)
+                                        .load(R.drawable.ic_logo)
+                                        .placeholder(R.drawable.ic_logo)
+                                        .error(R.drawable.ic_logo)
+                                        .into(img_logo);
+                            } else {
+                                String cafename = "";
+                                String logo = "";
+                                boolean isSelected = false;
+
+                                if ("".equals(mSelectedCafeSeq)) {
+                                    mSelectedCafeSeq = mCMList.getCafelist().get(0).getCafeseq();
+                                } else {
+                                    for (int i = 0; i < mCMList.getCafelist().size(); i++) {
+                                        if (mSelectedCafeSeq.equals(mCMList.getCafelist().get(i).getCafeseq())) {
+                                            cafename = mCMList.getCafelist().get(i).getCafename();
+                                            logo = mCMList.getCafelist().get(i).getLogo();
+                                            isSelected = true;
+                                            break;
+                                        }
+                                    }
+
+                                    if (!isSelected) {
+                                        cafename = mCMList.getCafelist().get(0).getCafename();
+                                        logo = mCMList.getCafelist().get(0).getLogo();
+
+                                        mSelectedCafeSeq = mCMList.getCafelist().get(0).getCafeseq();
+                                    }
+                                }
+
+                                if (!"".equals(logo) && null != logo && logo.contains("http")) {
+                                    title.setVisibility(View.GONE);
+                                    Picasso.with(mActivity)
+                                            .load(logo)
+                                            .placeholder(R.drawable.ic_logo)
+                                            .error(R.drawable.ic_logo)
+                                            .into(img_logo);
+                                } else {
+                                    img_logo.setVisibility(View.GONE);
+                                    title.setVisibility(View.VISIBLE);
+                                    title.setText(cafename);
+                                }
+                            }
+
+                            title.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    mActivity.callActivity(CafeChangeActivity.class, false);
+                                }
+                            });
+
+                            img_logo.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    mActivity.callActivity(CafeChangeActivity.class, false);
+                                }
+                            });
+                        } else {
                             Picasso.with(mActivity)
                                     .load(R.drawable.ic_logo)
                                     .placeholder(R.drawable.ic_logo)
                                     .error(R.drawable.ic_logo)
                                     .into(img_logo);
-                        } else {
-                            String cafename = "";
-                            String logo = "";
-                            boolean isSelected = false;
 
-                            if ("".equals(mSelectedCafeSeq)) {
-                                mSelectedCafeSeq = mCMList.getCafelist().get(0).getCafeseq();
-                            } else {
-                                for (int i=0; i<mCMList.getCafelist().size(); i++) {
-                                    if (mSelectedCafeSeq.equals(mCMList.getCafelist().get(i).getCafeseq())) {
-                                        cafename = mCMList.getCafelist().get(i).getCafename();
-                                        logo = mCMList.getCafelist().get(i).getLogo();
-                                        isSelected = true;
-                                        break;
-                                    }
-                                }
-
-                                if (!isSelected) {
-                                    cafename = mCMList.getCafelist().get(0).getCafename();
-                                    logo = mCMList.getCafelist().get(0).getLogo();
-
-                                    mSelectedCafeSeq = mCMList.getCafelist().get(0).getCafeseq();
-                                }
-                            }
-
-                            if (!"".equals(logo) && null != logo && logo.contains("http")) {
-                                title.setVisibility(View.GONE);
-                                Picasso.with(mActivity)
-                                        .load(logo)
-                                        .placeholder(R.drawable.ic_logo)
-                                        .error(R.drawable.ic_logo)
-                                        .into(img_logo);
-                            } else {
-                                img_logo.setVisibility(View.GONE);
-                                title.setVisibility(View.VISIBLE);
-                                title.setText(cafename);
-                            }
+                            title.setVisibility(View.GONE);
                         }
-
-                        title.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mActivity.callActivity(CafeChangeActivity.class, false);
-                            }
-                        });
-
-                        img_logo.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mActivity.callActivity(CafeChangeActivity.class, false);
-                            }
-                        });
                     } else {
                         Picasso.with(mActivity)
                                 .load(R.drawable.ic_logo)
                                 .placeholder(R.drawable.ic_logo)
                                 .error(R.drawable.ic_logo)
                                 .into(img_logo);
+
+                        title.setVisibility(View.GONE);
                     }
                 } else {
                     Picasso.with(mActivity)
@@ -501,6 +513,8 @@ public class MainFragment extends BaseFragment {
                             .placeholder(R.drawable.ic_logo)
                             .error(R.drawable.ic_logo)
                             .into(img_logo);
+
+                    title.setVisibility(View.GONE);
                 }
 
 
@@ -977,11 +991,30 @@ public class MainFragment extends BaseFragment {
 
         if (data.getCust_build_seq() == data.getBuild_seq()) {
             user.setCust_name(data.getCustName());
-            buildName.setText(data.getBuildingName() + "(" + data.getCustName() +
-                    ")에서 오른층수  " + String.valueOf(totalamt) + " " + ((isbuild.equals("Y")) ? "F" : "M"));
+            if (null == data.getCustName()) {
+                data.setCustName(user.getCust_name());
+            }
+            if (null == data.getBuildingName()) {
+                data.setBuildingName(user.getBuild_name());
+            }
+
+
+
+            try {
+                buildName.setText(data.getBuildingName() + "(" + data.getCustName() +
+                        ")에서 오른층수  " + totalamt + " F");
+            } catch  (Exception ex) {
+                buildName.setText(user.getBuild_name() + "(" + user.getCust_name() +
+                        ")에서 오른층수  " + totalamt + " F");
+            }
         } else {
-            buildName.setText(data.getBuildingName() +
-                    "에서 오른층수  " + String.valueOf(totalamt) + " " + ((isbuild.equals("Y")) ? "F" : "M"));
+            try {
+                buildName.setText(data.getBuildingName() +
+                        "에서 오른층수  " + totalamt + " F");
+            } catch (Exception ex) {
+                buildName.setText(user.getBuild_name() +
+                        "에서 오른층수  " + totalamt + " F");
+            }
         }
 
         buildName.setVisibility(View.GONE);

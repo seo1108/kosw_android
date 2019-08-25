@@ -20,6 +20,7 @@ import kr.co.photointerior.kosw.R;
 import kr.co.photointerior.kosw.rest.DefaultRestClient;
 import kr.co.photointerior.kosw.rest.api.CafeService;
 import kr.co.photointerior.kosw.rest.model.Cafe;
+import kr.co.photointerior.kosw.rest.model.CafeDetail;
 import kr.co.photointerior.kosw.rest.model.CafeMainList;
 import kr.co.photointerior.kosw.rest.model.DataHolder;
 import kr.co.photointerior.kosw.utils.KUtil;
@@ -106,7 +107,7 @@ public class CafeFindActivity extends BaseActivity {
                             mAdapter.clear();
                         }
 
-                        if (mList.size() == 0) {
+                        if (null == mList || mList.size() == 0) {
                             toast(R.string.warn_cafe_not_exists);
                         } else {
                             mAdapter = new CafeAdapter(getApplicationContext(), mList);
@@ -160,14 +161,28 @@ public class CafeFindActivity extends BaseActivity {
             String opendate = item.getOpendate();
             holder.tvOpendate.setText(opendate);
 
-            String memcnt = item.getTotal();
-            holder.tvMember.setText("멤버: " + memcnt +"명  공개/자동 승인" );
+            String confirm = item.getConfirm();
+            String confirmMessage = "";
+            if ("Y".equals(confirm)) {
+                confirmMessage = "비공개/자동 승인";
+            } else {
+                confirmMessage = "공개/자동 승인";
+            }
 
-            holder.tvAdmin.setVisibility(View.GONE);
+            String memcnt = item.getTotal();
+            holder.tvMember.setText("멤버: " + memcnt +"명  " + confirmMessage);
+
+            String admin = item.getAdmin();
+            holder.tvAdmin.setText("관리자: " + admin);
 
 
             holder.row.setOnClickListener(v->{
-               toast(R.string.warn_keyword_not_input);
+                Bundle bu = new Bundle();
+                bu.putSerializable("cafeseq", item.getCafeseq());
+                bu.putSerializable("cafekey", item.getCafekey());
+
+                // kmj mod
+                callActivity(CafeDetailActivity.class, bu,false);
             });
         }
 

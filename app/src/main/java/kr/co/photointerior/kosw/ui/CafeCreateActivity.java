@@ -86,6 +86,7 @@ public class CafeCreateActivity extends BaseActivity {
     private KoswButton btn_change, btn_make_cafe;
     private KoswEditText et_cate_title, et_cate_user_title;
     private LinearLayout category_linearlayout;
+    private ImageView btn_back;
 
     private KoswTextView txt_privacy, txt_hide, txt_open, txt_choose_message, txt_cate_message, txt_cate_user_message, txt_cate_info1, txt_cate_info2;
 
@@ -238,7 +239,10 @@ public class CafeCreateActivity extends BaseActivity {
         });
 
 
-
+        btn_back = findViewById(R.id.btn_back);
+        btn_back.setOnClickListener(v->{
+            finish();
+        });
     }
 
     @Override
@@ -297,6 +301,8 @@ public class CafeCreateActivity extends BaseActivity {
 
         cafename = et_input_name.getText().toString();
 
+        cafedesc = et_desc.getText().toString();
+
         if (null == cafename || "".equals(cafename.trim())) {
             toast(R.string.warn_cafe_name);
             return;
@@ -306,9 +312,6 @@ public class CafeCreateActivity extends BaseActivity {
             toast(R.string.warn_cafe_desc);
             return;
         }
-
-
-        cafedesc = et_desc.getText().toString();
 
         if (check_privacy_hide.isChecked()) {
             confirm = "Y";
@@ -337,10 +340,6 @@ public class CafeCreateActivity extends BaseActivity {
             }
         }
 
-
-
-//        Log.d("111111", f.getAbsoluteFile().toString());
-
         showSpinner("");
         AppUserBase user = DataHolder.instance().getAppUserBase() ;
         Map<String, Object> query = KUtil.getDefaultQueryMap();
@@ -361,49 +360,139 @@ public class CafeCreateActivity extends BaseActivity {
             RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), f);
             uploadFile = MultipartBody.Part.createFormData("file", f.getName(), requestFile);
             //query.put("file", uploadFile);
+        } else {
+            RequestBody attachmentEmpty = RequestBody.create(MediaType.parse("text/plain"), "");
+            uploadFile = MultipartBody.Part.createFormData("attachment", "", attachmentEmpty);
         }
-
-        /*if (null != f) {
-            RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), f);
-            query.put("file", fileBody);
-        }*/
 
         Call<ResponseBase> call =
                 new DefaultRestClient<CafeService>(this)
-                .getClient(CafeService.class).createCafe(query, uploadFile);
+                        .getClient(CafeService.class).createCafe(query, uploadFile);
         call.enqueue(new Callback<ResponseBase>() {
 
             @Override
             public void onResponse(Call<ResponseBase> call, Response<ResponseBase> response) {
                 LogUtils.err(TAG, response.raw().toString());
-                Log.d("111111111111", response.raw().toString());
-                Log.d("111111111111", response.code() + "_____" + response.message());
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     ResponseBase base = response.body();
-                    if(base.isSuccess()) {
+                    if (base.isSuccess()) {
                         // 카페 생성 성공시
                         toast(R.string.cafe_create_success);
 
-                    }else{
-                        toast("1 " + R.string.warn_fail_create_cafe);
+                    } else {
+                        toast(R.string.warn_cafe_fail);
                     }
-                }else{
-                    toast("2 " + R.string.warn_fail_create_cafe);
+                } else {
+                    toast(R.string.warn_cafe_fail);
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBase> call, Throwable t) {
                 LogUtils.err(TAG, t);
-                Log.d("111111111111", t.toString());
-                toast("3 " + R.string.warn_fail_create_cafe);
+                toast(R.string.warn_cafe_fail);
+            }
+        });
+        closeSpinner();
+    }
+
+    private void createCafeNoLogo() {
+        // 카페명
+        String cafename = "";
+        // 카페설명
+        String cafedesc = "";
+        // 공개/비공개
+        String confirm = "";
+        // 사용자추가 부서명
+        String additions = "";
+        // 관리자입력 부서명
+        String category = "";
+        // 로고 파일명
+        String file = "";
+
+        cafename = et_input_name.getText().toString();
+
+        cafedesc = et_desc.getText().toString();
+
+        if (null == cafename || "".equals(cafename.trim())) {
+            toast(R.string.warn_cafe_name);
+            return;
+        }
+
+        if (null == cafedesc || "".equals(cafedesc.trim())) {
+            toast(R.string.warn_cafe_desc);
+            return;
+        }
+
+        if (check_privacy_hide.isChecked()) {
+            confirm = "Y";
+        } else if (check_privacy_open.isChecked()) {
+            confirm = "N";
+        } else if (!check_privacy_hide.isChecked() && !check_privacy_open.isChecked()) {
+            toast(R.string.warn_privacy_not_selected);
+            return;
+        }
+
+        additions = et_cate_user_title.getText().toString();
+
+        category = et_cate_title.getText().toString();
+
+
+        for (int i = 0; i < mCategoryIndex; i++) {
+            KoswEditText et = (KoswEditText)findViewById(i+2000);
+
+            if (null != et) {
+                if (et.isShown()) {
+                    if (null != et.getText().toString() && !"".equals(et.getText().toString().trim())) {
+                        category += "#@#" + et.getText().toString();
+                    }
+                }
+            } else {
+            }
+        }
+
+        showSpinner("");
+        AppUserBase user = DataHolder.instance().getAppUserBase() ;
+        Map<String, Object> query = KUtil.getDefaultQueryMap();
+        query.put("user_seq",user.getUser_seq() );
+
+        query.put("cafename", cafename);
+        query.put("cafedesc", cafedesc);
+        query.put("confirm", confirm);
+        query.put("additions", additions);
+        query.put("category", category);
+
+        Call<ResponseBase> call =
+                new DefaultRestClient<CafeService>(this)
+                        .getClient(CafeService.class).createCafeNologo(query);
+        call.enqueue(new Callback<ResponseBase>() {
+
+            @Override
+            public void onResponse(Call<ResponseBase> call, Response<ResponseBase> response) {
+                LogUtils.err(TAG, response.raw().toString());
+                if (response.isSuccessful()) {
+                    ResponseBase base = response.body();
+                    if (base.isSuccess()) {
+                        // 카페 생성 성공시
+                        toast(R.string.cafe_create_success);
+
+                    } else {
+                        toast(R.string.warn_cafe_fail);
+                    }
+                } else {
+                    toast(R.string.warn_cafe_fail);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBase> call, Throwable t) {
+                LogUtils.err(TAG, t);
+                toast(R.string.warn_cafe_fail);
             }
         });
 
         closeSpinner();
     }
-
-
 
 
     private void showPicDialog() {

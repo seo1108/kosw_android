@@ -180,11 +180,19 @@ public class CafeMainActivity extends BaseActivity {
             String cafename = item.getCafename();
             holder.tvCafename.setText(cafename);
             holder.tvCafename.setTypeface(holder.tvCafename.getTypeface(), Typeface.BOLD);
+            holder.tvCafename.setOnClickListener(v->{
+                Bundle bu = new Bundle();
+                bu.putSerializable("cafeseq", item.getCafeseq());
+                bu.putSerializable("cafekey", item.getCafekey());
+
+                // kmj mod
+                callActivity(CafeDetailActivity.class, bu,false);
+            });
 
             String opendate = item.getOpendate();
             String memcnt = item.getTotal();
 
-            holder.tvOpendate.setText("개설일: " + opendate +"\n멤버: " + memcnt);
+            holder.tvOpendate.setText("개설일: " + opendate +"\n멤버: " + memcnt + "명");
 
             holder.tvInvite.setTypeface(holder.tvInvite.getTypeface(), Typeface.BOLD);
         }
@@ -249,6 +257,14 @@ public class CafeMainActivity extends BaseActivity {
             String cafename = item.getCafename();
             holder.tvCafename.setText(cafename);
             holder.tvCafename.setTypeface(holder.tvCafename.getTypeface(), Typeface.BOLD);
+            holder.tvCafename.setOnClickListener(v->{
+                Bundle bu = new Bundle();
+                bu.putSerializable("cafeseq", item.getCafeseq());
+                bu.putSerializable("cafekey", item.getCafekey());
+
+                // kmj mod
+                callActivity(CafeDetailActivity.class, bu,false);
+            });
 
             String opendate = item.getOpendate();
             holder.tvOpendate.setText("가입일: " + opendate);

@@ -74,7 +74,8 @@ public class BaseUserActivity extends BaseActivity {
                     base.setUserId(email);
                     LogUtils.err(TAG, "login data :" + base.string());
                     if( base.isSuccess() ){
-                        storeUserTokenAndMovesToGps(base);
+                        //storeUserTokenAndMovesToGps(base);
+                        storeUserValueDefault(base);
 
                     }else{
                         showWarn(R.id.input_warn, base.getResponseMessage());
@@ -239,6 +240,8 @@ public class BaseUserActivity extends BaseActivity {
         pref.saveStringValue(PrefKey.BUILDING_CODE, "100001");
         pref.saveStringValue(PrefKey.BUILDING_ID, "ChIJtwmC7eGYfDURUWALZJGt1bE");
 
+
+
         if(user.getBeaconUuidList() != null) {
             KsDbWorker.replaceUuid(getBaseContext(), user.getBeaconUuidList());//UUID 교체
         }
@@ -276,6 +279,9 @@ public class BaseUserActivity extends BaseActivity {
                     user = response.body();
                     if(user.isSuccess()){
                         //LogUtils.e(TAG, "login data on splash=" + response.body().getTodayActivity().string());
+
+
+
                         LogUtils.err(TAG, "login data on splash=" + response.body().string());
                         if (mBuilding != null) {
                             user.setBuild_seq(mBuilding.getBuildingSeq());
@@ -292,16 +298,6 @@ public class BaseUserActivity extends BaseActivity {
                             user.setCountry(mBuilding.getCountry());
                             user.setCity(mBuilding.getCity());
                             user.setIsbuild(mBuilding.getIsbuild());
-
-                            // 도원빌딩 강제 매핑
-                            user.setBuild_seq("118");
-                            user.setBuildingCode("100001");
-                            user.setBuild_lat(37.5666447);
-                            user.setBuild_lng(126.9122815);
-                            user.setBuild_name("도원빌딩");
-                            user.setBuild_addr("대한민국 서울특별시 마포구 성산동");
-                            user.setPlace_id("ChIJtwmC7eGYfDURUWALZJGt1bE");
-
                         }
 
                         if (mMapBuildingUser != null) {
@@ -309,13 +305,24 @@ public class BaseUserActivity extends BaseActivity {
                             user.setCust_name(mMapBuildingUser.getCust_name());
                             user.setDept_seq(mMapBuildingUser.getDept_seq());
                             user.setDept_name(mMapBuildingUser.getDept_name());
-
-                            // 도원빌딩 강제 매핑
-                            user.setCust_seq(50);
                             user.setCust_name(mMapBuildingUser.getCust_name());
-                            user.setDept_seq(84);
                             user.setDept_name(mMapBuildingUser.getDept_name());
                         }
+
+                        // 도원빌딩 강제 매핑
+                        user.setBuild_seq("118");
+                        user.setBuildingCode("100001");
+                        user.setBuild_lat(37.5666447);
+                        user.setBuild_lng(126.9122815);
+                        user.setBuild_name("도원빌딩");
+                        user.setBuild_addr("대한민국 서울특별시 마포구 성산동");
+                        user.setPlace_id("ChIJtwmC7eGYfDURUWALZJGt1bE");
+                        user.setCountry("대한민국");
+                        user.setCity("서울특별시");
+                        user.setCust_seq(50);
+                        user.setCust_name("photointerior");
+                        user.setDept_seq(84);
+                        user.setDept_name("경영");
 
                         storeUserTokenAndMovesToMain(user);
                     }else{

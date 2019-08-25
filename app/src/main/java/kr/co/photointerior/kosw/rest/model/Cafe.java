@@ -27,6 +27,13 @@ public class Cafe extends ResponseBase {
     private List<CafeSubCategory> category;
     @SerializedName("cafeseq")
     private String cafeseq;
+    @SerializedName("confirm")
+    private String confirm;
+    @SerializedName("isjoin")
+    private String isjoin;
+    @SerializedName("admin")
+    private String admin;
+
 
     private boolean selected;
     /**
@@ -114,12 +121,62 @@ public class Cafe extends ResponseBase {
         this.cafetype = cafetype;
     }
 
+    public String getConfirm() {
+        return confirm;
+    }
+
+    public void setConfirm(String confirm) {
+        this.confirm = confirm;
+    }
+
+    public String getIsjoin() {
+        return isjoin;
+    }
+
+    public void setIsjoin(String isjoin) {
+        this.isjoin = isjoin;
+    }
+
+    public String getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(String admin) {
+        this.admin = admin;
+    }
+
     public boolean isSelected() {
         return selected;
     }
 
     public void setSelected(boolean selected) {
         this.selected = selected;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cafe cafe = (Cafe) o;
+        return selected == cafe.selected &&
+                Objects.equals(total, cafe.total) &&
+                Objects.equals(cafedesc, cafe.cafedesc) &&
+                Objects.equals(additions, cafe.additions) &&
+                Objects.equals(cafename, cafe.cafename) &&
+                Objects.equals(cafekey, cafe.cafekey) &&
+                Objects.equals(logo, cafe.logo) &&
+                Objects.equals(opendate, cafe.opendate) &&
+                Objects.equals(category, cafe.category) &&
+                Objects.equals(cafeseq, cafe.cafeseq) &&
+                Objects.equals(confirm, cafe.confirm) &&
+                Objects.equals(isjoin, cafe.isjoin) &&
+                Objects.equals(admin, cafe.admin) &&
+                Objects.equals(cafetype, cafe.cafetype);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(total, cafedesc, additions, cafename, cafekey, logo, opendate, category, cafeseq, confirm, isjoin, admin, selected, cafetype);
     }
 
     @Override
@@ -134,27 +191,11 @@ public class Cafe extends ResponseBase {
                 ", opendate='" + opendate + '\'' +
                 ", category=" + category +
                 ", cafeseq='" + cafeseq + '\'' +
+                ", confirm='" + confirm + '\'' +
+                ", isjoin='" + isjoin + '\'' +
+                ", admin='" + admin + '\'' +
+                ", selected=" + selected +
+                ", cafetype='" + cafetype + '\'' +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Cafe cafe = (Cafe) o;
-        return Objects.equals(total, cafe.total) &&
-                Objects.equals(cafedesc, cafe.cafedesc) &&
-                Objects.equals(additions, cafe.additions) &&
-                Objects.equals(cafename, cafe.cafename) &&
-                Objects.equals(cafekey, cafe.cafekey) &&
-                Objects.equals(logo, cafe.logo) &&
-                Objects.equals(opendate, cafe.opendate) &&
-                Objects.equals(category, cafe.category) &&
-                Objects.equals(cafeseq, cafe.cafeseq);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(total, cafedesc, additions, cafename, cafekey, logo, opendate, category, cafeseq);
     }
 }
