@@ -364,17 +364,26 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
 
 
-        getAppKeyHash();
+        //getAppKeyHash();
 
 
         // 계단 측정 서비스 실행
         //Intent walk_intent = new Intent(this, StepCounterService.class);
         //startService(walk_intent);
 
-        // 노티피케이션 서비스 실행
-        Intent noti_intent = new Intent(this, NotiService.class);
-        startService(noti_intent);
+        if(!isMyServiceRunning(NotiService.class)) {
+            // 노티피케이션 서비스 실행
+            Intent noti_intent = new Intent(this, NotiService.class);
+            startService(noti_intent);
+        }
 
+
+
+        String gocafemain = getIntent().getStringExtra("_CAFEMAIN_ACTIVITY_");
+
+        if (null != gocafemain && "GOCAFEMAIN".equals(gocafemain)) {
+            callActivity(CafeMainActivity.class, false);
+        }
 
     }
 

@@ -22,9 +22,12 @@ import kr.co.photointerior.kosw.rest.model.AppUserBase;
 import kr.co.photointerior.kosw.rest.model.Cafe;
 import kr.co.photointerior.kosw.rest.model.CafeMyAllList;
 import kr.co.photointerior.kosw.rest.model.DataHolder;
+import kr.co.photointerior.kosw.rest.model.ResponseBase;
 import kr.co.photointerior.kosw.utils.Acceptor;
 import kr.co.photointerior.kosw.utils.KUtil;
 import kr.co.photointerior.kosw.utils.LogUtils;
+import kr.co.photointerior.kosw.widget.KoswButton;
+import kr.co.photointerior.kosw.widget.KoswEditText;
 import kr.co.photointerior.kosw.widget.KoswTextView;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,7 +44,9 @@ public class CafeMainActivity extends BaseActivity {
     private List<Cafe> mCJoinList = new ArrayList<>();
 
     private Button btnMake, btnFind, btnGuide;
+    private KoswButton btnJoin;
     private KoswTextView txt_privacy, txt_cafe_mine, txt_cafe_my;
+    private KoswEditText txt_cafekey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,12 +69,25 @@ public class CafeMainActivity extends BaseActivity {
         txt_cafe_mine.setTypeface(txt_cafe_mine.getTypeface(), Typeface.BOLD);
         txt_cafe_my.setTypeface(txt_cafe_my.getTypeface(), Typeface.BOLD);
 
+        txt_cafekey = findViewById(R.id.txt_cafekey);
+
+        btnJoin = findViewById(R.id.btn_join);
+        btnJoin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!"".equals(txt_cafekey.getText().toString().trim())) {
+                    godetail();
+                } else {
+                    toast(R.string.warn_cafe_key_not_inputed);
+                }
+            }
+        });
 
         btnMake = findViewById(R.id.btn_make_cafe);
         btnMake.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callActivity(CafeCreateActivity.class, false);
+                callActivity(CafeCreateDefaultActivity.class, false);
             }
         });
 
@@ -154,6 +172,14 @@ public class CafeMainActivity extends BaseActivity {
         });
     }
 
+    private void godetail() {
+        Bundle bu = new Bundle();
+        bu.putSerializable("cafekey", txt_cafekey.getText().toString().trim());
+
+        // kmj mod
+        callActivity(CafeDetailActivity.class, bu,false);
+    }
+
 
     class CafeMineAdapter extends RecyclerView.Adapter<CafeMineAdapter.CafeMineHolder> {
         private Context context;
@@ -192,7 +218,7 @@ public class CafeMainActivity extends BaseActivity {
             String opendate = item.getOpendate();
             String memcnt = item.getTotal();
 
-            holder.tvOpendate.setText("개설일: " + opendate +"\n멤버: " + memcnt + "명");
+            holder.tvOpendate.setText("가입일: " + opendate +"\n멤버: " + memcnt + "명");
 
             holder.tvInvite.setTypeface(holder.tvInvite.getTypeface(), Typeface.BOLD);
         }

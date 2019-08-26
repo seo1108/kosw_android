@@ -149,7 +149,7 @@
                 android:paddingBottom="10dp">
 
                 <kr.co.photointerior.kosw.widget.KoswEditText
-                    android:id="@+id/input_name"
+                    android:id="@+id/txt_cafekey"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_marginRight="10dp"

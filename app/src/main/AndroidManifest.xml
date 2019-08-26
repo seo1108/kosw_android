@@ -248,6 +248,16 @@
             android:theme="@style/Kosw.NoActionbar"/>
 
         <activity
+            android:name="kr.co.photointerior.kosw.ui.CafeCreateDefaultActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.CafeCreateOptionActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+
+        <activity
             android:name="kr.co.photointerior.kosw.ui.CafeMainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Kosw.NoActionbar"/>

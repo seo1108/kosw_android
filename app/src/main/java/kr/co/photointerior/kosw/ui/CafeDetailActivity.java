@@ -153,10 +153,13 @@ public class CafeDetailActivity extends BaseActivity {
         AppUserBase user = DataHolder.instance().getAppUserBase() ;
         Map<String, Object> query = KUtil.getDefaultQueryMap();
         query.put("user_seq",user.getUser_seq() );
-        query.put("cafeseq", mCafeseq);
+        if (null != mCafeseq && !"".equals(mCafeseq)) {
+            query.put("cafeseq", mCafeseq);
+        }
         if (null != mCafekey && !"".equals(mCafekey)) {
             query.put("cafekey", mCafekey);
         }
+
         Call<CafeDetail> call =
                 new DefaultRestClient<CafeService>(this)
                         .getClient(CafeService.class).detail(query);
@@ -172,6 +175,8 @@ public class CafeDetailActivity extends BaseActivity {
                     if (cafedetail.isSuccess()) {
                         mCafe = cafedetail.getCafe();
 
+                        mCafeseq = mCafe.getCafeseq();
+
                         findViews();
                         attachEvents();
                         setInitialData();
@@ -179,7 +184,11 @@ public class CafeDetailActivity extends BaseActivity {
                         getCafeNotice();
                     } else {
                     }
-                } else {
+                }
+
+                if (!"0000".equals(response.body().getResponseCode())) {
+                    toast(response.body().getResponseMessage());
+                    finish();
                 }
             }
 
