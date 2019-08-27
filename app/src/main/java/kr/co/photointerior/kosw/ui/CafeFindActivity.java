@@ -49,6 +49,8 @@ public class CafeFindActivity extends BaseActivity {
         findViews();
         attachEvents();
         setInitialData();
+
+        getFindCafeList("");
     }
 
     @Override
@@ -112,6 +114,7 @@ public class CafeFindActivity extends BaseActivity {
                         } else {
                             mAdapter = new CafeAdapter(getApplicationContext(), mList);
                             mRecyclerView.setAdapter(mAdapter);
+                            mRecyclerView.setNestedScrollingEnabled(false);
                         }
 
                     } else {

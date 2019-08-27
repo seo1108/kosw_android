@@ -333,8 +333,6 @@ public class ServiceThread extends Thread{
         long endTime = startTime + (24*60*60*1000);
 
         java.text.DateFormat dateFormat = getDateTimeInstance();
-        Log.d("99999999911111", "Range Start: " + dateFormat.format(startTime));
-        Log.d("99999999911111", "Range End: " + dateFormat.format(endTime));
 
         DataReadRequest readRequest =
                 new DataReadRequest.Builder()
@@ -363,7 +361,6 @@ public class ServiceThread extends Thread{
         // If the DataReadRequest object specified aggregated data, dataReadResult will be returned
         // as buckets containing DataSets, instead of just DataSets.
         if (dataReadResult.getBuckets().size() > 0) {
-            Log.d("99999999999999", "Number of returned buckets of DataSets is: " + dataReadResult.getBuckets().size());
             for (Bucket bucket : dataReadResult.getBuckets()) {
                 List<DataSet> dataSets = bucket.getDataSets();
                 for (DataSet dataSet : dataSets) {
@@ -371,7 +368,6 @@ public class ServiceThread extends Thread{
                 }
             }
         } else if (dataReadResult.getDataSets().size() > 0) {
-            Log.d("99999999999999", "Number of returned DataSets is: " + dataReadResult.getDataSets().size());
             for (DataSet dataSet : dataReadResult.getDataSets()) {
                 dumpYesterdayDataSet(dataSet);
             }
@@ -391,12 +387,7 @@ public class ServiceThread extends Thread{
         String s_date = d_dateFormat.format(cal.getTime());
 
         for (DataPoint dp : dataSet.getDataPoints()) {
-            Log.d("99999999999999", "Data point:");
-            Log.d("99999999999999", "\tType: " + dp.getDataType().getName());
-            Log.d("99999999999999", "\tStart: " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
-            Log.d("99999999999999", "\tEnd: " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)));
             for (Field field : dp.getDataType().getFields()) {
-                Log.d("99999999999999", "\tField: " + field.getName() + " Value: " + dp.getValue(field));
                 // 어제자 걸음수 전송
                 try {
                     saveWalkStep(s_date, Integer.parseInt(dp.getValue(field).toString()));
