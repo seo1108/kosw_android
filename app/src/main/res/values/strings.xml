@@ -285,6 +285,10 @@
     <string name="rank_individual_1">부서 내 개인랭킹</string>
     <string name="rank_individual_2">전체 사용자 내 개인랭킹</string>
 
+    <string name="cafe_rank_individual">개인랭킹</string>
+    <string name="cafe_rank_category">분류랭킹</string>
+    <string name="cafe_rank_cate_indi">분류내 개인랭킹</string>
+
     <string name="rank_group_0">회사 내 부서 랭킹</string>
     <string name="rank_group_1">전제 사용자 내 회사 랭킹</string>
 

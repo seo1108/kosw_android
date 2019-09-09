@@ -1,15 +1,25 @@
 package kr.co.photointerior.kosw.ui;
 
+import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import kr.co.photointerior.kosw.R;
+import kr.co.photointerior.kosw.listener.ClickListener;
+import kr.co.photointerior.kosw.listener.ItemClickListener;
 import kr.co.photointerior.kosw.rest.DefaultRestClient;
 import kr.co.photointerior.kosw.rest.api.CafeService;
 import kr.co.photointerior.kosw.rest.model.AppUserBase;
@@ -19,6 +29,7 @@ import kr.co.photointerior.kosw.rest.model.CafeNoticeList;
 import kr.co.photointerior.kosw.rest.model.CafeSubCategory;
 import kr.co.photointerior.kosw.rest.model.DataHolder;
 import kr.co.photointerior.kosw.rest.model.Notice;
+import kr.co.photointerior.kosw.rest.model.SpinnerRow;
 import kr.co.photointerior.kosw.utils.KUtil;
 import kr.co.photointerior.kosw.utils.LogUtils;
 import kr.co.photointerior.kosw.widget.KoswButton;
@@ -28,7 +39,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CafeDetailActivity extends BaseActivity {
+public class CafeDetailActivity extends BaseActivity implements ItemClickListener {
     private String TAG = LogUtils.makeLogTag(CafeDetailActivity.class);
     private Cafe mCafe;
     private List<Notice> mNoticeList;
@@ -42,6 +53,13 @@ public class CafeDetailActivity extends BaseActivity {
     private String mCafekey = "";
     private List<CafeSubCategory> mCate;
 
+    private SpinnerRow mSelectedSpinner;
+    private RecyclerView mRecyclerView;
+    private SpinnerAdapter mAdapter;
+    private List<SpinnerRow> mSpinnerItems = new ArrayList<>();
+    private TextView mSpinnerText;
+    private View mSpinnerListBox;
+
     @Override
     protected  void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,10 +70,15 @@ public class CafeDetailActivity extends BaseActivity {
 
         getCafeDetail();
 
+
+
     }
 
     @Override
     protected void findViews() {
+        mRecyclerView = getView(R.id.recyclerView);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
         tv_title = findViewById(R.id.tv_title);
         tv_title.setText(mCafe.getCafename());
 
@@ -133,6 +156,11 @@ public class CafeDetailActivity extends BaseActivity {
             }
         });
 
+        mSpinnerListBox = getView(R.id.drop_list_box);
+        mSpinnerText = getView(R.id.txt_spinner);
+
+
+
         btn_back = findViewById(R.id.btn_back);
         btn_back.setOnClickListener(v->{
             finish();
@@ -141,11 +169,36 @@ public class CafeDetailActivity extends BaseActivity {
 
     @Override
     protected void attachEvents() {
+        View.OnClickListener listener = new ClickListener(this);
+        getView(R.id.box_spinner).setOnClickListener(listener);
     }
 
     @Override
     protected void setInitialData() {
+        mSpinnerItems.clear();
+        mSpinnerItems.add(new SpinnerRow("1", getString(R.string.cafe_rank_individual)));//회사 내 개인랭킹
+        mSpinnerItems.add(new SpinnerRow("2", getString(R.string.cafe_rank_category)));//부서 내 개인랭킹
+        mSpinnerItems.add(new SpinnerRow("3", getString(R.string.cafe_rank_cate_indi)));
 
+        drawSpinner();
+    }
+
+    @Override
+    public void performClick(View view) {
+        int id = view.getId();
+        if(id == R.id.box_spinner){
+            if(mSpinnerListBox.getVisibility() == View.GONE){
+                mSpinnerListBox.setVisibility(View.VISIBLE);
+            }else{
+                mSpinnerListBox.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        mSpinnerListBox.setVisibility(View.GONE);
+        selectSpinner(position);
     }
 
     private void getCafeDetail() {
@@ -249,5 +302,69 @@ public class CafeDetailActivity extends BaseActivity {
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.fade_in_full,R.anim.slide_out_right);
+    }
+
+    private void drawSpinner(){
+        mSelectedSpinner = mSpinnerItems.get(0);
+        selectSpinner(0);
+        mAdapter = new SpinnerAdapter(getApplicationContext(), this, mSpinnerItems);
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    private void selectSpinner(int position){
+        mSelectedSpinner = mSpinnerItems.get(position);
+        mSpinnerText.setText(mSelectedSpinner.getName());
+        //requestToServer();
+    }
+
+    private class SpinnerAdapter extends RecyclerView.Adapter<SpinnerAdapter.BaseRowHolder>{
+        private Context mContext;
+        private LayoutInflater mInflater;
+        private List<SpinnerRow> mItems;
+        private ItemClickListener mItemClickListener;
+
+        SpinnerAdapter(Context context, ItemClickListener listener, List<SpinnerRow> list){
+            mContext = context;
+            mItemClickListener = listener;
+            mInflater = LayoutInflater.from(context);
+            mItems = list;
+        }
+        @NonNull
+        @Override
+        public BaseRowHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = mInflater.inflate(R.layout.row_depart_spinner1, parent, false);
+            return new BaseRowHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull BaseRowHolder holder, int position) {
+            holder.title.setText(mItems.get(position).getName());
+        }
+
+        @Override
+        public int getItemCount() {
+            return mItems.size();
+        }
+
+        class BaseRowHolder extends RecyclerView.ViewHolder  implements View.OnClickListener{
+            TextView title;
+            public BaseRowHolder(View itemView) {
+                super(itemView);
+                pickupView();
+            }
+
+            protected void pickupView(){
+                title = itemView.findViewById(R.id.text1);
+                itemView.setOnClickListener(this);
+                itemView.setTag("spinner");
+            }
+
+            @Override
+            public void onClick(View view) {
+                if(mItemClickListener != null){
+                    mItemClickListener.onItemClick(view, getAdapterPosition());
+                }
+            }
+        }
     }
 }
