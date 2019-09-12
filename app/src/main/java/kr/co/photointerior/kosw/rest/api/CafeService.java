@@ -6,6 +6,7 @@ import kr.co.photointerior.kosw.rest.model.CafeDetail;
 import kr.co.photointerior.kosw.rest.model.CafeMainList;
 import kr.co.photointerior.kosw.rest.model.CafeMyAllList;
 import kr.co.photointerior.kosw.rest.model.CafeNoticeList;
+import kr.co.photointerior.kosw.rest.model.CafeRankingList;
 import kr.co.photointerior.kosw.rest.model.ResponseBase;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -81,4 +82,28 @@ public interface CafeService {
      */
     @POST("api/cafe/join")
     Call<ResponseBase> join(@QueryMap Map<String, Object> queryMap);
+
+    /**
+     * 카페 개인랭킹
+     * @param queryMap
+     * @return
+     */
+    @POST("api/cafe/rankingIndividual")
+    Call<CafeRankingList> rankingIndividual(@QueryMap Map<String, Object> queryMap);
+
+    /**
+     * 카페 분류랭킹
+     * @param queryMap
+     * @return
+     */
+    @POST("api/cafe/rankingByCategory")
+    Call<CafeRankingList> rankingByCategory(@QueryMap Map<String, Object> queryMap);
+
+    /**
+     * 카페 분류내 개인랭킹
+     * @param queryMap
+     * @return
+     */
+    @POST("api/cafe/rankingIndividualByCategory")
+    Call<CafeRankingList> rankingIndividualByCategory(@QueryMap Map<String, Object> queryMap);
 }

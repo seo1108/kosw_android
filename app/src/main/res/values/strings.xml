@@ -88,6 +88,7 @@
     <string name="warn_bbs_not_exists">공지사항이나 이벤트가 없습니다.</string>
     <string name="warn_keyword_not_input">검색 키워드가 입력되지 않았습니다.</string>
     <string name="warn_cafe_not_exists">검색된 카페가 없습니다.</string>
+    <string name="warn_cafe_rank_not_exists">랭킹 정보가 없습니다.</string>
     <string name="warn_cafe_already_join">이미 가입한 카페입니다.</string>
     <string name="warn_cafe_fail_join">카페 가입을 진행하지 못했습니다.\n다시 시도해주세요.</string>
     <string name="warn_cafe_success_join">카페 가입을 완료했습니다.</string>
