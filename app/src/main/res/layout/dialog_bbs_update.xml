@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/black_bg"
+    android:paddingLeft="30dp"
+    android:paddingRight="30dp"
+    android:paddingTop="100dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/bg_round_color_white_3dp">
+
+        <RelativeLayout
+            android:id="@+id/top_box"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="10dp">
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/txt_bbs_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="50dp"
+                android:gravity="center"
+                android:text="@string/txt_bbs_edit"
+                android:textColor="@color/light_black"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/btn_close"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/button_close_click_black"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/center_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@+id/top_box">
+
+            <LinearLayout
+                android:id="@+id/time_box"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="200dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <kr.co.photointerior.kosw.widget.KoswEditText
+                    android:id="@+id/text_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_border_1a1a1a"
+                    android:gravity="top"
+                    android:lines="10"
+                    android:paddingStart="10dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:text="게시글 상세"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/sp_15"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:orientation="horizontal" >
+
+                <kr.co.photointerior.kosw.widget.KoswButton
+                    android:id="@+id/btn_edit"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_weight="1.0"
+                    android:background="@drawable/button_border_1a1a1a"
+                    android:text="@string/txt_edit_done"
+                    android:textColor="@color/text_btn_click"
+                    android:textSize="@dimen/sp_16"
+
+                    />
+
+                <kr.co.photointerior.kosw.widget.KoswButton
+                    android:id="@+id/btn_cancel"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_weight="1.0"
+                    android:background="@drawable/button_border_1a1a1a"
+                    android:text="@string/txt_cancel_btn"
+                    android:textColor="@color/text_btn_click"
+                    android:textSize="@dimen/sp_16"
+                    android:layout_alignParentBottom="true" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+
+    </RelativeLayout>
+</LinearLayout>

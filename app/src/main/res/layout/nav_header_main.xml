@@ -154,7 +154,8 @@
                 android:layout_marginEnd="@dimen/dp_14"
                 android:layout_marginStart="@dimen/dp_14"
                 app:menuTitle="@string/txt_ranking_group"
-                app:menuTitleColor="@color/color_1a1a1a" />
+                app:menuTitleColor="@color/color_1a1a1a"
+                android:visibility="gone" />
 
             <kr.co.photointerior.kosw.widget.MenuRow
                 android:id="@+id/menu_ggr"

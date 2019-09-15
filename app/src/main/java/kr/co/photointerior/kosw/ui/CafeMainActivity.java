@@ -1,6 +1,7 @@
 package kr.co.photointerior.kosw.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import kr.co.photointerior.kosw.R;
+import kr.co.photointerior.kosw.global.Env;
 import kr.co.photointerior.kosw.rest.DefaultRestClient;
 import kr.co.photointerior.kosw.rest.api.CafeService;
 import kr.co.photointerior.kosw.rest.model.AppUserBase;
@@ -180,6 +182,23 @@ public class CafeMainActivity extends BaseActivity {
         callActivity(CafeDetailActivity.class, bu,false);
     }
 
+    private void shareCafe(String cafename, String cafekey) {
+        String subject = "계단왕 '" + cafename + "' 카페로 초대합니다.";
+
+        String text = "계단왕 '" + cafename + "' 카페로 초대합니다.\n\n저희 계단왕 '" + cafename + "' 카페에 가입해 주세요.\n"
+                + "계단왕 앱 메뉴의 카페 페이지에서 아래의 키값으로 바로 가입할 수 있습니다. (비공개 카페는 키값을 통해서만 카페 가입이 가능합니다.)\n\n"
+                + "카페키값 : " + cafekey + "\n\n"
+                + "계단왕은 그룹 멤버들과 함께 운동하며 이야기를 나누는 공간입니다. 아이폰, 안드로이드에서 무료로 다운받아 사용해 보세요.\n\n"
+                + Env.Url.URL_SHARE.url();
+
+        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        //intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_TEXT, text);
+        Intent chooser = Intent.createChooser(intent, "공유할 앱을 선택하세요.");
+        startActivity(chooser);
+    }
+
 
     class CafeMineAdapter extends RecyclerView.Adapter<CafeMineAdapter.CafeMineHolder> {
         private Context context;
@@ -215,12 +234,17 @@ public class CafeMainActivity extends BaseActivity {
                 callActivity(CafeDetailActivity.class, bu,false);
             });
 
+            holder.btnInvite.setOnClickListener(v->{
+                shareCafe(item.getCafename(), item.getCafekey());
+            });
+
             String opendate = item.getOpendate();
             String memcnt = item.getTotal();
 
             holder.tvOpendate.setText("가입일: " + opendate +"\n멤버: " + memcnt + "명");
 
             holder.tvInvite.setTypeface(holder.tvInvite.getTypeface(), Typeface.BOLD);
+
         }
 
         @Override

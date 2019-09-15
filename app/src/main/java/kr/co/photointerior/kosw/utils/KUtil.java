@@ -172,7 +172,6 @@ public class KUtil {
 
     public static String getNickName(){
         String nick = getStringPref(PrefKey.USER_NICK, "");
-        Log.d("99999999999999999", nick);
         if(StringUtil.isEmptyOrWhiteSpace(nick)){
             nick = getStringPref(PrefKey.USER_ID, "");
             if(nick != null){

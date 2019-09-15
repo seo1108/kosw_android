@@ -21,7 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class BbsPostActivity  extends BaseUserActivity {
+public class BbsPostActivity extends BaseUserActivity {
     private String TAG = LogUtils.makeLogTag(BbsPostActivity.class);
     private KoswEditText et_content;
     private KoswTextView title_done;
@@ -104,7 +104,7 @@ public class BbsPostActivity  extends BaseUserActivity {
                     if(base.isSuccess()) {
                         toast(R.string.cafe_bbs_success);
                         Intent intent = new Intent() ;
-                        setResult(mBbsCreateResultCode, intent);
+                        setResult(RESULT_OK, intent);
                         finish();
                     }else{
                         toast(R.string.warn_cafe_fail_bbs_write);
@@ -151,7 +151,7 @@ public class BbsPostActivity  extends BaseUserActivity {
                     if(base.isSuccess()) {
                         toast(R.string.cafe_comment_success);
                         Intent intent = new Intent() ;
-                        setResult(mBbsCreateResultCode, intent);
+                        setResult(RESULT_OK, intent);
                         finish();
                     }else{
                         toast(R.string.warn_cafe_fail_comment_write);

@@ -125,6 +125,22 @@ public interface CafeService {
     Call<ResponseBase> writeBbs(@QueryMap Map<String, Object> queryMap);
 
     /**
+     * 카페 게시글 수정
+     * @param queryMap
+     * @return
+     */
+    @POST("api/cafe/modifyBbs")
+    Call<ResponseBase> modifyBbs(@QueryMap Map<String, Object> queryMap);
+
+    /**
+     * 카페 게시글 삭제
+     * @param queryMap
+     * @return
+     */
+    @POST("api/cafe/deleteBbs")
+    Call<ResponseBase> deleteBbs(@QueryMap Map<String, Object> queryMap);
+
+    /**
      * 카페 게시글 답글 작성
      * @param queryMap
      * @return

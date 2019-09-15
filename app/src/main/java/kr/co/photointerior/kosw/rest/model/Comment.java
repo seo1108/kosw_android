@@ -15,6 +15,8 @@ public class Comment extends ResponseBase {
     private String user_seq;
     @SerializedName("content")
     private String content;
+    @SerializedName("charImageFile")
+    private String charImageFile;
 
     public String getCommentseq() {
         return commentseq;
@@ -56,6 +58,14 @@ public class Comment extends ResponseBase {
         this.content = content;
     }
 
+    public String getCharImageFile() {
+        return charImageFile;
+    }
+
+    public void setCharImageFile(String charImageFile) {
+        this.charImageFile = charImageFile;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -65,22 +75,24 @@ public class Comment extends ResponseBase {
                 Objects.equals(nickname, comment.nickname) &&
                 Objects.equals(regdate, comment.regdate) &&
                 Objects.equals(user_seq, comment.user_seq) &&
-                Objects.equals(content, comment.content);
+                Objects.equals(content, comment.content) &&
+                Objects.equals(charImageFile, comment.charImageFile);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(commentseq, nickname, regdate, user_seq, content);
+        return Objects.hash(commentseq, nickname, regdate, user_seq, content, charImageFile);
     }
 
     @Override
     public String toString() {
-        return "Comments{" +
+        return "Comment{" +
                 "commentseq='" + commentseq + '\'' +
                 ", nickname='" + nickname + '\'' +
                 ", regdate='" + regdate + '\'' +
                 ", user_seq='" + user_seq + '\'' +
                 ", content='" + content + '\'' +
+                ", charImageFile='" + charImageFile + '\'' +
                 '}';
     }
 }

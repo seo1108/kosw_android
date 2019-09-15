@@ -287,6 +287,21 @@
             android:screenOrientation="portrait"
             android:theme="@style/Kosw.NoActionbar"/>
 
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.BbsDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.BbsEditActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.CafeNoticeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+
         <service android:name="kr.co.photointerior.kosw.service.fcm.FcmMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
