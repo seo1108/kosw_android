@@ -252,66 +252,122 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <RelativeLayout
-                android:id="@+id/box_spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/top_btn_box"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp"
-                android:paddingEnd="@dimen/dp_20"
-                android:paddingStart="@dimen/dp_20"
-                android:background="@drawable/button_border_bottom_cccccc">
-
-                <android.support.v7.widget.AppCompatSpinner
-                    android:id="@+id/spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    android:overlapAnchor="false"
-                    android:spinnerMode="dropdown"/>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/box_spinner_category"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/top_btn_box"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp"
-                android:paddingEnd="@dimen/dp_20"
-                android:paddingStart="@dimen/dp_20"
-                android:background="@drawable/button_border_bottom_cccccc"
-                >
-
-                <android.support.v7.widget.AppCompatSpinner
-                    android:id="@+id/spinner_category"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    android:overlapAnchor="false"
-                    android:spinnerMode="dropdown"
-                    android:visibility="gone"/>
-            </RelativeLayout>
-
             <LinearLayout
-                android:id="@+id/ll_recycler"
+                android:id="@+id/ll_notice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="15dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
                 android:orientation="vertical">
 
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recycler_view"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:scrollbars="none"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:paddingBottom="10dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/button_border_bottom_dot_cccccc">
+
+                    <kr.co.photointerior.kosw.widget.KoswEditText
+                        android:id="@+id/bbs_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="게시글"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/colorBlack"
+                        android:textStyle="bold"
+                        android:background="@null"
+                        android:layout_weight="1.0"
+                        android:textSize="@dimen/sp_15" />
+
+                    <ImageView
+                        android:id="@+id/img_post"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="right"
+                        android:src="@drawable/ic_add_post" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/notice_linearlayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="0dp"
+                    android:orientation="vertical"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent">
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_ranking"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/box_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/top_btn_box"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="20dp"
+                    android:paddingEnd="@dimen/dp_20"
+                    android:paddingStart="@dimen/dp_20"
+                    android:background="@drawable/button_border_bottom_cccccc">
+
+                    <android.support.v7.widget.AppCompatSpinner
+                        android:id="@+id/spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:overlapAnchor="false"
+                        android:spinnerMode="dropdown"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/box_spinner_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/top_btn_box"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="20dp"
+                    android:paddingEnd="@dimen/dp_20"
+                    android:paddingStart="@dimen/dp_20"
+                    android:background="@drawable/button_border_bottom_cccccc"
+                    >
+
+                    <android.support.v7.widget.AppCompatSpinner
+                        android:id="@+id/spinner_category"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:overlapAnchor="false"
+                        android:spinnerMode="dropdown"
+                        android:visibility="gone"/>
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="15dp"
+                    android:orientation="vertical">
+
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:scrollbars="none"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>

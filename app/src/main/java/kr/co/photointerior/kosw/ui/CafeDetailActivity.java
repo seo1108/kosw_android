@@ -1,19 +1,22 @@
 package kr.co.photointerior.kosw.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -22,25 +25,27 @@ import java.util.Map;
 import java.util.Objects;
 
 import kr.co.photointerior.kosw.R;
-import kr.co.photointerior.kosw.global.PeriodType;
+import kr.co.photointerior.kosw.global.ResultType;
 import kr.co.photointerior.kosw.listener.ClickListener;
 import kr.co.photointerior.kosw.listener.ItemClickListener;
 import kr.co.photointerior.kosw.rest.DefaultRestClient;
 import kr.co.photointerior.kosw.rest.api.CafeService;
 import kr.co.photointerior.kosw.rest.model.AppUserBase;
 import kr.co.photointerior.kosw.rest.model.Cafe;
+import kr.co.photointerior.kosw.rest.model.CafeBbsList;
 import kr.co.photointerior.kosw.rest.model.CafeDetail;
+import kr.co.photointerior.kosw.rest.model.CafeNotice;
 import kr.co.photointerior.kosw.rest.model.CafeNoticeList;
 import kr.co.photointerior.kosw.rest.model.CafeRankingList;
 import kr.co.photointerior.kosw.rest.model.CafeSubCategory;
 import kr.co.photointerior.kosw.rest.model.DataHolder;
 import kr.co.photointerior.kosw.rest.model.Notice;
 import kr.co.photointerior.kosw.rest.model.RankInCafe;
-import kr.co.photointerior.kosw.rest.model.Ranking;
-import kr.co.photointerior.kosw.rest.model.SpinnerRow;
+import kr.co.photointerior.kosw.ui.row.RowCafeBbs;
+import kr.co.photointerior.kosw.ui.row.RowCafeBbsComment;
+import kr.co.photointerior.kosw.ui.row.RowDotSeparator;
 import kr.co.photointerior.kosw.utils.KUtil;
 import kr.co.photointerior.kosw.utils.LogUtils;
-import kr.co.photointerior.kosw.utils.StringUtil;
 import kr.co.photointerior.kosw.widget.KoswButton;
 import kr.co.photointerior.kosw.widget.KoswEditText;
 import kr.co.photointerior.kosw.widget.KoswTextView;
@@ -64,9 +69,11 @@ public class CafeDetailActivity extends BaseActivity {
     private KoswTextView tv_title, txt_cafename, txt_cafe_message, txt_notice_date, txt_notice;
     private KoswTextView txt_open_date, txt_member, txt_admin;
     private KoswEditText txt_cafedesc;
+    private KoswEditText bbs_count;
     private KoswButton btn_join_cafe;
     private AppCompatSpinner spinner, spinner_category;
-    private ImageView btn_back;
+    private ImageView btn_back, img_post;
+    private LinearLayout ll_notice, notice_linearlayout;
     private String mCafeseq = "";
     private String mCafekey = "";
     private List<CafeSubCategory> mCate;
@@ -74,10 +81,13 @@ public class CafeDetailActivity extends BaseActivity {
     private RecyclerView mRecyclerView;
     private RankingAdapter mAdapter;
     private List<RankInCafe> mList = new ArrayList<>();
+    private List<CafeNotice> mBbsList = new ArrayList<>();
 
     private String mBtnType;
     private String mSelectedSpinnerItem = "1";
     private String mSelectedCategorySpinnerItem = "-1";
+
+    private int mBbsCreateResultCode = 1000;
 
     @Override
     protected  void onCreate(Bundle savedInstanceState) {
@@ -128,44 +138,11 @@ public class CafeDetailActivity extends BaseActivity {
         txt_admin.setText("관리자: " + mCafe.getAdmin());
 
         btn_join_cafe = findViewById(R.id.btn_join_cafe);
-        btn_join_cafe.setOnClickListener(v->{
-            if ("1".equals(mCafe.getIsjoin())) {
-                toast(R.string.warn_cafe_already_join);
-            } else {
-                String catenames = "";
-                String cateseqs = "";
-                String additions = "";
 
-                additions = mCafe.getAdditions();
-                if (null != mCate && mCate.size() > 0) {
-                    int idx = 0;
-                    catenames += "분류(부서)를 선택하세요#@#";
-                    cateseqs += "0#@#";
-                    for (int i = 0; i < mCate.size(); i++) {
-                        catenames += mCate.get(i).getName() + "#@#";
-                        cateseqs += mCate.get(i).getCateseq() + "#@#";
-                    }
 
-                    catenames = catenames.substring(0, catenames.length()-3);
-                    cateseqs = cateseqs.substring(0, cateseqs.length()-3);
-                }
-
-                if ("".equals(additions) && "".equals(cateseqs)) {
-                    // 부서 정보와 추가 정보가 없으면 바로 카페 가입
-                    toast("바로가입");
-                } else {
-                    Bundle bu = new Bundle();
-                    bu.putSerializable("cafeseq", mCafe.getCafeseq());
-                    bu.putSerializable("cafename", mCafe.getCafename());
-                    bu.putSerializable("catenames", catenames);
-                    bu.putSerializable("cateseqs", cateseqs);
-                    bu.putSerializable("additions", additions);
-
-                    // kmj mod
-                    callActivity(CafeJoinActivity.class, bu,true);
-                }
-            }
-        });
+        ll_notice  = findViewById(R.id.ll_notice);
+        notice_linearlayout = findViewById(R.id.notice_linearlayout);
+        bbs_count = findViewById(R.id.bbs_count);
 
         spinner = findViewById(R.id.spinner);
         spinner_category = findViewById(R.id.spinner_category);
@@ -175,10 +152,11 @@ public class CafeDetailActivity extends BaseActivity {
                 new LinearLayoutManager(this,
                         LinearLayoutManager.VERTICAL, false));
 
+        img_post = findViewById(R.id.img_post);
+
+
         btn_back = findViewById(R.id.btn_back);
-        btn_back.setOnClickListener(v->{
-            finish();
-        });
+
     }
 
     @Override
@@ -238,11 +216,71 @@ public class CafeDetailActivity extends BaseActivity {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
+        btn_join_cafe.setOnClickListener(v->{
+            if ("1".equals(mCafe.getIsjoin())) {
+                toast(R.string.warn_cafe_already_join);
+            } else {
+                String catenames = "";
+                String cateseqs = "";
+                String additions = "";
+
+                additions = mCafe.getAdditions();
+                if (null != mCate && mCate.size() > 0) {
+                    int idx = 0;
+                    catenames += "분류(부서)를 선택하세요#@#";
+                    cateseqs += "0#@#";
+                    for (int i = 0; i < mCate.size(); i++) {
+                        catenames += mCate.get(i).getName() + "#@#";
+                        cateseqs += mCate.get(i).getCateseq() + "#@#";
+                    }
+
+                    catenames = catenames.substring(0, catenames.length()-3);
+                    cateseqs = cateseqs.substring(0, cateseqs.length()-3);
+                }
+
+                if ("".equals(additions) && "".equals(cateseqs)) {
+                    // 부서 정보와 추가 정보가 없으면 바로 카페 가입
+                    toast("바로가입");
+                } else {
+                    Bundle bu = new Bundle();
+                    bu.putSerializable("cafeseq", mCafe.getCafeseq());
+                    bu.putSerializable("cafename", mCafe.getCafename());
+                    bu.putSerializable("catenames", catenames);
+                    bu.putSerializable("cateseqs", cateseqs);
+                    bu.putSerializable("additions", additions);
+
+                    // kmj mod
+                    callActivity(CafeJoinActivity.class, bu,true);
+                }
+            }
+        });
+
+        img_post.setOnClickListener(v->{
+            Intent intent = new Intent(this, BbsPostActivity.class);
+            intent.putExtra("cafeseq", mCafeseq);
+            intent.putExtra("postType", "BBS");
+
+            startActivityForResult(intent, mBbsCreateResultCode);
+        });
+
+        btn_back.setOnClickListener(v->{
+            finish();
+        });
     }
 
     @Override
     protected void setInitialData() {
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == mBbsCreateResultCode) {
+            getCafeBBS();
+        }
     }
 
     private void setSpinner() {
@@ -539,6 +577,117 @@ public class CafeDetailActivity extends BaseActivity {
 
     }
 
+    private void getCafeBBS() {
+        notice_linearlayout.removeAllViews();
+
+        showSpinner("");
+        AppUserBase user = DataHolder.instance().getAppUserBase() ;
+        Map<String, Object> query = KUtil.getDefaultQueryMap();
+        query.put("user_seq",user.getUser_seq() );
+        query.put("cafeseq", mCafeseq);
+
+        Call<CafeBbsList> call =
+                new DefaultRestClient<CafeService>(this)
+                        .getClient(CafeService.class).bbs(query);
+        call.enqueue(new Callback<CafeBbsList>() {
+            @Override
+            public void onResponse(Call<CafeBbsList> call, Response<CafeBbsList> response) {
+                closeSpinner();
+                LogUtils.err(TAG, response.toString());
+                if (response.isSuccessful()) {
+                    if (null == response.body().getList() || response.body().getList().size() == 0) {
+                        bbs_count.setText("게시글 : 0개");
+                        bbs_count.setTypeface(bbs_count.getTypeface(), Typeface.BOLD);
+                    } else {
+                        mBbsList = response.body().getList();
+
+                        bbs_count.setText("게시글 : " + mBbsList.size() + "개");
+                        bbs_count.setTypeface(bbs_count.getTypeface(), Typeface.BOLD);
+
+                        for (int idx = 0; idx < mBbsList.size(); idx++) {
+                            RowCafeBbs n_layout = new RowCafeBbs(getApplicationContext());
+                            LinearLayout con = (LinearLayout) findViewById(R.id.notice_linearlayout);
+                            con.addView(n_layout);
+
+                            int info_id = Integer.parseInt("200" + mBbsList.get(idx).getBbsseq());
+                            int content_id = Integer.parseInt("300" + mBbsList.get(idx).getBbsseq());
+                            int commcount_id = Integer.parseInt("400" + mBbsList.get(idx).getBbsseq());
+                            int replycomm_id = Integer.parseInt("500" + mBbsList.get(idx).getBbsseq());
+
+                            String notice_info = mBbsList.get(idx).getRegdate() + "   " + mBbsList.get(idx).getNickname() + "님";
+                            KoswEditText et_info = (KoswEditText) con.findViewById(R.id.notice_info);
+                            et_info.setId(info_id);
+                            et_info.setText(notice_info);
+
+                            String notice_content = mBbsList.get(idx).getContent();
+                            KoswEditText et_context = (KoswEditText) con.findViewById(R.id.notice_context);
+                            et_context.setId(content_id);
+                            et_context.setTypeface(et_context.getTypeface(), Typeface.BOLD);
+                            et_context.setText(notice_content);
+
+                            KoswEditText et_comm_count = (KoswEditText) con.findViewById(R.id.notice_comment_count);
+                            et_comm_count.setId(commcount_id);
+
+                            // 댓글달기 이벤트
+                            final String bbsseq = mBbsList.get(idx).getBbsseq();
+                            KoswEditText et_notice_comment = (KoswEditText) con.findViewById(R.id.notice_comment);
+                            et_notice_comment.setId(replycomm_id);
+                            et_notice_comment.setOnClickListener(v->{
+                                Intent intent = new Intent(getApplicationContext(), BbsPostActivity.class);
+                                intent.putExtra("bbsseq", bbsseq);
+                                intent.putExtra("postType", "COMMENT");
+
+                                startActivityForResult(intent, mBbsCreateResultCode);
+                            });
+
+                            if (null != mBbsList.get(idx).getComments() && mBbsList.get(idx).getComments().size() > 0) {
+                                et_comm_count.setText(mBbsList.get(idx).getComments().size() + "");
+
+                                for (int b_idx = 0; b_idx < mBbsList.get(idx).getComments().size(); b_idx++) {
+                                    RowCafeBbsComment b_layout = new RowCafeBbsComment(getApplicationContext());
+                                    LinearLayout b_con = (LinearLayout) findViewById(R.id.notice_linearlayout);
+                                    b_con.addView(b_layout);
+
+                                    int comm_info_id = Integer.parseInt("600" + mBbsList.get(idx).getBbsseq() + mBbsList.get(idx).getComments().get(b_idx).getCommentseq());
+                                    int comm_content_id = Integer.parseInt("700" + mBbsList.get(idx).getBbsseq() + mBbsList.get(idx).getComments().get(b_idx).getCommentseq());
+                                    int comm_date_id = Integer.parseInt("800" + mBbsList.get(idx).getBbsseq() + mBbsList.get(idx).getComments().get(b_idx).getCommentseq());
+
+                                    KoswEditText et_comm_info = (KoswEditText) b_con.findViewById(R.id.comment_context_info);
+                                    et_comm_info.setId(comm_info_id);
+                                    et_comm_info.setTypeface(et_comm_info.getTypeface(), Typeface.BOLD);
+                                    et_comm_info.setText(mBbsList.get(idx).getComments().get(b_idx).getNickname());
+
+                                    KoswEditText et_comm_context = (KoswEditText) b_con.findViewById(R.id.comment_context);
+                                    et_comm_context.setId(comm_content_id);
+                                    et_comm_context.setText(mBbsList.get(idx).getComments().get(b_idx).getContent());
+
+                                    KoswEditText et_comm_date = (KoswEditText) b_con.findViewById(R.id.comment_date);
+                                    et_comm_date.setId(comm_date_id);
+                                    et_comm_date.setText(mBbsList.get(idx).getComments().get(b_idx).getRegdate());
+                                }
+                            } else {
+                                et_comm_count.setText("0");
+                            }
+
+                            RowDotSeparator d_layout = new RowDotSeparator(getApplicationContext());
+                            LinearLayout d_con = (LinearLayout) findViewById(R.id.notice_linearlayout);
+                            d_con.addView(d_layout);
+                        }
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CafeBbsList> call, Throwable t) {
+                closeSpinner();
+                LogUtils.err(TAG, t);
+                toast(R.string.warn_server_not_smooth);
+            }
+        });
+
+    }
+
     private void toggleBtn(int clickId){
         for( int rs : mBtnResId ){
             TextView tv = getView(rs);
@@ -580,7 +729,7 @@ public class CafeDetailActivity extends BaseActivity {
             }
         } else if(mSelectedBtnId == R.id.btn_notice) {
             mBtnType = "N";
-            spinner.setVisibility(View.GONE);
+            getCafeBBS();
             spinner_category.setVisibility(View.GONE);
             if (null != mAdapter) {
                 mAdapter.clear();
@@ -588,7 +737,11 @@ public class CafeDetailActivity extends BaseActivity {
         }
 
         if (!"N".equals(mBtnType)) {
+            ll_notice.setVisibility(View.GONE);
             spinner.setVisibility(View.VISIBLE);
+        } else {
+            ll_notice.setVisibility(View.VISIBLE);
+            spinner.setVisibility(View.GONE);
         }
     }
 

@@ -2,6 +2,7 @@ package kr.co.photointerior.kosw.rest.api;
 
 import java.util.Map;
 
+import kr.co.photointerior.kosw.rest.model.CafeBbsList;
 import kr.co.photointerior.kosw.rest.model.CafeDetail;
 import kr.co.photointerior.kosw.rest.model.CafeMainList;
 import kr.co.photointerior.kosw.rest.model.CafeMyAllList;
@@ -106,4 +107,28 @@ public interface CafeService {
      */
     @POST("api/cafe/rankingIndividualByCategory")
     Call<CafeRankingList> rankingIndividualByCategory(@QueryMap Map<String, Object> queryMap);
+
+    /**
+     * 카페 게시판 리스트
+     * @param queryMap
+     * @return
+     */
+    @POST("api/cafe/bbs")
+    Call<CafeBbsList> bbs(@QueryMap Map<String, Object> queryMap);
+
+    /**
+     * 카페 게시글 작성
+     * @param queryMap
+     * @return
+     */
+    @POST("api/cafe/writeBbs")
+    Call<ResponseBase> writeBbs(@QueryMap Map<String, Object> queryMap);
+
+    /**
+     * 카페 게시글 답글 작성
+     * @param queryMap
+     * @return
+     */
+    @POST("api/cafe/writeComment")
+    Call<ResponseBase> writeComment(@QueryMap Map<String, Object> queryMap);
 }

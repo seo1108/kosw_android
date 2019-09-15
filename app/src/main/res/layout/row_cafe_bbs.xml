@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/box_notice_row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/box_notice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <kr.co.photointerior.kosw.widget.KoswEditText
+            android:id="@+id/notice_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="날짜/작성자"
+            android:padding="10dp"
+            android:textColor="@color/pad_char"
+            android:background="@null"
+            android:textSize="@dimen/sp_15" />
+
+        <kr.co.photointerior.kosw.widget.KoswEditText
+            android:id="@+id/notice_context"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="노티스내용"
+            android:paddingLeft="10dp"
+            android:paddingBottom="10dp"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"
+            android:background="@null"
+            android:textSize="@dimen/sp_15" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingBottom="10dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_notice_cmt" />
+            <kr.co.photointerior.kosw.widget.KoswEditText
+                android:id="@+id/notice_comment_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:paddingLeft="3dp"
+                android:layout_marginTop="-3dp"
+                android:textColor="@color/colorBlack"
+                android:background="@null"
+                android:gravity="top"
+                android:textSize="@dimen/sp_13" />
+
+            <kr.co.photointerior.kosw.widget.KoswEditText
+                android:id="@+id/notice_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="댓글 달기"
+                android:layout_weight="1.0"
+                android:paddingLeft="40dp"
+                android:textColor="@color/pad_char"
+                android:background="@null"
+                android:textSize="@dimen/sp_14" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+</RelativeLayout>

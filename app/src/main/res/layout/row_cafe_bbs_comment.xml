@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/box_comment_row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/box_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingTop="10dp"
+        android:paddingLeft="20dp"
+        android:orientation="horizontal">
+
+        <kr.co.photointerior.kosw.widget.CircleImageView
+            android:layout_width="@dimen/dp_50"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginRight="@dimen/dp_2"
+            android:background="@drawable/circle_00c5ed"
+            android:layout_gravity="top"
+            app:srcCompat="@drawable/img_character1" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <kr.co.photointerior.kosw.widget.KoswEditText
+                android:id="@+id/comment_context_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="작성자"
+                android:paddingLeft="10dp"
+                android:textColor="@color/colorBlack"
+                android:textStyle="bold"
+                android:background="@null"
+                android:textSize="@dimen/sp_15" />
+
+            <kr.co.photointerior.kosw.widget.KoswEditText
+                android:id="@+id/comment_context"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="답글내용"
+                android:paddingLeft="10dp"
+                android:textColor="@color/colorBlack"
+                android:background="@null"
+                android:textSize="@dimen/sp_15" />
+
+            <kr.co.photointerior.kosw.widget.KoswEditText
+                android:id="@+id/comment_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="날짜"
+                android:paddingLeft="10dp"
+                android:textColor="@color/pad_char"
+                android:background="@null"
+                android:textSize="@dimen/sp_14" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
