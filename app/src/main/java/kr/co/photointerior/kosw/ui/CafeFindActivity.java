@@ -74,11 +74,12 @@ public class CafeFindActivity extends BaseActivity {
     protected void attachEvents() {
         findViewById(R.id.btn_find).setOnClickListener(v->{
             String keyword = input_name.getText().toString();
-            if (null != keyword && !"".equals(keyword)) {
+            getFindCafeList(keyword);
+            /*if (null != keyword && !"".equals(keyword)) {
                 getFindCafeList(keyword);
             } else {
                 toast(R.string.warn_keyword_not_input);
-            }
+            }*/
         });
     }
 
@@ -167,9 +168,9 @@ public class CafeFindActivity extends BaseActivity {
             String confirm = item.getConfirm();
             String confirmMessage = "";
             if ("Y".equals(confirm)) {
-                confirmMessage = "비공개/자동 승인";
+                confirmMessage = "비공개";
             } else {
-                confirmMessage = "공개/자동 승인";
+                confirmMessage = "공개";
             }
 
             String memcnt = item.getTotal();

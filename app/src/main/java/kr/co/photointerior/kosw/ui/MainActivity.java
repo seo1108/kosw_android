@@ -377,6 +377,12 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             startService(noti_intent);
         }
 
+        if(!isMyServiceRunning(StepCounterService.class)) {
+            // 자동측정 서비스 실행
+            Intent intent = new Intent(this, StepCounterService.class);
+            startService(intent);
+        }
+
 
 
         String gocafemain = getIntent().getStringExtra("_CAFEMAIN_ACTIVITY_");
@@ -854,6 +860,12 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             mDirectionManager.stopMeasure();
             mStepManager.stopMeasure();
             findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
+           if(isMyServiceRunning(StepCounterService.class)) {
+               // 자동측정중이면
+               TextView tv =  findViewById(R.id.tvPauseMent);
+               tv.setText("자동측정중입니다.");
+           }
+
 
         }else{
 
@@ -1532,6 +1544,12 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 if (isSleep)
                 findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
 
+                if(isMyServiceRunning(StepCounterService.class)) {
+                    // 자동측정중이면
+                    TextView tv =  findViewById(R.id.tvPauseMent);
+                    tv.setText("자동측정중입니다.");
+                }
+
             }
             transaction.replace(R.id.content_frame, fragment);
             transaction.addToBackStack(title + "-" + fragment.getClass().getSimpleName());
@@ -1587,6 +1605,12 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
                 if (isSleep)
                     findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
+
+                if(isMyServiceRunning(StepCounterService.class)) {
+                    // 자동측정중이면
+                    TextView tv =  findViewById(R.id.tvPauseMent);
+                    tv.setText("자동측정중입니다.");
+                }
 
                 LogUtils.err(TAG, entry.getName());
                 if(backStackCount <= 2 ){

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ public class CafeMainActivity extends BaseActivity {
     private KoswButton btnJoin;
     private KoswTextView txt_privacy, txt_cafe_mine, txt_cafe_my;
     private KoswEditText txt_cafekey;
+    private ImageView btn_config;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +66,14 @@ public class CafeMainActivity extends BaseActivity {
 
     @Override
     protected void findViews() {
+        btn_config = findViewById(R.id.btn_config);
+        btn_config.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callActivity(MyCafeManageActivity.class, false);
+            }
+        });
+
         txt_privacy = findViewById(R.id.txt_privacy);
         txt_cafe_mine = findViewById(R.id.txt_cafe_mine);
         txt_cafe_my = findViewById(R.id.txt_cafe_my);

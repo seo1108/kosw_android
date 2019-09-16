@@ -26,41 +26,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@drawable/ic_top_arrow" />
 
+
         <kr.co.photointerior.kosw.widget.KoswTextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="56sp"
             android:gravity="center"
-            android:text="@string/txt_notice_cafe"
+            android:text="@string/txt_my_cafe_manage"
             android:textColor="@color/color_1a1a1a"
             android:textSize="@dimen/sp_20"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
-
-        <kr.co.photointerior.kosw.widget.KoswTextView
-            android:id="@+id/title_regist"
-            android:layout_width="wrap_content"
-            android:layout_height="52sp"
-            android:layout_marginEnd="16dp"
-            android:gravity="center"
-            android:text="@string/txt_register"
-            android:textColor="@color/color_00c5ed"
-            android:textSize="@dimen/sp_20"
-            android:textStyle="bold"
-            android:paddingLeft="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            app:layout_constraintHorizontal_bias="1.0"
-            android:visibility="invisible"/>
-
     </android.support.constraint.ConstraintLayout>
 
     <android.support.v4.widget.NestedScrollView
@@ -68,25 +48,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="55dp"
+        android:layout_marginTop="65dp"
         android:layout_marginEnd="0dp"
         android:layout_marginBottom="5dp">
+
         <LinearLayout
-            android:id="@+id/ll_recycler"
+            android:id="@+id/ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="15dp"
             android:orientation="vertical">
+
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
                 android:scrollbars="none"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
         </LinearLayout>
+
     </android.support.v4.widget.NestedScrollView>
 </RelativeLayout>

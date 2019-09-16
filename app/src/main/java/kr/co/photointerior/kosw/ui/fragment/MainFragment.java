@@ -91,11 +91,15 @@ import kr.co.photointerior.kosw.rest.model.Bbs;
 import kr.co.photointerior.kosw.rest.model.BeaconUuid;
 import kr.co.photointerior.kosw.rest.model.Cafe;
 import kr.co.photointerior.kosw.rest.model.CafeMainList;
+import kr.co.photointerior.kosw.rest.model.CafeNoticeList;
+import kr.co.photointerior.kosw.rest.model.CafeRankingList;
 import kr.co.photointerior.kosw.rest.model.Club;
 import kr.co.photointerior.kosw.rest.model.DataHolder;
 import kr.co.photointerior.kosw.rest.model.GGRRow;
 import kr.co.photointerior.kosw.rest.model.MainData;
+import kr.co.photointerior.kosw.rest.model.Notice;
 import kr.co.photointerior.kosw.rest.model.Profile;
+import kr.co.photointerior.kosw.rest.model.RankInCafe;
 import kr.co.photointerior.kosw.rest.model.Record;
 import kr.co.photointerior.kosw.service.fcm.Push;
 import kr.co.photointerior.kosw.service.noti.NotiService;
@@ -103,6 +107,7 @@ import kr.co.photointerior.kosw.service.noti.NotificationChannelSupport;
 import kr.co.photointerior.kosw.service.stepcounter.StepCounterService;
 import kr.co.photointerior.kosw.ui.BaseActivity;
 import kr.co.photointerior.kosw.ui.CafeChangeActivity;
+import kr.co.photointerior.kosw.ui.CafeNoticeActivity;
 import kr.co.photointerior.kosw.ui.GPSAcceptActivity;
 import kr.co.photointerior.kosw.ui.InfoSettingProfileActivity;
 import kr.co.photointerior.kosw.ui.MainActivity;
@@ -164,6 +169,8 @@ public class MainFragment extends BaseFragment {
 
     private String mSelectedCafeSeq = "";
 
+    private List<Notice> mNoticeList;
+
     private BroadcastReceiver mTestReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -216,9 +223,7 @@ public class MainFragment extends BaseFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("2222222", "RESULTCODE " + resultCode + "___" + Activity.RESULT_OK);
         if (resultCode == Activity.RESULT_OK) {
-            Log.d("2222222", "RESULTCODE1 " + requestCode + "___" + REQUEST_OAUTH_REQUEST_CODE);
             if (requestCode == REQUEST_OAUTH_REQUEST_CODE) {
                 readHistoryData();
             }
@@ -653,6 +658,11 @@ public class MainFragment extends BaseFragment {
      * @param mainData
      */
     private void refreshMainNotiTexts(final Push push, final MainData mainData) {
+        // 선택된 카페의 저지 및 공지사항 가져오기
+        getCafeNotice();
+        getCafeRankingList();
+
+
         if (mActivity != null) {
             mActivity.runOnUiThread(new Runnable() {
                 @Override
@@ -662,7 +672,7 @@ public class MainFragment extends BaseFragment {
                         if ("NOTICE_EVENT_GLOBAL".equals(type)) {//계단왕 공지
                             TextView tv = getTextView(R.id.txt_noti_one);//첫번 째 row
                             tv.setText(push.getStringData("message"));
-                        } else if ("NOTICE_EVENT_CUSTOMER".equals(type)) {//고객사 공지
+                        } /*else if ("NOTICE_EVENT_CUSTOMER".equals(type)) {//고객사 공지
                             TextView tv = getTextView(R.id.txt_noti_two);//두번 째 row
                             tv.setText(push.getStringData("message"));
                         } else if ("JERSEY_GOLD".equals(type)) {
@@ -674,9 +684,9 @@ public class MainFragment extends BaseFragment {
                         } else if ("JERSEY_REDDOT".equals(type)) {
                             TextView tv = getTextView(R.id.txt_noti_five);//다섯번 째 row
                             tv.setText(push.getStringData("message"));
-                        }
+                        }*/
                     } else {//메인 로딩으로 획득한 데이터
-                        TextView tvg1 = getTextView(R.id.tv2101);
+                        /*TextView tvg1 = getTextView(R.id.tv2101);
                         tvg1.setVisibility(View.INVISIBLE);
                         ImageView iv1 = getImageView(R.id.iv2101);
                         iv1.setVisibility(View.INVISIBLE);
@@ -687,7 +697,7 @@ public class MainFragment extends BaseFragment {
                         TextView tvg3 = getTextView(R.id.tv2103);
                         tvg3.setVisibility(View.INVISIBLE);
                         ImageView iv3 = getImageView(R.id.iv2103);
-                        iv3.setVisibility(View.INVISIBLE);
+                        iv3.setVisibility(View.INVISIBLE);*/
 
                         ImageView iv41 = getImageView(R.id.iv4101);
                         iv41.setVisibility(View.INVISIBLE);
@@ -712,7 +722,7 @@ public class MainFragment extends BaseFragment {
                         } else {
                             tv1.setText("");
                         }
-                        TextView tv2 = getTextView(R.id.txt_noti_two);//두번 째 row:회사공지
+                        /*TextView tv2 = getTextView(R.id.txt_noti_two);//두번 째 row:회사공지
                         mCustomerNotice = mainData.getCustomerNotice();
                         if (mCustomerNotice != null) {
                             tv2.setText(mCustomerNotice.getTitle());
@@ -726,7 +736,7 @@ public class MainFragment extends BaseFragment {
                         tv4.setText(mainData.getGreenJersey());
 
                         TextView tv5 = getTextView(R.id.txt_noti_five);//다섯번 째 row:레드닷
-                        tv5.setText(mainData.getRedDotJersey());
+                        tv5.setText(mainData.getRedDotJersey());*/
 
                         AppUserBase user = DataHolder.instance().getAppUserBase();
                         // 나무심기
@@ -762,7 +772,7 @@ public class MainFragment extends BaseFragment {
                             for (GGRRow row : mainData.getGgrList()
                             ) {
 
-                                if (row.getAct_kind().equals("GOLD")) {
+                                /*if (row.getAct_kind().equals("GOLD")) {
                                     TextView tv = getTextView(R.id.tv2101);
                                     tv.setVisibility(View.VISIBLE);
                                     tv.setText(row.getNickname());
@@ -782,7 +792,7 @@ public class MainFragment extends BaseFragment {
                                     tv.setText(row.getNickname());
                                     ImageView iv = getImageView(R.id.iv2103);
                                     iv.setVisibility(View.VISIBLE);
-                                }
+                                }*/
                             }
                         }
 
@@ -954,6 +964,111 @@ public class MainFragment extends BaseFragment {
     }
 
     /**
+     * 선택되어 있는 카페 정보로 메인화면 구성
+     *
+     */
+
+    private void getCafeNotice() {
+        showSpinner("");
+        Map<String, Object> query = KUtil.getDefaultQueryMap();
+        query.put("cafeseq", mSelectedCafeSeq);
+        Call<CafeNoticeList> call =
+                new DefaultRestClient<CafeService>(mActivity)
+                        .getClient(CafeService.class).notice(query);
+
+        call.enqueue(new Callback<CafeNoticeList>() {
+            @Override
+            public void onResponse(Call<CafeNoticeList> call, Response<CafeNoticeList> response) {
+                closeSpinner();
+                LogUtils.err(TAG, response.toString());
+                if (response.isSuccessful()) {
+                    CafeNoticeList noticelist = response.body();
+                    //LogUtils.err(TAG, "profile=" + profile.string());
+                    if (noticelist.isSuccess()) {
+                        mNoticeList = noticelist.getNotice();
+
+                        if (null != mNoticeList && mNoticeList.size() > 0) {
+                            TextView tv2 = getTextView(R.id.txt_noti_two);
+                            tv2.setText(mNoticeList.get(0).getContents());
+                        } else {
+                            TextView tv2 = getTextView(R.id.txt_noti_two);
+                            tv2.setText("카페 공지사항이 없습니다.");
+                        }
+                    } else {
+                    }
+                } else {
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CafeNoticeList> call, Throwable t) {
+                closeSpinner();
+                LogUtils.err(TAG, t);
+
+            }
+        });
+    }
+
+    private void getCafeRankingList() {
+        showSpinner("");
+        AppUserBase user = DataHolder.instance().getAppUserBase() ;
+        Map<String, Object> query = KUtil.getDefaultQueryMap();
+        query.put("user_seq",user.getUser_seq() );
+        query.put("cafeseq", mSelectedCafeSeq);
+        query.put("period", "M");
+
+        Call<CafeRankingList> call =
+                new DefaultRestClient<CafeService>(mActivity)
+                        .getClient(CafeService.class).rankingIndividual(query);
+        call.enqueue(new Callback<CafeRankingList>() {
+            @Override
+            public void onResponse(Call<CafeRankingList> call, Response<CafeRankingList> response) {
+                closeSpinner();
+                LogUtils.err(TAG, response.toString());
+                if (response.isSuccessful()) {
+                    if (null == response.body().getList() || response.body().getList().size() == 0) {
+                    } else {
+                        for (int idx = 0; idx < response.body().getList().size(); idx++) {
+                            if (idx == 0) {
+                                TextView tv = getTextView(R.id.tv2101);
+                                tv.setVisibility(View.VISIBLE);
+                                tv.setText(response.body().getList().get(idx).getNickname());
+                                ImageView iv = getImageView(R.id.iv2101);
+                                iv.setVisibility(View.VISIBLE);
+                            } else if (idx == 1) {
+                                TextView tv = getTextView(R.id.tv2102);
+                                tv.setVisibility(View.VISIBLE);
+                                tv.setText(response.body().getList().get(idx).getNickname());
+                                ImageView iv = getImageView(R.id.iv2102);
+                                iv.setVisibility(View.VISIBLE);
+                            } else if (idx == 2) {
+                                TextView tv = getTextView(R.id.tv2103);
+                                tv.setVisibility(View.VISIBLE);
+                                tv.setText(response.body().getList().get(idx).getNickname());
+                                ImageView iv = getImageView(R.id.iv2103);
+                                iv.setVisibility(View.VISIBLE);
+                            }
+                        }
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CafeRankingList> call, Throwable t) {
+                closeSpinner();
+                LogUtils.err(TAG, t);
+
+            }
+        });
+
+    }
+
+
+
+
+    /**
      * @param data 메인화면 구성 데이터
      */
     private void updateHealthValues(MainData data) {
@@ -1061,16 +1176,12 @@ public class MainFragment extends BaseFragment {
                         .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
                         .build();
         if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(mActivity), fitnessOptions)) {
-            Log.d("22222", "has no permissions");
-
             GoogleSignIn.requestPermissions(
                     this,
                     REQUEST_OAUTH_REQUEST_CODE,
                     GoogleSignIn.getLastSignedInAccount(mActivity),
                     fitnessOptions);
         } else {
-            Log.d("22222", "has permissions");
-
             readHistoryData();
         }
 

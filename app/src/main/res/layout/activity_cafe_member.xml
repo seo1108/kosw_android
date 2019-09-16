@@ -27,86 +27,92 @@
             app:srcCompat="@drawable/ic_top_arrow" />
 
 
+
         <kr.co.photointerior.kosw.widget.KoswTextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="56sp"
             android:gravity="center"
-            android:text="@string/txt_bbs_edit"
+            android:text="@string/txt_member_manage"
             android:textColor="@color/color_1a1a1a"
             android:textSize="@dimen/sp_20"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
     </android.support.constraint.ConstraintLayout>
 
     <LinearLayout
-        android:id="@+id/name_linearlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
         android:layout_marginStart="32dp"
+        android:layout_marginTop="60dp"
         android:layout_marginEnd="32dp"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:paddingBottom="10dp">
 
         <kr.co.photointerior.kosw.widget.KoswEditText
-            android:id="@+id/et_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/button_border_cccccc"
-            android:gravity="top"
-            android:lines="15"
+            android:id="@+id/input_name"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_border_bottom_cccccc"
+            android:drawableLeft="@drawable/ic_action_search"
+            android:hint="이름/닉네임/부서 등 검색"
             android:paddingStart="10dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
+            android:singleLine="true"
             android:textColor="#000"
             android:textCursorDrawable="@null"
-            android:textSize="@dimen/sp_16"
+            android:textSize="@dimen/sp_16" />
+
+        <kr.co.photointerior.kosw.widget.KoswButton
+            android:id="@+id/btn_find"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:background="@drawable/button_border_1a1a1a"
+            android:text="@string/txt_cafe_find_member"
+            android:textColor="@color/text_btn_click"
+            android:textSize="@dimen/sp_14"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:orientation="horizontal">
-            <kr.co.photointerior.kosw.widget.KoswButton
-                android:id="@+id/btn_edit"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginEnd="5dp"
-                android:layout_weight="1.0"
-                android:background="@drawable/button_border_1a1a1a"
-                android:text="@string/txt_edit_done"
-                android:textColor="@color/text_btn_click"
-                android:textSize="@dimen/sp_16"
-                />
-
-            <kr.co.photointerior.kosw.widget.KoswButton
-                android:id="@+id/btn_cancel"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="5dp"
-                android:layout_weight="1.0"
-                android:background="@drawable/button_border_1a1a1a"
-                android:text="@string/txt_cancel_btn"
-                android:textColor="@color/text_btn_click"
-                android:textSize="@dimen/sp_16"
-                android:layout_alignParentBottom="true" />
-        </LinearLayout>
     </LinearLayout>
 
 
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/sv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="125dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="5dp">
+
+        <LinearLayout
+            android:id="@+id/ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:scrollbars="none"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
 </RelativeLayout>

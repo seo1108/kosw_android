@@ -33,6 +33,12 @@ public class Cafe extends ResponseBase {
     private String isjoin;
     @SerializedName("admin")
     private String admin;
+    @SerializedName("adminseq")
+    private String adminseq;
+    @SerializedName("myadditions")
+    private String myadditions;
+    @SerializedName("cateseq")
+    private String cateseq;
 
 
     private boolean selected;
@@ -153,6 +159,30 @@ public class Cafe extends ResponseBase {
         this.selected = selected;
     }
 
+    public String getAdminseq() {
+        return adminseq;
+    }
+
+    public void setAdminseq(String adminseq) {
+        this.adminseq = adminseq;
+    }
+
+    public String getMyadditions() {
+        return myadditions;
+    }
+
+    public void setMyadditions(String myadditions) {
+        this.myadditions = myadditions;
+    }
+
+    public String getCateseq() {
+        return cateseq;
+    }
+
+    public void setCateseq(String cateseq) {
+        this.cateseq = cateseq;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -171,12 +201,15 @@ public class Cafe extends ResponseBase {
                 Objects.equals(confirm, cafe.confirm) &&
                 Objects.equals(isjoin, cafe.isjoin) &&
                 Objects.equals(admin, cafe.admin) &&
+                Objects.equals(adminseq, cafe.adminseq) &&
+                Objects.equals(myadditions, cafe.myadditions) &&
+                Objects.equals(cateseq, cafe.cateseq) &&
                 Objects.equals(cafetype, cafe.cafetype);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(total, cafedesc, additions, cafename, cafekey, logo, opendate, category, cafeseq, confirm, isjoin, admin, selected, cafetype);
+        return Objects.hash(total, cafedesc, additions, cafename, cafekey, logo, opendate, category, cafeseq, confirm, isjoin, admin, adminseq, myadditions, cateseq, selected, cafetype);
     }
 
     @Override
@@ -194,8 +227,12 @@ public class Cafe extends ResponseBase {
                 ", confirm='" + confirm + '\'' +
                 ", isjoin='" + isjoin + '\'' +
                 ", admin='" + admin + '\'' +
+                ", adminseq='" + adminseq + '\'' +
+                ", myadditions='" + myadditions + '\'' +
+                ", cateseq='" + cateseq + '\'' +
                 ", selected=" + selected +
                 ", cafetype='" + cafetype + '\'' +
                 '}';
     }
 }
+

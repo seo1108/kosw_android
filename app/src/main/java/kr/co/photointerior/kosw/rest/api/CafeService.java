@@ -5,6 +5,7 @@ import java.util.Map;
 import kr.co.photointerior.kosw.rest.model.CafeBbsList;
 import kr.co.photointerior.kosw.rest.model.CafeDetail;
 import kr.co.photointerior.kosw.rest.model.CafeMainList;
+import kr.co.photointerior.kosw.rest.model.CafeMemberList;
 import kr.co.photointerior.kosw.rest.model.CafeMyAllList;
 import kr.co.photointerior.kosw.rest.model.CafeNoticeList;
 import kr.co.photointerior.kosw.rest.model.CafeRankingList;
@@ -147,4 +148,28 @@ public interface CafeService {
      */
     @POST("api/cafe/writeComment")
     Call<ResponseBase> writeComment(@QueryMap Map<String, Object> queryMap);
+
+    /**
+     * 카페 멤버 리스트
+     * @param queryMap
+     * @return
+     */
+    @POST("api/cafe/searchUser")
+    Call<CafeMemberList> searchUser(@QueryMap Map<String, Object> queryMap);
+
+    /**
+     * 카페 멤버 강퇴
+     * @param queryMap
+     * @return
+     */
+    @POST("api/cafe/kickUser")
+    Call<ResponseBase> kickUser(@QueryMap Map<String, Object> queryMap);
+
+    /**
+     * 카페 공개/비공개 설정
+     * @param queryMap
+     * @return
+     */
+    @POST("api/cafe/updateConfirm")
+    Call<ResponseBase> updateConfirm(@QueryMap Map<String, Object> queryMap);
 }

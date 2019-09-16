@@ -33,17 +33,19 @@
                     android:layout_width="24dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/top_gold" />
+                    app:srcCompat="@drawable/top_gold"
+                    android:visibility="invisible"/>
 
                 <kr.co.photointerior.kosw.widget.KoswTextView
                     android:id="@+id/tv2101"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="제다이님"
+                    android:text=""
                     android:textColor="@android:color/white"
                     android:textSize="11dp"
-                    app:fontFamily="sans-serif" />
+                    app:fontFamily="sans-serif"
+                    android:visibility="invisible"/>
             </LinearLayout>
 
             <LinearLayout
@@ -57,7 +59,8 @@
                     android:layout_width="24dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/top_green"/>
+                    app:srcCompat="@drawable/top_green"
+                    android:visibility="invisible"/>
 
                 <kr.co.photointerior.kosw.widget.KoswTextView
                     android:id="@+id/tv2102"
@@ -65,10 +68,11 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:singleLine="true"
-                    android:text="chrky1213122121님"
+                    android:text=""
                     android:textColor="@android:color/white"
                     android:textSize="11dp"
-                    app:fontFamily="sans-serif" />
+                    app:fontFamily="sans-serif"
+                    android:visibility="invisible"/>
             </LinearLayout>
 
             <LinearLayout
@@ -82,7 +86,8 @@
                     android:layout_width="24dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/top_red"/>
+                    app:srcCompat="@drawable/top_red"
+                    android:visibility="invisible"/>
 
                 <kr.co.photointerior.kosw.widget.KoswTextView
                     android:id="@+id/tv2103"
@@ -90,10 +95,11 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:singleLine="true"
-                    android:text="하록선장님"
+                    android:text=""
                     android:textColor="@android:color/white"
                     android:textSize="11dp"
-                    app:fontFamily="sans-serif" />
+                    app:fontFamily="sans-serif"
+                    android:visibility="invisible"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -279,7 +285,7 @@
                     android:textStyle="bold"
                     tools:text="계단왕 시스템 점검"/>
 
-                <TextView
+                <!--<TextView
                     android:id="@+id/txt_noti_two"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -291,7 +297,20 @@
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/sp_11"
                     android:textStyle="bold"
-                    tools:text="디자인팀 이벤트 진행예정"/>
+                    tools:text="디자인팀 이벤트 진행예정"/>-->
+
+                <TextView
+                    android:id="@+id/txt_noti_two"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    android:maxWidth="500dp"
+                    android:lines="3"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/sp_11"
+                    android:textStyle="bold"
+                    tools:text="디자인팀 이벤트 진행예정" />
 
                 <TextView
                     android:id="@+id/txt_noti_three"
@@ -305,7 +324,8 @@
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/sp_11"
                     android:textStyle="bold"
-                    tools:text="감자님이 레드저지를 획득"/>
+                    tools:text="감자님이 레드저지를 획득"
+                    android:visibility="invisible"/>
 
                 <TextView
                     android:id="@+id/txt_noti_four"
@@ -319,7 +339,8 @@
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/sp_11"
                     android:textStyle="bold"
-                    tools:text="하록선장님이 레드닷 저지를 획득"/>
+                    tools:text="하록선장님이 레드닷 저지를 획득"
+                    android:visibility="invisible"/>
 
                 <TextView
                     android:id="@+id/txt_noti_five"
@@ -333,7 +354,8 @@
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/sp_11"
                     android:textStyle="bold"
-                    tools:text="하록선장님이 레드닷 저지를 획득"/>
+                    tools:text="하록선장님이 레드닷 저지를 획득"
+                    android:visibility="invisible"/>
 
             </LinearLayout>
 

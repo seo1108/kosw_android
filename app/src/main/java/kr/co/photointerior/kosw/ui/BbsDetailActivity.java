@@ -37,14 +37,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class BbsDetailActivity extends BaseUserActivity {
+public class BbsDetailActivity extends BaseActivity {
     private String TAG = LogUtils.makeLogTag(BbsDetailActivity.class);
     private KoswEditText et_content;
     private KoswButton btn_edit, btn_del;
     private ImageView btn_back;
 
-    private String mBbsseq, mContent;
-    private boolean mIsAdmin, mIsCreator;
+    private String mBbsseq, mContent, mIsAdmin;
+    private boolean mIsCreator;
     private int mBbsCreateResultCode = 1000;
 
     private Dialog mDialog;
@@ -56,7 +56,7 @@ public class BbsDetailActivity extends BaseUserActivity {
 
         mBbsseq = getIntent().getStringExtra("bbsseq");
         mContent = getIntent().getStringExtra("content");
-        mIsAdmin = getIntent().getBooleanExtra("isAdmin", false);
+        mIsAdmin = getIntent().getStringExtra("isAdmin");
         mIsCreator = getIntent().getBooleanExtra("isCreator", false);
 
         findViews();
@@ -99,9 +99,9 @@ public class BbsDetailActivity extends BaseUserActivity {
     protected void setInitialData() {
         et_content.setText(mContent);
 
-        if (!mIsCreator && mIsAdmin) {
+        if (!mIsCreator && "Y".equals(mIsAdmin)) {
             btn_edit.setVisibility(View.GONE);
-        } else if (!mIsCreator && !mIsAdmin) {
+        } else if (!mIsCreator && !"Y".equals(mIsAdmin)) {
             btn_edit.setVisibility(View.GONE);
             btn_del.setVisibility(View.GONE);
         }
@@ -113,7 +113,7 @@ public class BbsDetailActivity extends BaseUserActivity {
         if (RESULT_OK == resultCode) {
             if (requestCode == mBbsCreateResultCode) {
                 Intent intent = new Intent();
-                setResult(mBbsCreateResultCode, intent);
+                setResult(RESULT_OK, intent);
                 finish();
             }
         }

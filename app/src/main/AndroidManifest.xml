@@ -302,6 +302,36 @@
             android:screenOrientation="portrait"
             android:theme="@style/Kosw.NoActionbar"/>
 
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.CafeNoticeEditActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.CafeNoticePostActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.CafeConfigActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.CafeCategoryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.CafeMemberActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+
+        <activity
+            android:name="kr.co.photointerior.kosw.ui.MyCafeManageActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Kosw.NoActionbar"/>
+
         <service android:name="kr.co.photointerior.kosw.service.fcm.FcmMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>

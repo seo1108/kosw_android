@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/box_of_row"
+    android:layout_height="54dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:background="@drawable/button_border_bottom_cccccc">
+    <!-- 개인, 그룹랭킹 1,2,3위 이외와 제일 상단 내 랭킹 row -->
+    <TextView
+        android:id="@+id/txt_name"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_6"
+        android:gravity="center"
+        android:text="1,000"
+        android:textColor="@color/color_1a1a1a"
+        android:textSize="@dimen/sp_15"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <TextView
+            android:id="@+id/txt_nickname"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:gravity="center"
+            android:text="하록선장"
+            android:textColor="@color/color_1a1a1a"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txt_catename"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:gravity="center"
+            android:text="디자인"
+            android:textColor="@color/color_1a1a1a"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <kr.co.photointerior.kosw.widget.KoswButton
+        android:id="@+id/btn_manage"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="@dimen/dp_62"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:text="@string/txt_member_unregister"
+        android:textColor="@color/color_1a1a1a"
+        android:textSize="@dimen/sp_15"
+        android:background="@drawable/button_border_1a1a1a"
+        android:layout_marginEnd="@dimen/dp_6" />
+</LinearLayout>

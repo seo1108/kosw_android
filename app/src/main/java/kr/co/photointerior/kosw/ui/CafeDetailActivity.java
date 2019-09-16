@@ -44,6 +44,7 @@ import kr.co.photointerior.kosw.rest.model.CafeNoticeList;
 import kr.co.photointerior.kosw.rest.model.CafeRankingList;
 import kr.co.photointerior.kosw.rest.model.CafeSubCategory;
 import kr.co.photointerior.kosw.rest.model.DataHolder;
+import kr.co.photointerior.kosw.rest.model.MyInfo;
 import kr.co.photointerior.kosw.rest.model.Notice;
 import kr.co.photointerior.kosw.rest.model.RankInCafe;
 import kr.co.photointerior.kosw.ui.row.RowCafeBbs;
@@ -62,6 +63,7 @@ import retrofit2.Response;
 public class CafeDetailActivity extends BaseActivity {
     private String TAG = LogUtils.makeLogTag(CafeDetailActivity.class);
     private Cafe mCafe;
+    private MyInfo mMyInfo;
     private List<Notice> mNoticeList;
 
     private int[] mBtnResId = {
@@ -78,7 +80,7 @@ public class CafeDetailActivity extends BaseActivity {
     private KoswEditText bbs_count;
     private KoswButton btn_join_cafe;
     private AppCompatSpinner spinner, spinner_category;
-    private ImageView btn_back, img_post;
+    private ImageView btn_back, img_post, btn_config;
     private LinearLayout ll_notice, notice_linearlayout;
     private String mCafeseq = "";
     private String mCafekey = "";
@@ -94,10 +96,11 @@ public class CafeDetailActivity extends BaseActivity {
     private String mSelectedCategorySpinnerItem = "-1";
 
     private int mBbsCreateResultCode = 1000;
+    private int mCafeConfigurationResultCode = 2000;
 
     private List<Cafe> mCAdminList = new ArrayList<>();
 
-    private boolean isAdmin;
+    private String isAdmin = "N";
 
     @Override
     protected  void onCreate(Bundle savedInstanceState) {
@@ -107,11 +110,7 @@ public class CafeDetailActivity extends BaseActivity {
         mCafeseq = getIntent().getStringExtra("cafeseq");
         mCafekey = getIntent().getStringExtra("cafekey");
 
-        isAdmin();
         getCafeDetail();
-
-
-
     }
 
     @Override
@@ -119,12 +118,17 @@ public class CafeDetailActivity extends BaseActivity {
         String confirm = mCafe.getConfirm();
         String join = mCafe.getIsjoin();
 
+        btn_config = findViewById(R.id.btn_config);
+
         tv_title = findViewById(R.id.tv_title);
         tv_title.setText(mCafe.getCafename());
 
         txt_cafename = findViewById(R.id.txt_cafename);
         txt_cafename.setTypeface(txt_cafename.getTypeface(), Typeface.BOLD);
         txt_cafename.setText(mCafe.getCafename());
+
+        txt_cafedesc = findViewById(R.id.txt_cafedesc);
+        txt_cafedesc.setText(mCafe.getCafedesc());
 
         txt_cafe_message = findViewById(R.id.txt_cafe_message);
         txt_cafe_message.setTypeface(txt_cafe_message.getTypeface(), Typeface.BOLD);
@@ -182,8 +186,6 @@ public class CafeDetailActivity extends BaseActivity {
                         LinearLayoutManager.VERTICAL, false));
 
         img_post = findViewById(R.id.img_post);
-
-
         btn_back = findViewById(R.id.btn_back);
 
     }
@@ -290,18 +292,28 @@ public class CafeDetailActivity extends BaseActivity {
             Intent intent = new Intent(this, BbsPostActivity.class);
             intent.putExtra("cafeseq", mCafeseq);
             intent.putExtra("postType", "BBS");
-
             startActivityForResult(intent, mBbsCreateResultCode);
         });
 
         btn_back.setOnClickListener(v->{
             finish();
         });
+
+        btn_config.setOnClickListener(v->{
+            Intent intent = new Intent(this, CafeConfigActivity.class);
+            intent.putExtra("cafeseq", mCafeseq);
+            intent.putExtra("type", "MODIFY");
+            startActivityForResult(intent, mCafeConfigurationResultCode);
+        });
     }
 
     @Override
     protected void setInitialData() {
-
+        if ("Y".equals(isAdmin)) {
+            btn_config.setVisibility(View.VISIBLE);
+        } else {
+            btn_config.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -310,6 +322,12 @@ public class CafeDetailActivity extends BaseActivity {
         if (RESULT_OK == resultCode) {
             if (requestCode == mBbsCreateResultCode) {
                 getCafeBBS();
+            } else if (requestCode == mCafeConfigurationResultCode) {
+                Bundle bu = new Bundle();
+                bu.putSerializable("cafeseq", mCafe.getCafeseq());
+                bu.putSerializable("cafekey", mCafe.getCafekey());
+                // kmj mod
+                callActivity(CafeDetailActivity.class, bu,true);
             }
         }
     }
@@ -375,8 +393,11 @@ public class CafeDetailActivity extends BaseActivity {
                     //LogUtils.err(TAG, "profile=" + profile.string());
                     if (cafedetail.isSuccess()) {
                         mCafe = cafedetail.getCafe();
+                        mMyInfo = cafedetail.getMyInfo();
                         mCafeseq = mCafe.getCafeseq();
                         mCate = mCafe.getCategory();
+
+                        isAdmin = mMyInfo.getIsAdmin();
 
                         findViews();
                         setSpinner();
@@ -754,46 +775,6 @@ public class CafeDetailActivity extends BaseActivity {
             }
         });
 
-    }
-
-
-    private void isAdmin() {
-        AppUserBase user = DataHolder.instance().getAppUserBase() ;
-        Map<String, Object> query = KUtil.getDefaultQueryMap();
-        query.put("user_seq",user.getUser_seq() );
-        Call<CafeMyAllList> call =
-                new DefaultRestClient<CafeService>(this)
-                        .getClient(CafeService.class).selectMyCafeMainList(query);
-        call.enqueue(new Callback<CafeMyAllList>() {
-            @Override
-            public void onResponse(Call<CafeMyAllList> call, Response<CafeMyAllList> response) {
-                if (response.isSuccessful()) {
-                    CafeMyAllList cafelist = response.body();
-                    //LogUtils.err(TAG, "profile=" + profile.string());
-                    if (cafelist.isSuccess()) {
-                        mCAdminList = cafelist.getAdminList();
-                        if (null != mCAdminList && mCAdminList.size() > 0) {
-                            for (int i = 0; i < mCAdminList.size(); i++) {
-                                if (mCafeseq.equals(mCAdminList.get(i).getCafeseq())) {
-                                    isAdmin = true;
-                                    break;
-                                }
-                            }
-                        }
-
-                    } else {
-                        isAdmin = false;
-                    }
-                } else {
-                    isAdmin = false;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<CafeMyAllList> call, Throwable t) {
-                isAdmin = false;
-            }
-        });
     }
 
     private void toggleBtn(int clickId){

@@ -111,7 +111,7 @@
         android:id="@+id/LayoutPause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="70dp"
+        android:layout_marginBottom="150dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:gravity="center"
@@ -125,9 +125,9 @@
             android:id="@+id/btn_pause"
             android:layout_width="52dp"
             android:layout_height="52dp"
-            android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
             android:background="@drawable/circle"
             android:backgroundTint="@color/cardview_light_background"
             app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
@@ -141,9 +141,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="측정중이 아닙니다"
-            android:textStyle="bold"
+            android:textColor="@color/colorWhite"
             android:textAlignment="center"
-            android:textSize="10sp"/>
+            android:textSize="10dp"
+            android:textStyle="bold" />
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -3,7 +3,6 @@ package kr.co.photointerior.kosw.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
 
 import java.util.Map;
@@ -22,15 +21,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class BbsEditActivity extends BaseActivity {
-    private String TAG = LogUtils.makeLogTag(BbsDetailActivity.class);
+public class CafeNoticeEditActivity extends BaseActivity {
+    private String TAG = LogUtils.makeLogTag(CafeNoticeEditActivity.class);
     private KoswEditText et_content;
-    private KoswButton btn_edit, btn_cancel;
+    private KoswButton btn_edit, btn_delete;
     private ImageView btn_back;
 
-    private String mBbsseq, mContent;
-    private int mBbsCreateResultCode = 1000;
-    private int mBbsCreateCancelResultCode = 2000;
+    private String mNotiseq, mContent;
 
     Activity mActivity;
 
@@ -38,9 +35,9 @@ public class BbsEditActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = this;
-        setContentView(R.layout.activity_bbs_edit);
+        setContentView(R.layout.activity_cafe_notice_edit);
 
-        mBbsseq = getIntent().getStringExtra("bbsseq");
+        mNotiseq = getIntent().getStringExtra("notiseq");
         mContent = getIntent().getStringExtra("content");
 
         findViews();
@@ -53,7 +50,7 @@ public class BbsEditActivity extends BaseActivity {
         et_content = findViewById(R.id.et_content);
 
         btn_edit = findViewById(R.id.btn_edit);
-        btn_cancel = findViewById(R.id.btn_cancel);
+        btn_delete = findViewById(R.id.btn_delete);
 
         btn_back = findViewById(R.id.btn_back);
     }
@@ -61,13 +58,13 @@ public class BbsEditActivity extends BaseActivity {
     @Override
     protected void attachEvents() {
         btn_edit.setOnClickListener(v->{
-            modifyBbs();
+            // 수정
+
         });
 
-        btn_cancel.setOnClickListener(v->{
-            Intent intent = new Intent() ;
-            setResult(RESULT_CANCELED, intent);
-            mActivity.finish();
+        btn_delete.setOnClickListener(v->{
+            // 삭제
+
         });
 
         btn_back.setOnClickListener(v->{
@@ -75,6 +72,11 @@ public class BbsEditActivity extends BaseActivity {
             setResult(RESULT_CANCELED, intent);
             mActivity.finish();
         });
+    }
+
+    @Override
+    protected void setInitialData() {
+        et_content.setText(mContent);
     }
 
     private void modifyBbs() {
@@ -90,7 +92,7 @@ public class BbsEditActivity extends BaseActivity {
         AppUserBase user = DataHolder.instance().getAppUserBase() ;
         Map<String, Object> query = KUtil.getDefaultQueryMap();
         query.put("user_seq",user.getUser_seq() );
-        query.put("bbsseq", mBbsseq);
+        query.put("notiseq", mNotiseq);
         query.put("content", content);
 
         Call<ResponseBase> call =
@@ -104,15 +106,15 @@ public class BbsEditActivity extends BaseActivity {
                 if(response.isSuccessful()){
                     ResponseBase base = response.body();
                     if(base.isSuccess()) {
-                        toast(R.string.cafe_bbs_edit_success);
+                        toast(R.string.cafe_notice_edit_success);
                         Intent intent = new Intent() ;
                         setResult(RESULT_OK, intent);
                         finish();
                     }else{
-                        toast(R.string.warn_cafe_fail_bbs_edit);
+                        toast(R.string.warn_cafe_fail_notice_edit);
                     }
                 }else{
-                    toast(R.string.warn_cafe_fail_bbs_edit);
+                    toast(R.string.warn_cafe_fail_notice_edit);
                 }
             }
 
@@ -124,8 +126,5 @@ public class BbsEditActivity extends BaseActivity {
         });
     }
 
-    @Override
-    protected void setInitialData() {
-        et_content.setText(mContent);
-    }
+
 }

@@ -1,11 +1,13 @@
 package kr.co.photointerior.kosw.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,7 @@ import kr.co.photointerior.kosw.rest.model.Notice;
 import kr.co.photointerior.kosw.utils.KUtil;
 import kr.co.photointerior.kosw.utils.LogUtils;
 import kr.co.photointerior.kosw.widget.KoswEditText;
+import kr.co.photointerior.kosw.widget.KoswTextView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,8 +36,12 @@ public class CafeNoticeActivity extends BaseActivity {
     private RecyclerView mRecyclerView;
     private CafeNoticeAdapter mAdapter;
     private ImageView btn_back;
-    private String mCafeseq;
+    private KoswTextView title_regist;
+    private String mCafeseq, mType;
     private List<Notice> mNoticeList;
+
+    private int mNoticeCreateResultCode = 3000;
+    //private int mNoticeEditResultCode = 3000;
 
     @Override
     protected  void onCreate(Bundle savedInstanceState) {
@@ -42,6 +49,7 @@ public class CafeNoticeActivity extends BaseActivity {
         setContentView(R.layout.activity_cafe_notice);
 
         mCafeseq = getIntent().getStringExtra("cafeseq");
+        mType = getIntent().getStringExtra("type");
 
         findViews();
         attachEvents();
@@ -52,8 +60,15 @@ public class CafeNoticeActivity extends BaseActivity {
 
     @Override
     protected void findViews() {
-        btn_back = findViewById(R.id.btn_back);
+        title_regist = findViewById(R.id.title_regist);
 
+        if (null != mType && "MODIFY".equals(mType)) {
+            title_regist.setVisibility(View.VISIBLE);
+        } else {
+            title_regist.setVisibility(View.GONE);
+        }
+
+        btn_back = findViewById(R.id.btn_back);
 
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(
@@ -65,6 +80,14 @@ public class CafeNoticeActivity extends BaseActivity {
 
     @Override
     protected void attachEvents() {
+
+        title_regist.setOnClickListener(v->{
+            Intent intent = new Intent(getApplicationContext(), CafeNoticePostActivity.class);
+            intent.putExtra("cafeseq", mCafeseq);
+            startActivityForResult(intent, mNoticeCreateResultCode);
+        });
+
+
         btn_back.setOnClickListener(v->{
             finish();
         });
@@ -73,6 +96,17 @@ public class CafeNoticeActivity extends BaseActivity {
     @Override
     protected void setInitialData() {
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (RESULT_OK == resultCode) {
+            if (requestCode == mNoticeCreateResultCode) {
+                getCafeNotice();
+            }
+        }
+    }
+
 
     private void getCafeNotice() {
         showSpinner("");
@@ -92,6 +126,10 @@ public class CafeNoticeActivity extends BaseActivity {
                     //LogUtils.err(TAG, "profile=" + profile.string());
                     if (noticelist.isSuccess()) {
                         mNoticeList = noticelist.getNotice();
+
+                        if (null != mAdapter) {
+                            mAdapter.clear();
+                        }
 
                         if (null != mNoticeList && mNoticeList.size() > 0) {
                             mAdapter = new CafeNoticeAdapter(getApplicationContext(), mNoticeList);
@@ -145,6 +183,19 @@ public class CafeNoticeActivity extends BaseActivity {
 
             String regdate = item.getRegdate();
             holder.txt_date.setText(regdate);
+
+            if (null != mType && "MODIFY".equals(mType)) {
+                holder.btn_config.setVisibility(View.VISIBLE);
+                holder.btn_config.setOnClickListener(v->{
+                    Intent intent = new Intent(getApplicationContext(), CafeNoticeEditActivity.class);
+                    intent.putExtra("cafeseq", mCafeseq);
+                    intent.putExtra("notiseq", item.getNotiseq());
+                    intent.putExtra("content", item.getContents());
+                    startActivityForResult(intent, mNoticeCreateResultCode);
+                });
+            } else {
+                holder.btn_config.setVisibility(View.INVISIBLE);
+            }
         }
 
         @Override
@@ -168,6 +219,7 @@ public class CafeNoticeActivity extends BaseActivity {
 
         class CafeNoticeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             TextView txt_title, txt_date;
+            ImageView btn_config;
 
             public CafeNoticeHolder(View view, int viewType) {
                 super(view);
@@ -177,6 +229,7 @@ public class CafeNoticeActivity extends BaseActivity {
             private void pickupViews(int type){
                 txt_title = itemView.findViewById(R.id.txt_title);
                 txt_date = itemView.findViewById(R.id.txt_date);
+                btn_config = itemView.findViewById(R.id.btn_config);
             }
 
             @Override

@@ -266,6 +266,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txt_cate_user_message" />
 
+
             <kr.co.photointerior.kosw.widget.KoswEditText
                 android:id="@+id/txt_cate_user_title"
                 android:layout_width="match_parent"
@@ -283,9 +284,9 @@
                 android:textCursorDrawable="@null"
                 android:textSize="@dimen/sp_16"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txt_cate_user_ex" />
-
 
             <kr.co.photointerior.kosw.widget.KoswTextView
                 android:id="@+id/txt_cate_info1"
