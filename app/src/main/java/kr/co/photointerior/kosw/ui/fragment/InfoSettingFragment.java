@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
@@ -58,6 +59,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.Context.MODE_PRIVATE;
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
@@ -354,6 +356,7 @@ public class InfoSettingFragment extends BaseFragment {
 
     private void setAutoTrackingSwitch(){
         MenuRow auto = getView(R.id.btn_auto_tracking_setting);
+        String background = "";
         if(isMyServiceRunning(StepCounterService.class)) {
             auto.setIconRight(R.drawable.ic_swip_off);
 
@@ -361,6 +364,8 @@ public class InfoSettingFragment extends BaseFragment {
             mActivity.stopService(walk_intent);
             //AppConst.IS_BACKGROUND = false;
             updateNotification();
+
+            background = "manual";
         }else{
             auto.setIconRight(R.drawable.ic_swip_on);
 
@@ -368,7 +373,14 @@ public class InfoSettingFragment extends BaseFragment {
             mActivity.startService(walk_intent);
             //AppConst.IS_BACKGROUND = true;
             updateNotification();
+
+            background = "auto";
         }
+
+        SharedPreferences prefr = mActivity.getSharedPreferences("background", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefr.edit();
+        editor.putString("background", background);
+        editor.commit();
     }
 
     private void updateNotification() {

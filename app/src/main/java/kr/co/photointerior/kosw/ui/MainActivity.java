@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -335,12 +336,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
         mSleepCnt = 0 ;
 
-        /******** 임시주석 ********/
-        if(!isMyServiceRunning(StepCounterService.class)) {
-            startMeasure(true);
-            handler.post(runnable);
-        }
-        /**************************/
+
 /*
 
         /////==================== 계단 업 테스트 =================/////
@@ -377,11 +373,28 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             startService(noti_intent);
         }
 
-        if(!isMyServiceRunning(StepCounterService.class)) {
-            // 자동측정 서비스 실행
-            Intent intent = new Intent(this, StepCounterService.class);
-            startService(intent);
+
+        SharedPreferences prefr = getSharedPreferences("background", MODE_PRIVATE);
+        String background = prefr.getString("background", "");
+
+        if (null != background && "auto".equals(background)) {
+            findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
+            TextView tv =  findViewById(R.id.tvPauseMent);
+            tv.setText("자동측정중입니다.");
+
+            if (!isMyServiceRunning(StepCounterService.class)) {
+                // 자동측정 서비스 실행
+                Intent intent = new Intent(this, StepCounterService.class);
+                startService(intent);
+            }
         }
+
+        /******** 임시주석 ********/
+        if(!isMyServiceRunning(StepCounterService.class)) {
+            startMeasure(true);
+            handler.post(runnable);
+        }
+        /**************************/
 
 
 
@@ -1665,6 +1678,16 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
     @Override
     protected void onResume() {
+        SharedPreferences prefr = getSharedPreferences("background", MODE_PRIVATE);
+        String background = prefr.getString("background", "");
+
+        if ("auto".equals(background)) {
+            findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
+            TextView tv =  findViewById(R.id.tvPauseMent);
+            tv.setText("자동측정중입니다.");
+        }
+
+
         /*if(!isMyServiceRunning(StepCounterService.class)) {
             startMeasure(true);
             handler.post(runnable);
