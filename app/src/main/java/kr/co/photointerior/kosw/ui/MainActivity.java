@@ -371,7 +371,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         //Intent walk_intent = new Intent(this, StepCounterService.class);
         //startService(walk_intent);
 
-        if(!isMyServiceRunning(NotiService.class)) {
+        /*if(!isMyServiceRunning(NotiService.class)) {
             // 노티피케이션 서비스 실행
             Intent noti_intent = new Intent(this, NotiService.class);
             startService(noti_intent);
@@ -391,7 +391,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 Intent intent = new Intent(this, StepCounterService.class);
                 startService(intent);
             }
-        }
+        }*/
 
         /******** 임시주석 ********/
         if(!isMyServiceRunning(StepCounterService.class)) {
