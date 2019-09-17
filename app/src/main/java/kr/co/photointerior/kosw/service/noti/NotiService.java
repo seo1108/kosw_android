@@ -1,6 +1,7 @@
 package kr.co.photointerior.kosw.service.noti;
 
 import android.app.ActivityManager;
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,9 +11,11 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.wifi.WifiManager;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -31,6 +34,11 @@ public class NotiService extends Service {
     PowerManager.WakeLock wakeLock;
     Context mContext;
 
+    private static final int MILLISINFUTURE = 1000*1000;
+    private static final int COUNT_DOWN_INTERVAL = 1000;
+
+    private CountDownTimer countDownTimer;
+
     @Override
     public IBinder onBind(Intent intent) {
 
@@ -46,8 +54,82 @@ public class NotiService extends Service {
         return Service.START_STICKY;
     }
 
+    @Override
+    public void onCreate() {
+        unregisterRestartAlarm();
+        super.onCreate();
+
+        initData();
+    }
+
     //서비스가 종료될 때 할 작업
     public void onDestroy() {
+        super.onDestroy();
+
+        Log.i("NotiService" , "onDestroy" );
+        countDownTimer.cancel();
+
+        /**
+         * 서비스 종료 시 알람 등록을 통해 서비스 재 실행
+         */
+        registerRestartAlarm();
+    }
+
+    private void initData(){
+        countDownTimer();
+        countDownTimer.start();
+    }
+
+    public void countDownTimer(){
+
+        countDownTimer = new CountDownTimer(MILLISINFUTURE, COUNT_DOWN_INTERVAL) {
+            public void onTick(long millisUntilFinished) {
+
+                Log.i("NotiService","onTick");
+            }
+            public void onFinish() {
+
+                Log.i("NotiService","onFinish");
+            }
+        };
+    }
+
+    private void registerRestartAlarm(){
+
+        Log.i("000 NotiService" , "registerRestartAlarm" );
+        Intent intent = new Intent(NotiService.this,RestartService.class);
+        intent.setAction("ACTION.RESTART.NotiService");
+        PendingIntent sender = PendingIntent.getBroadcast(NotiService.this,0,intent,0);
+
+        long firstTime = SystemClock.elapsedRealtime();
+        firstTime += 1*1000;
+
+        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+
+        /**
+         * 알람 등록
+         */
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,firstTime,1*1000,sender);
+
+    }
+
+    private void unregisterRestartAlarm(){
+
+        Log.i("000 NotiService" , "unregisterRestartAlarm" );
+
+        Intent intent = new Intent(NotiService.this,RestartService.class);
+        intent.setAction("ACTION.RESTART.NotiService");
+        PendingIntent sender = PendingIntent.getBroadcast(NotiService.this,0,intent,0);
+
+        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+
+        /**
+         * 알람 취소
+         */
+        alarmManager.cancel(sender);
+
+
+
     }
 
     /*private NotificationCompat.Action generateAction(int icon, String title, String intentAction ) {

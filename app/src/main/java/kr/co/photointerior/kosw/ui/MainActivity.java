@@ -101,6 +101,8 @@ import kr.co.photointerior.kosw.service.fcm.Push;
 import kr.co.photointerior.kosw.service.net.NetworkConnectivityReceiver;
 import kr.co.photointerior.kosw.service.net.NetworkSchedulerService;
 import kr.co.photointerior.kosw.service.noti.NotiService;
+import kr.co.photointerior.kosw.service.noti.RestartService;
+import kr.co.photointerior.kosw.service.receiver.BootStartupReceiver;
 import kr.co.photointerior.kosw.service.stepcounter.StepCounterService;
 import kr.co.photointerior.kosw.ui.fragment.BaseFragment;
 import kr.co.photointerior.kosw.ui.fragment.CityRankFragment;
@@ -229,6 +231,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     private  String mIsBuild = "" ; // Y :건물계단    N : 등산계단
     private  int mClimbCount = 0 ;  // 등산 카운트 (4미터 체크)
     private  int mLogicCount = 0 ;  // 로직 카운트 (회전 )
+
+    private RestartService restartService;
 
 
     @Override
@@ -404,6 +408,20 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             callActivity(CafeMainActivity.class, false);
         }
 
+
+
+
+
+        // 죽지않는 서비스 구현
+        restartService = new RestartService();
+        Intent intent = new Intent(MainActivity.this, NotiService.class);
+
+
+        IntentFilter intentFilter = new IntentFilter("kr.co.photointerior.kosw.service.noti.NotiService");
+        //브로드 캐스트에 등록
+        registerReceiver(restartService,intentFilter);
+        // 서비스 시작
+        startService(intent);
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
@@ -1664,6 +1682,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
         }
         super.onDestroy();
+
+        unregisterReceiver(restartService);
     }
 
     @Override
