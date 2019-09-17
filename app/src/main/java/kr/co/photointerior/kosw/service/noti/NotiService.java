@@ -51,6 +51,14 @@ public class NotiService extends Service {
         mContext = this;
         thread = new ServiceThread(this);
         thread.start();
+        SharedPreferences prefr = getSharedPreferences("background", MODE_PRIVATE);
+        String background = prefr.getString("background", "auto");
+
+        if ("auto".equals(background)) {
+            Intent startintent = new Intent(this, StepCounterService.class);
+            startService(startintent);
+        }
+
         buildNotification();
         return Service.START_STICKY;
     }

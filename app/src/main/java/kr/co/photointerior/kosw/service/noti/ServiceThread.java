@@ -302,7 +302,7 @@ public class ServiceThread extends Thread{
             for (Field field : dp.getDataType().getFields()) {
                 //Toast.makeText(mContext, dp.getValue(field).toString(), Toast.LENGTH_LONG).show();
                 todayStep = dp.getValue(field).toString();
-                updateNotification();
+               // updateNotification();
             }
         }
     }
