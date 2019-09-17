@@ -354,7 +354,12 @@ public class CafeDetailActivity extends BaseActivity {
                 if (idx == 0) {
                     mSelectedCategorySpinnerItem = mCate.get(idx).getCateseq();
                 }
-                categoryList.add(new SubCategory(mCate.get(idx).getCateseq(), mCate.get(idx).getName()));
+
+                if ("1".equals(mCafe.getIsjoin())) {
+                    categoryList.add(new SubCategory(mCate.get(idx).getCateseq(), mCate.get(idx).getName()));
+                } else {
+                    categoryList.add(new SubCategory(mCate.get(idx).getCateseq(), "*****"));
+                }
             }
 
             ArrayAdapter<SubCategory> adapter = new ArrayAdapter<SubCategory>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, categoryList);
@@ -397,7 +402,11 @@ public class CafeDetailActivity extends BaseActivity {
                         mCafeseq = mCafe.getCafeseq();
                         mCate = mCafe.getCategory();
 
-                        isAdmin = mMyInfo.getIsAdmin();
+                        if ("1".equals(mCafe.getIsjoin())) {
+                            isAdmin = mMyInfo.getIsAdmin();
+                        } else {
+                            isAdmin = "N";
+                        }
 
                         findViews();
                         setSpinner();
@@ -962,12 +971,22 @@ public class CafeDetailActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull RankingRowHolder holder, int position) {
+            String join = mCafe.getIsjoin();
+
             RankInCafe item = mItems.get(position);
 
             String rank = item.getRank();
             String nickname = item.getNickname();
             String catename = item.getCatename();
             String act_amt = item.getAct_amt();
+
+            // 미가입카페인 경우,
+            if (!"1".equals(join))
+            {
+                if (null != nickname) nickname = nickname.substring(0, 1) + "****";
+                if (null != catename) catename = "*****";
+            }
+
 
             holder.ranking.setText(rank);
 

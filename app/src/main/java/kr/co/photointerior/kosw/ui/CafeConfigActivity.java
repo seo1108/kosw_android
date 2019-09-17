@@ -23,6 +23,7 @@ import kr.co.photointerior.kosw.rest.model.Cafe;
 import kr.co.photointerior.kosw.rest.model.CafeDetail;
 import kr.co.photointerior.kosw.rest.model.CafeSubCategory;
 import kr.co.photointerior.kosw.rest.model.DataHolder;
+import kr.co.photointerior.kosw.rest.model.ResponseBase;
 import kr.co.photointerior.kosw.utils.KUtil;
 import kr.co.photointerior.kosw.utils.LogUtils;
 import kr.co.photointerior.kosw.widget.KoswButton;
@@ -112,6 +113,8 @@ public class CafeConfigActivity extends BaseActivity {
                     // TODO : CheckBox is checked.
                     check_privacy_hide.setChecked(true);
                     check_privacy_open.setChecked(false);
+
+                    updateConfirm("Y");
                 } else {
                     // TODO : CheckBox is unchecked.
                     check_privacy_hide.setChecked(true);
@@ -133,6 +136,8 @@ public class CafeConfigActivity extends BaseActivity {
                     // TODO : CheckBox is checked.
                     check_privacy_hide.setChecked(false);
                     check_privacy_open.setChecked(true);
+
+                    updateConfirm("N");
                 } else {
                     // TODO : CheckBox is unchecked.
                     check_privacy_hide.setChecked(false);
@@ -157,6 +162,7 @@ public class CafeConfigActivity extends BaseActivity {
         rl_member.setOnClickListener(v->{
             Bundle bu = new Bundle();
             bu.putSerializable("cafeseq", mCafe.getCafeseq());
+            bu.putSerializable("adminseq", mCafe.getAdminseq());
             callActivity(CafeMemberActivity.class, bu,false);
         });
 
@@ -168,7 +174,7 @@ public class CafeConfigActivity extends BaseActivity {
 
         btn_back.setOnClickListener(v->{
             Intent intent = new Intent() ;
-            setResult(RESULT_CANCELED, intent);
+            setResult(RESULT_OK, intent);
             finish();
         });
     }
@@ -248,5 +254,56 @@ public class CafeConfigActivity extends BaseActivity {
         intent.putExtra(Intent.EXTRA_TEXT, text);
         Intent chooser = Intent.createChooser(intent, "공유할 앱을 선택하세요.");
         startActivity(chooser);
+    }
+
+    private void updateConfirm(String confirm) {
+        showSpinner("");
+
+        AppUserBase user = DataHolder.instance().getAppUserBase() ;
+        Map<String, Object> query = KUtil.getDefaultQueryMap();
+        query.put("user_seq",user.getUser_seq() );
+        query.put("confirm", confirm);
+        query.put("cafeseq", mCafeseq);
+
+        Call<ResponseBase> call =
+                new DefaultRestClient<CafeService>(this)
+                        .getClient(CafeService.class).updateConfirm(query);
+
+        call.enqueue(new Callback<ResponseBase>() {
+            @Override
+            public void onResponse(Call<ResponseBase> call, Response<ResponseBase> response) {
+                LogUtils.err(TAG, response.raw().toString());
+                if(response.isSuccessful()){
+                    ResponseBase base = response.body();
+                    if(base.isSuccess()) {
+                        if ("Y".equals(confirm)) {
+                            toast(R.string.cafe_close);
+                        } else {
+                            toast(R.string.cafe_open);
+                        }
+                    }else{
+                        toast(R.string.warn_cafe_member_fail_kick);
+                    }
+                }else{
+                    toast(R.string.warn_cafe_member_fail_kick);
+                }
+
+                closeSpinner();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBase> call, Throwable t) {
+                closeSpinner();
+                LogUtils.err(TAG, t);
+                toast(R.string.warn_server_not_smooth);
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent() ;
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }

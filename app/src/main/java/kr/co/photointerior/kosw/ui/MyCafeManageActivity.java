@@ -1,6 +1,7 @@
 package kr.co.photointerior.kosw.ui;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -340,6 +341,16 @@ public class MyCafeManageActivity extends BaseActivity {
         query.put("kick_user_seq", kickuserseq);
         query.put("cafeseq", cafeseq);
 
+        SharedPreferences prefr = getSharedPreferences("lastSelectedCafe", MODE_PRIVATE);
+        String selectedCafeSeq = prefr.getString("cafeseq", "");
+
+        // 탈퇴한 카페가 현재 선택된 카페랑 같을 경우, 선택된 카페를 리셋한다.
+        if (selectedCafeSeq.equals(cafeseq)) {
+            SharedPreferences.Editor editor = prefr.edit();
+            editor.putString("cafeseq", "");
+            editor.commit();
+        }
+
         Call<ResponseBase> call =
                 new DefaultRestClient<CafeService>(this)
                         .getClient(CafeService.class).kickUser(query);
@@ -351,7 +362,7 @@ public class MyCafeManageActivity extends BaseActivity {
                 if(response.isSuccessful()){
                     ResponseBase base = response.body();
                     if(base.isSuccess()) {
-                        toast(R.string.cafe_member_kick_success);
+                        toast(R.string.cafe_member_kick_myself_success);
                         mAdapter.deleteItem(position);
                     }else{
                         toast(R.string.warn_cafe_member_fail_kick);
@@ -359,10 +370,12 @@ public class MyCafeManageActivity extends BaseActivity {
                 }else{
                     toast(R.string.warn_cafe_member_fail_kick);
                 }
+                closeSpinner();
             }
 
             @Override
             public void onFailure(Call<ResponseBase> call, Throwable t) {
+                closeSpinner();
                 LogUtils.err(TAG, t);
                 toast(R.string.warn_server_not_smooth);
             }

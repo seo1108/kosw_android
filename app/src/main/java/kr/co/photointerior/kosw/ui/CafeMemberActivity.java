@@ -42,7 +42,7 @@ public class CafeMemberActivity extends BaseActivity {
     private KoswEditText input_name;
     private ImageView btn_back;
 
-    private String mCafeseq;
+    private String mCafeseq, mAdminseq;
 
     private List<CafeMember> mList = new ArrayList<>();
 
@@ -52,6 +52,7 @@ public class CafeMemberActivity extends BaseActivity {
         setContentView(R.layout.activity_cafe_member);
 
         mCafeseq = getIntent().getStringExtra("cafeseq");
+        mAdminseq = getIntent().getStringExtra("adminseq");
 
         findViews();
         attachEvents();
@@ -163,10 +164,13 @@ public class CafeMemberActivity extends BaseActivity {
                 }else{
                     toast(R.string.warn_cafe_member_fail_kick);
                 }
+
+                closeSpinner();
             }
 
             @Override
             public void onFailure(Call<ResponseBase> call, Throwable t) {
+                closeSpinner();
                 LogUtils.err(TAG, t);
                 toast(R.string.warn_server_not_smooth);
             }
@@ -205,10 +209,14 @@ public class CafeMemberActivity extends BaseActivity {
             holder.txt_nickname.setText(nickname);
             holder.txt_catename.setText(catename);
 
-            holder.btn_manage.setOnClickListener(v->{
-                // 강퇴
-                kickUser(item.getUser_seq(), position);
-            });
+            if (mAdminseq.equals(item.getUser_seq())) {
+                holder.btn_manage.setVisibility(View.INVISIBLE);
+            } else {
+                holder.btn_manage.setOnClickListener(v -> {
+                    // 강퇴
+                    kickUser(item.getUser_seq(), position);
+                });
+            }
         }
 
         @Override

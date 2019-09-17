@@ -90,6 +90,7 @@ import kr.co.photointerior.kosw.rest.model.AppUserBase;
 import kr.co.photointerior.kosw.rest.model.Bbs;
 import kr.co.photointerior.kosw.rest.model.BeaconUuid;
 import kr.co.photointerior.kosw.rest.model.Cafe;
+import kr.co.photointerior.kosw.rest.model.CafeDetail;
 import kr.co.photointerior.kosw.rest.model.CafeMainList;
 import kr.co.photointerior.kosw.rest.model.CafeNoticeList;
 import kr.co.photointerior.kosw.rest.model.CafeRankingList;
@@ -149,6 +150,7 @@ public class MainFragment extends BaseFragment {
     private Boolean isNoAny = false;
     private ActivityRecord mActivityRecord;
     private DataHolder mDataHolder = DataHolder.instance();
+    private Cafe mCafe;
 
     private static String stepCount = "";
     private static String floorCount = "";
@@ -219,6 +221,9 @@ public class MainFragment extends BaseFragment {
 
         SharedPreferences prefr = mActivity.getSharedPreferences("lastSelectedCafe", MODE_PRIVATE);
         mSelectedCafeSeq = prefr.getString("cafeseq", "");
+
+        // 현재 선택된 카페의 유효성 체크
+        getCafeDetail();
     }
 
     @Override
@@ -1063,6 +1068,49 @@ public class MainFragment extends BaseFragment {
             }
         });
 
+    }
+
+    private void getCafeDetail() {
+        AppUserBase user = DataHolder.instance().getAppUserBase() ;
+        Map<String, Object> query = KUtil.getDefaultQueryMap();
+        query.put("user_seq",user.getUser_seq() );
+        query.put("cafeseq", mSelectedCafeSeq);
+
+        Call<CafeDetail> call =
+                new DefaultRestClient<CafeService>(mActivity)
+                        .getClient(CafeService.class).detail(query);
+
+        call.enqueue(new Callback<CafeDetail>() {
+            @Override
+            public void onResponse(Call<CafeDetail> call, Response<CafeDetail> response) {
+                if (response.isSuccessful()) {
+                    CafeDetail cafedetail = response.body();
+                    //LogUtils.err(TAG, "profile=" + profile.string());
+                    if (cafedetail.isSuccess()) {
+                        mCafe = cafedetail.getCafe();
+
+                        if (null != mCafe && "1".equals(mCafe.getIsjoin())) {
+                        } else {
+                            // 유효한 카페가 아니면 리로드
+                            SharedPreferences prefr = mActivity.getSharedPreferences("lastSelectedCafe", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = prefr.edit();
+                            editor.putString("cafeseq", "");
+                            editor.commit();
+
+                            // 프래그먼트 리플래쉬
+                            mSelectedCafeSeq = "";
+                            mActivity.displayFragment(Env.FragmentType.HOME);
+                        }
+
+                    } else {
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CafeDetail> call, Throwable t) {
+            }
+        });
     }
 
 

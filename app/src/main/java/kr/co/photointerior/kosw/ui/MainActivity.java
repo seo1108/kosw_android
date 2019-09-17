@@ -375,7 +375,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
 
         SharedPreferences prefr = getSharedPreferences("background", MODE_PRIVATE);
-        String background = prefr.getString("background", "");
+        String background = prefr.getString("background", "manual");
 
         if (null != background && "auto".equals(background)) {
             findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
@@ -1679,12 +1679,16 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     @Override
     protected void onResume() {
         SharedPreferences prefr = getSharedPreferences("background", MODE_PRIVATE);
-        String background = prefr.getString("background", "");
+        String background = prefr.getString("background", "manual");
 
         if ("auto".equals(background)) {
             findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
             TextView tv =  findViewById(R.id.tvPauseMent);
             tv.setText("자동측정중입니다.");
+        } else {
+            findViewById(R.id.LayoutPause).setVisibility(View.INVISIBLE);
+            startMeasure(true);
+            handler.post(runnable);
         }
 
 
