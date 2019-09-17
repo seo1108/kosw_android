@@ -1,5 +1,6 @@
 package kr.co.photointerior.kosw.service.noti;
 
+import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -46,6 +47,7 @@ import kr.co.photointerior.kosw.rest.model.AppUserBase;
 import kr.co.photointerior.kosw.rest.model.DataHolder;
 import kr.co.photointerior.kosw.rest.model.MainData;
 import kr.co.photointerior.kosw.rest.model.ResponseBase;
+import kr.co.photointerior.kosw.service.stepcounter.StepCounterService;
 import kr.co.photointerior.kosw.ui.MainActivity;
 import kr.co.photointerior.kosw.utils.KUtil;
 import kr.co.photointerior.kosw.utils.LogUtils;
@@ -83,6 +85,18 @@ public class ServiceThread extends Thread{
         while(isRun){
 
             try{
+                // 계단측정 서비스 alive 체크
+                // 자동실행이지만, 서비스가 죽어있으면 재시작
+                SharedPreferences pref = mContext.getSharedPreferences("background", MODE_PRIVATE);
+                String background = pref.getString("background", "auto");
+                if ("auto".equals(background)) {
+                    if (!isMyServiceRunning(StepCounterService.class)) {
+                        // 자동측정 서비스 실행
+                        Intent intent = new Intent(mContext, StepCounterService.class);
+                        mContext.startService(intent);
+                    }
+                }
+
                 //requestToServer();
                 // 어제걸음수 전송된 데이터가 없다면 전송
                 DateFormat d_dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -107,6 +121,16 @@ public class ServiceThread extends Thread{
 
 
         }
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void saveWalkStep(String date, int walk_count) {

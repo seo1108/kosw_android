@@ -375,7 +375,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
 
         SharedPreferences prefr = getSharedPreferences("background", MODE_PRIVATE);
-        String background = prefr.getString("background", "manual");
+        String background = prefr.getString("background", "auto");
 
         if (null != background && "auto".equals(background)) {
             findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);

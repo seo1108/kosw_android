@@ -589,6 +589,14 @@ public class MainFragment extends BaseFragment {
             isNoAny = false;
             requestToServer();
         }
+
+
+        if(isMyServiceRunning(StepCounterService.class)) {
+            // 자동측정중이면
+            TextView tv =  mActivity.findViewById(R.id.tvPauseMent);
+            tv.setText("자동측정중입니다.");
+        }
+
         super.onResume();
     }
 

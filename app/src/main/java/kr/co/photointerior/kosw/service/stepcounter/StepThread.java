@@ -213,26 +213,38 @@ public class StepThread extends Thread {
             //return ;
         }
 
-        Log.d("99999977777", mTrashStep + "_______" + cnt + "___" + mSaveStep + "______" + mStep);
+        Log.d("99999977777", String.valueOf(mStarted) + mTrashStep + "_______" + cnt + "___" + mSaveStep + "______" + mStep);
 
         // 30초 이상 걷기 없으면 잠금
-        if (cnt >= 10 * 30   )  {
+        if (cnt >= 10 * 30 )  {
 
             if (mSaveStep <=  0 ) { // 걷기중이아니면
                 //Toast.makeText(mContext, "걷기중이아니면", Toast.LENGTH_SHORT).show();
-                mSleepCnt = mMaxSleepCnt;
+                // 원본소스
+                /*mSleepCnt = mMaxSleepCnt;
                 sleepMode = 0 ;
                 initMeasure();
-                return;
-            } else {  // 120초이상 측정이 없으면 측정 잠금  mSleepCnt >= 4
-                //Toast.makeText(mContext, "120초이상 측정이 없으면 측정 잠금", Toast.LENGTH_SHORT).show();
+                return;*/
+
+                // 수정소스
+                //Toast.makeText(mContext, "측정이 없으면 측정 잠금", Toast.LENGTH_SHORT).show();
                 sleepMode = 1 ;
                 mSleepCnt++ ;
                 initMeasure();
                 return;
             }
+
+           /* else {  // 120초이상 측정이 없으면 측정 잠금  mSleepCnt >= 4
+                Toast.makeText(mContext, "120초이상 측정이 없으면 측정 잠금", Toast.LENGTH_SHORT).show();
+                sleepMode = 1 ;
+                mSleepCnt++ ;
+                initMeasure();
+                return;
+            }*/
         }
         mSaveStep = 0 ;
+
+        Log.d("999999777778888", String.valueOf(mStarted) + mTrashStep + "_______" + cnt + "___" + mSaveStep + "______" + mStep);
 
         MeasureObj obj = mStartList.get(cnt) ;
         obj.altitude = mAltitude ;
@@ -258,7 +270,7 @@ public class StepThread extends Thread {
         double gapStep =   0 ;
         gapStep = obj.step - obj_b.step ;
 
-        if (cnt > 50) {
+            if (cnt > 50) {
             MeasureObj obj_c ;
             obj_c = mStartList.get(cnt - 50 ) ;
             obj.stepGap = Math.abs(obj.step - obj_c.step);
@@ -267,7 +279,7 @@ public class StepThread extends Thread {
 
         double step = gapStep ; // 초당 걸음수
         mSaveStep = step ;
-
+        Log.d("999999777779999", String.valueOf(mStarted) + mTrashStep + "_______" + cnt + "___" + mSaveStep + "______" + mStep);
         List<Double> list = Arrays.asList(obj.xGap,obj.yGap,obj.zGap ) ;
         Double mDir =  Collections.max(list) ;
 
@@ -528,12 +540,13 @@ public class StepThread extends Thread {
         goupTime = System.currentTimeMillis();
 
         // 5분 지나면 잠금
-        /*if (mSleepCnt >= mMaxSleepCnt ) {
+        if (mSleepCnt >= mMaxSleepCnt ) {
+            Toast.makeText(mContext, "슬립모드", Toast.LENGTH_SHORT).show();
             isSleep = true;;
             mSleepCnt = 0  ;
             mStarted = false ;
             startMeasure(false);
-        }*/
+        }
 
     }
 
@@ -573,8 +586,8 @@ public class StepThread extends Thread {
             }
             cnt = 0;
 
-            mAltiManager.stopMeasure();
-            mDirectionManager.stopMeasure();
+            if (mAltiManager != null) mAltiManager.stopMeasure();
+            if (mDirectionManager != null) mDirectionManager.stopMeasure();
             //mStepManager.stopMeasure();
             //findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
 
@@ -657,6 +670,7 @@ public class StepThread extends Thread {
             mStartList.add(new MeasureObj());
         }
         cnt = 0;
+        Toast.makeText(mContext, "측정시작", Toast.LENGTH_SHORT).show();
     }
 
     public void setCurrentOrientation2(double x ,double y, double z  ){
