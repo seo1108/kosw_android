@@ -224,7 +224,10 @@ public class MainFragment extends BaseFragment {
 
         // 현재 선택된 카페의 유효성 체크
         if (!"".equals(mSelectedCafeSeq)) {
-            getCafeDetail();
+            AppUserBase user = DataHolder.instance().getAppUserBase() ;
+            if (null != user) {
+                getCafeDetail();
+            }
         }
     }
 

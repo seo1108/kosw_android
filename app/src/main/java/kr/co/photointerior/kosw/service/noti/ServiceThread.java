@@ -85,17 +85,7 @@ public class ServiceThread extends Thread{
         while(isRun){
 
             try{
-                // 계단측정 서비스 alive 체크
-                // 자동실행이지만, 서비스가 죽어있으면 재시작
-                SharedPreferences pref = mContext.getSharedPreferences("background", MODE_PRIVATE);
-                String background = pref.getString("background", "auto");
-                if ("auto".equals(background)) {
-                    if (!isMyServiceRunning(StepCounterService.class)) {
-                        // 자동측정 서비스 실행
-                        Intent intent = new Intent(mContext, StepCounterService.class);
-                        mContext.startService(intent);
-                    }
-                }
+
 
                 //requestToServer();
                 // 어제걸음수 전송된 데이터가 없다면 전송
