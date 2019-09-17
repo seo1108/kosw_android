@@ -79,14 +79,6 @@ public class NotiService extends Service {
     private void initData(){
         countDownTimer();
         countDownTimer.start();
-
-        // 계단측정 서비스 alive 체크
-        // 자동실행이지만, 서비스가 죽어있으면 재시작
-       if (!isMyServiceRunning(StepCounterService.class)) {
-                // 자동측정 서비스 실행
-                Intent intent = new Intent(mContext, StepCounterService.class);
-                mContext.startService(intent);
-       }
     }
 
     public void countDownTimer(){
