@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -82,6 +84,7 @@ public class CafeDetailActivity extends BaseActivity {
     private AppCompatSpinner spinner, spinner_category;
     private ImageView btn_back, img_post, btn_config;
     private LinearLayout ll_notice, notice_linearlayout;
+    private NestedScrollView sv;
     private String mCafeseq = "";
     private String mCafekey = "";
     private List<CafeSubCategory> mCate;
@@ -97,6 +100,9 @@ public class CafeDetailActivity extends BaseActivity {
 
     private int mBbsCreateResultCode = 1000;
     private int mCafeConfigurationResultCode = 2000;
+
+    private int offsetY = 0;
+    private String bbsType = "";
 
     private List<Cafe> mCAdminList = new ArrayList<>();
 
@@ -117,6 +123,8 @@ public class CafeDetailActivity extends BaseActivity {
     protected void findViews() {
         String confirm = mCafe.getConfirm();
         String join = mCafe.getIsjoin();
+
+        sv = findViewById(R.id.sv);
 
         btn_config = findViewById(R.id.btn_config);
 
@@ -289,6 +297,7 @@ public class CafeDetailActivity extends BaseActivity {
         });
 
         img_post.setOnClickListener(v->{
+            bbsType = "BBS";
             Intent intent = new Intent(this, BbsPostActivity.class);
             intent.putExtra("cafeseq", mCafeseq);
             intent.putExtra("postType", "BBS");
@@ -706,6 +715,7 @@ public class CafeDetailActivity extends BaseActivity {
                                     intent.putExtra("bbsseq", bbsseq);
                                     intent.putExtra("content", bbscontent);
                                     intent.putExtra("isAdmin", isAdmin);
+                                    bbsType = "BBS";
 
                                     if (creatorseq.equals(String.valueOf(user.getUser_seq()))) {
                                         intent.putExtra("isCreator", true);
@@ -718,11 +728,18 @@ public class CafeDetailActivity extends BaseActivity {
                                 });
                             //}
 
+
+
                             // 댓글달기 이벤트
 
                             KoswEditText et_notice_comment = (KoswEditText) con.findViewById(R.id.notice_comment);
                             et_notice_comment.setId(replycomm_id);
                             et_notice_comment.setOnClickListener(v->{
+                                //con.setTranslationY();
+                                bbsType = "COMMENT";
+                                offsetY = sv.getScrollY();
+
+                                et_notice_comment.getTranslationY();
                                 Intent intent = new Intent(getApplicationContext(), BbsPostActivity.class);
                                 intent.putExtra("bbsseq", bbsseq);
                                 intent.putExtra("postType", "COMMENT");
@@ -770,9 +787,20 @@ public class CafeDetailActivity extends BaseActivity {
                             RowDotSeparator d_layout = new RowDotSeparator(getApplicationContext());
                             LinearLayout d_con = (LinearLayout) findViewById(R.id.notice_linearlayout);
                             d_con.addView(d_layout);
+
+
+                        }
+
+                        // 댓글 작성 후, 댓글 단 위치로 이동
+                        if ("COMMENT".equals(bbsType) && offsetY > 0) {
+                            ViewTreeObserver vto = sv.getViewTreeObserver();
+                            vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                                public void onGlobalLayout() {
+                                    sv.scrollTo(0, offsetY);
+                                }
+                            });
                         }
                     }
-
                 }
             }
 
