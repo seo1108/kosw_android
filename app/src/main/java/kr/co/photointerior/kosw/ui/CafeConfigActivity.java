@@ -183,7 +183,12 @@ public class CafeConfigActivity extends BaseActivity {
     protected void setInitialData() {
         txt_cafename.setText(mCafe.getCafename());
         txt_cafedesc.setText(mCafe.getCafedesc());
-        txt_cafekey.setText(getResources().getString(R.string.txt_cafekey) + " : " + mCafe.getCafekey());
+        if (null != mCafe.getCafekey()) {
+            txt_cafekey.setText(getResources().getString(R.string.txt_cafekey) + " : " + mCafe.getCafekey());
+        } else {
+            txt_cafekey.setText("");
+        }
+
         if ("Y".equals(mCafe.getConfirm())) {
             check_privacy_hide.setChecked(true);
             check_privacy_open.setChecked(false);

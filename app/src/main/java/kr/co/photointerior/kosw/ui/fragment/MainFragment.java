@@ -223,7 +223,9 @@ public class MainFragment extends BaseFragment {
         mSelectedCafeSeq = prefr.getString("cafeseq", "");
 
         // 현재 선택된 카페의 유효성 체크
-        getCafeDetail();
+        if (!"".equals(mSelectedCafeSeq)) {
+            getCafeDetail();
+        }
     }
 
     @Override
