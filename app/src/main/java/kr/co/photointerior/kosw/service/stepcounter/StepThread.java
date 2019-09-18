@@ -912,8 +912,7 @@ public class StepThread extends Thread {
 
         PendingIntent contentPendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        builder.setContentTitle("[자동측정]")
-                .setContentText("[랭킹:" + ranking + "] " + floor + "F / " + cal + "kcal / " + sec + "sec")
+        builder.setContentText("[랭킹:" + ranking + "] " + floor + "F / " + cal + "kcal / " + sec + "sec")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_floor))
                 .setWhen(System.currentTimeMillis())
