@@ -634,10 +634,6 @@ public class StepThread extends Thread {
 
             isSleep = false  ;
 
-            mAltiManager.stopMeasure();
-            mDirectionManager.stopMeasure();
-            mStepManager.stopMeasure();
-
             mAltiManager.startMeasure();
             mDirectionManager.startMeasure();
             mStepManager.startMeasure();
