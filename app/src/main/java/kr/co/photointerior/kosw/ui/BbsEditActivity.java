@@ -128,4 +128,19 @@ public class BbsEditActivity extends BaseActivity {
     protected void setInitialData() {
         et_content.setText(mContent);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

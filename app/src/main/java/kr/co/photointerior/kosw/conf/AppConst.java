@@ -10,4 +10,5 @@ public class AppConst {
     public static String NOTI_SECS = "0";
 
     public static boolean IS_BACKGROUND = false;
+    public static boolean IS_MAIN_RUNNED = false;
 }

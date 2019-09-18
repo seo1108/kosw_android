@@ -368,4 +368,19 @@ public class CafeMainActivity extends BaseActivity {
         super.onBackPressed();
         overridePendingTransition(R.anim.fade_in_full,R.anim.slide_out_right);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

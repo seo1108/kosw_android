@@ -135,8 +135,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     private String TAG = LogUtils.makeLogTag(MainActivity.class);
 
     /** current fragment instance. */
-
-
     private static boolean isTest = false ;
     private Location mLocation ;
     private Address mAddr ;
@@ -326,19 +324,18 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(mCharacterChangeReceiver, new IntentFilter(Env.Action.CHARACTER_CHANGED_ACTION.action()));
 
-        //checkBatteryWhiteList();
-        mStartList.clear();
+        /*mStartList.clear();
         for (int i = 0; i < 600; i++) {
             mStartList.add(new MeasureObj());
-        }
+        }*/
 
         scheduleJob();//network state monitoring
 
-        mAltiManager = new AltitudeManager(this);
+        /*mAltiManager = new AltitudeManager(this);
         mStepManager = new StepManager(this) ;
         mDirectionManager = new DirectionManager(this) ;
 
-        mSleepCnt = 0 ;
+        mSleepCnt = 0 ;*/
 
 
 /*
@@ -400,9 +397,10 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         //}
         /**************************/
 
-        startMeasure(true);
-        handler.post(runnable);
+        /*startMeasure(true);
+        handler.post(runnable);*/
 
+        startCalcStairs();
 
         String gocafemain = getIntent().getStringExtra("_CAFEMAIN_ACTIVITY_");
 
@@ -424,10 +422,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         // 서비스 시작
         startService(intent);
 
-        SharedPreferences prefr = getSharedPreferences("background", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefr.edit();
-        editor.putString("background", "manual");
-        editor.commit();
+        AppConst.IS_MAIN_RUNNED = true;
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
@@ -1688,29 +1683,10 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 //            }catch(IllegalArgumentException e){}*/
 //
 //        }
-
         LogUtils.err(TAG, "MainActivity#onDestroy()");
         stopService(new Intent(getBaseContext(), BeaconRagingInRegionService.class));
-        stopService(new Intent(getBaseContext(), StepSensorService.class));
-        mStepManager.stopMeasure();
         //unregisterReceiver(mExitReceiver);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mCharacterChangeReceiver);
-
-        SharedPreferences prefr = getSharedPreferences("background", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefr.edit();
-        editor.putString("background", "auto");
-        editor.commit();
-
-        // 자동측정서비스 시작
-        if(!isMyServiceRunning(StepCounterService.class)) {
-            Intent startintent = new Intent(this, StepCounterService.class);
-            startService(startintent);
-            toast("수동 종료 / 서비스 측정 시작 by onDestroy");
-        } else {
-            toast("수동 종료 / 서비스 측정 이미 시작됨 by onDestroy");
-        }
-
-
 
         super.onDestroy();
 
@@ -1719,82 +1695,21 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
     @Override
     protected void onPause() {
-        //BusProvider.instance().unregister(this);
         LogUtils.err(TAG, "MainActivity#onPause()");
-        //setBeaconManagerMode(true);
         isActivity = false ;
 
         stopService(new Intent(getBaseContext(), BeaconRagingInRegionService.class));
         stopService(new Intent(getBaseContext(), StepSensorService.class));
-        mStepManager.stopMeasure();
-        //unregisterReceiver(mExitReceiver);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mCharacterChangeReceiver);
-
-        SharedPreferences prefr = getSharedPreferences("background", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefr.edit();
-        editor.putString("background", "auto");
-        editor.commit();
-
-        // 자동측정서비스 시작
-        Intent startintent = new Intent(this, StepCounterService.class);
-        startService(startintent);
-
-        toast("수동 종료 / 서비스 측정 시작 by onPause");
-
-        handler.removeCallbacks(runnable);
-        startMeasure(false);
 
         super.onPause();
     }
 
+
     @Override
     protected void onResume() {
-        //startService(new Intent(getBaseContext(), BeaconRagingInRegionService.class));
-        startService(new Intent(getBaseContext(), StepSensorService.class));
-        mStepManager.startMeasure();
-        //unregisterReceiver(mExitReceiver);
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(mCharacterChangeReceiver, new IntentFilter(Env.Action.CHARACTER_CHANGED_ACTION.action()));
-
-        SharedPreferences prefr = getSharedPreferences("background", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefr.edit();
-        editor.putString("background", "manual");
-        editor.commit();
-
-
-        // 자동측정서비스 종료
-        Intent startintent = new Intent(this, StepCounterService.class);
-        stopService(startintent);
-
-        // 측정시작
-        startMeasure(true);
-        handler.post(runnable);
-
-        toast("측정 시작 by onResume");
-
-        /*if ("auto".equals(background)) {
-            findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
-            TextView tv =  findViewById(R.id.tvPauseMent);
-            tv.setText("자동측정중입니다.");
-        } else {
-            findViewById(R.id.LayoutPause).setVisibility(View.INVISIBLE);
-            startMeasure(true);
-            handler.post(runnable);
-        }*/
-
-
-        /*if(!isMyServiceRunning(StepCounterService.class)) {
-            startMeasure(true);
-            handler.post(runnable);
-        }
-
-
-        if (!AppConst.IS_BACKGROUND) {
-            checkStart();
-        } else {
-            handler.removeCallbacks(runnable);
-            startMeasure(false);
-        }*/
 
         isActivity = true ;
         //BusProvider.instance().register(this);
@@ -1808,14 +1723,10 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
         if (app.isPop) {
             showStartPopup();
-            startMeasure(true);
         }
 
         if (app.isInit) {  // 다시 화면 빠졌다 들어오면 락 클리어
             app.isInit = false ;
-            mStarted = true;
-            mSleepCnt = 0;
-            startMeasure(true);
             app.getmBLocationManager().registerLocationUpdates();
             app.getmBLocationManager().mDelegateFindLocation = this ;
         } else {
@@ -1940,6 +1851,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             LogUtils.err(TAG, "push on main : " + push.string());
         }
     }
+
+
 
     @Override
     public void clearNotificationBadge(){
@@ -2066,5 +1979,21 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             // TODO Auto-generated catch block
             Log.e("name not found", e.toString());
         }
+    }
+
+    public boolean isAppOnBackground() {
+        ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+        if (appProcesses == null) {
+            return false;
+        }
+        final String packageName = getPackageName();
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+                && appProcess.processName.equals(packageName)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

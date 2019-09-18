@@ -109,4 +109,20 @@ public class NoticeEventActivity extends BaseActivity {
             getSupportFragmentManager().popBackStackImmediate();
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        toast("destroy");
+        super.onDestroy();
+    }
 }

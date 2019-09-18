@@ -1,21 +1,28 @@
 package kr.co.photointerior.kosw.ui;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -35,29 +42,49 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import kr.co.photointerior.kosw.R;
+import kr.co.photointerior.kosw.conf.AppConst;
 import kr.co.photointerior.kosw.db.KsDbWorker;
+import kr.co.photointerior.kosw.global.DefaultCode;
 import kr.co.photointerior.kosw.global.Env;
 import kr.co.photointerior.kosw.global.KoswApp;
 import kr.co.photointerior.kosw.pref.Pref;
 import kr.co.photointerior.kosw.pref.PrefKey;
 import kr.co.photointerior.kosw.rest.DefaultRestClient;
+import kr.co.photointerior.kosw.rest.api.App;
 import kr.co.photointerior.kosw.rest.api.CafeService;
 import kr.co.photointerior.kosw.rest.api.UserService;
 import kr.co.photointerior.kosw.rest.model.AppUserBase;
+import kr.co.photointerior.kosw.rest.model.BeaconUuid;
 import kr.co.photointerior.kosw.rest.model.CafeMainList;
 import kr.co.photointerior.kosw.rest.model.DataHolder;
+import kr.co.photointerior.kosw.service.beacon.AltitudeManager;
+import kr.co.photointerior.kosw.service.beacon.BeaconRagingInRegionService;
+import kr.co.photointerior.kosw.service.beacon.DirectionManager;
+import kr.co.photointerior.kosw.service.beacon.MeasureObj;
+import kr.co.photointerior.kosw.service.beacon.StepManager;
+import kr.co.photointerior.kosw.service.beacon.StepSensorService;
+import kr.co.photointerior.kosw.service.net.NetworkConnectivityReceiver;
+import kr.co.photointerior.kosw.service.stepcounter.StepCounterService;
 import kr.co.photointerior.kosw.social.kakao.KakaoSignupActivity;
 import kr.co.photointerior.kosw.ui.dialog.DialogCommon;
 import kr.co.photointerior.kosw.ui.dialog.ProgressSpinnerDialog;
 import kr.co.photointerior.kosw.utils.AUtil;
 import kr.co.photointerior.kosw.utils.AbstractAcceptor;
 import kr.co.photointerior.kosw.utils.Acceptor;
+import kr.co.photointerior.kosw.utils.DateUtil;
 import kr.co.photointerior.kosw.utils.KUtil;
 import kr.co.photointerior.kosw.utils.LogUtils;
 import kr.co.photointerior.kosw.utils.StringUtil;
+import kr.co.photointerior.kosw.utils.event.BusProvider;
+import kr.co.photointerior.kosw.utils.event.KsEvent;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -68,6 +95,8 @@ import retrofit2.Response;
  */
 
 public abstract class BaseActivity extends AppCompatActivity {
+    private String TAG = LogUtils.makeLogTag(MainActivity.class);
+
     protected Dialog mSpinnerDialog;
     protected View mContentRootView;
     protected Toolbar mToolBar;
@@ -103,6 +132,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         app = (KoswApp) getApplication() ;
+
+
 
         //Thread.setDefaultUncaughtExceptionHandler(((KoswApp)getApplication()).getUncaughtExceptionHandler());
     }
@@ -770,4 +801,849 @@ public abstract class BaseActivity extends AppCompatActivity {
             KoswApp.setCurrentActivity(null);
         }
     }
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    private static boolean isTest = false ;
+    private Location mLocation ;
+    private Address mAddr ;
+    private boolean mStarted;
+    private double mAltitude;
+    private double mAltitude2;
+    private double mOrientation;
+    private double mX;
+    private double mY;
+    private double mZ;
+    private double mStep;
+    private int mFloor ;
+
+    private int mSleepCnt = 0 ;
+    static private  int mMaxSleepCnt = 10 ;
+    static private  String sleepMsg[] = {"걷기중 측정시간(30초)이 지났습니다.","계단이용 측정시간(5분)이 지났습니다."} ;
+    private int sleepMode = 0 ;
+
+    private double mSaveStep = 0 ;
+    private Boolean isSleep = false ;
+
+    private long startTime = 0 ;
+    private long endTime = 0 ;
+    private  Boolean isRedDot = false ;
+
+    private AltitudeManager mAltiManager;
+    private StepManager mStepManager;
+    private DirectionManager mDirectionManager ;
+
+    private  boolean isStart = false ;
+    private  boolean isTurn = false ;
+    private  boolean isContinue = false ;
+    // Create the Handler
+    private Handler handler = new Handler();
+    private ArrayList<MeasureObj> mStartList = new ArrayList<>() ;
+
+    private int cnt = 0 ;
+    private Boolean is315 = false ;
+    private  int cnt315 = 0 ;
+    private  Boolean isCount = false ;
+
+    private long goupTime = 0 ;
+
+    // 건물 층 카운트
+    private int mBuildCount = 0 ;
+    private int mCurBuildCount = 0 ;
+
+    // 건물 / 등산 모드
+    private  String mIsBuild = "" ; // Y :건물계단    N : 등산계단
+    private  int mClimbCount = 0 ;  // 등산 카운트 (4미터 체크)
+    private  int mLogicCount = 0 ;  // 로직 카운트 (회전 )
+
+    protected void startCalcStairs() {
+        AppUserBase user = DataHolder.instance().getAppUserBase() ;
+        mIsBuild = "N" ;
+
+        mStartList.clear();
+        for (int i = 0; i < 600; i++) {
+            mStartList.add(new MeasureObj());
+        }
+
+
+        mAltiManager = new AltitudeManager(this);
+        mStepManager = new StepManager(this) ;
+        mDirectionManager = new DirectionManager(this) ;
+
+        mSleepCnt = 0 ;
+
+        startMeasure(true);
+        handler.post(runnable);
+
+        SharedPreferences prefr = getSharedPreferences("background", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefr.edit();
+        editor.putString("background", "manual");
+        editor.commit();
+
+
+    }
+
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            // Insert custom code here
+            if (mStarted) {
+                checkFloor();
+            }
+            // Repeat every 2 seconds
+            handler.postDelayed(runnable, 100);
+        }
+    };
+
+    public void checkFloor() {
+        checkStart();
+    }
+
+    private  void checkStart() {
+        if (mAltitude == 0 )  {
+            //return ;
+        }
+        Log.d("999999999999", cnt + "__");
+        // 30초 이상 걷기 없으면 잠금
+        if (cnt >= 30 * 10   )  {
+            if (mSaveStep <=  0 ) { // 걷기중이아니면
+                mSleepCnt = mMaxSleepCnt;
+                sleepMode = 0 ;
+                initMeasure();
+                return;
+            } else {  // 120초이상 측정이 없으면 측정 잠금  mSleepCnt >= 4
+                sleepMode = 1 ;
+                mSleepCnt++ ;
+                initMeasure();
+                return;
+            }
+        }
+
+        mSaveStep = 0 ;
+
+        MeasureObj obj = mStartList.get(cnt) ;
+        obj.altitude = mAltitude ;
+        obj.orientation = mOrientation ;
+        obj.step = mStep ;
+        obj.x = mX ;
+        obj.y = mY ;
+        obj.z = mZ ;
+
+        MeasureObj obj_b = mStartList.get(0) ;
+        obj.altitudeGap =  obj.altitude -  obj_b.altitude ;
+        obj.orientationGap =  Math.abs(obj.orientation -  obj_b.orientation) ;
+        obj.stepGap =  Math.abs(obj.step -  obj_b.step) ;
+        obj.xGap =  Math.abs(obj.x -  obj_b.x) ;
+        obj.yGap =  Math.abs(obj.y -  obj_b.y) ;
+        obj.zGap =  Math.abs(obj.z -  obj_b.z) ;
+
+        // 고도 합계
+        double gapAlitude =   0 ;
+        gapAlitude = obj.altitude - obj_b.altitude ;
+
+        // 스텝 합계
+        double gapStep =   0 ;
+        gapStep = obj.step - obj_b.step ;
+        if (cnt > 50) {
+            MeasureObj obj_c ;
+            obj_c = mStartList.get(cnt - 50 ) ;
+            obj.stepGap = Math.abs(obj.step - obj_c.step);
+            gapStep = obj.step - obj_c.step ;
+        }
+
+        double step = gapStep ; // 초당 걸음수
+        mSaveStep = step ;
+
+        List<Double> list = Arrays.asList(obj.xGap,obj.yGap,obj.zGap ) ;
+        Double mDir =  Collections.max(list) ;
+
+        //Log.v("kmj",String.format("count %d ,높이 :  %.2f , 걸음수 : %.2f , 방향 : %.2f",cnt,gapAlitude,step,mDir)) ;
+        //tvStep.setText(String.format("스텝 : %.2f" ,step));
+        //mValue.setText(String.format("높이 : %.2fm \n 방향  %.2f " , gapAlitude ,mDir)  );
+        //getTextView(R.id.txt_m).setText("");
+        String m = String.format("높이 : %.2f , 방향 : %.2f , 걷기 : %.2f , 시간 : %d" , gapAlitude, mDir, step, cnt);
+        if (isTest) {
+            // ==========================   test    ==============================
+            getTextView(R.id.txt_height).setText(String.format("높이 : %.2f", gapAlitude));
+            getTextView(R.id.txt_dir).setText(String.format("방향 : %.2f", mDir));
+            getTextView(R.id.txt_step).setText(String.format("걷기 : %.2f", step));
+            getTextView(R.id.txt_time).setText(String.format("시간 : %d (%d)", 300 - cnt,mSleepCnt ));
+            getTextView(R.id.txt_count).setText(String.format("%d  (B:%d,M:%d)", mFloor, mLogicCount, mClimbCount));
+            if (mAddr != null && mAddr.getAddressLine(0) != null) {
+                getTextView(R.id.txt_addr).setText(String.format("%s", mAddr.getAddressLine(0)));
+            }
+            if (mLocation != null) {
+                getTextView(R.id.txt_gps).setText(String.format("%s,%s", String.valueOf(mLocation.getLatitude()), String.valueOf(mLocation.getLongitude())));
+            }
+        }
+
+        if (!isContinue) {
+            if (mDir > 135 && Math.abs(gapAlitude) > 1.5  ) {
+                // 2초 이내 측정이면  카운트 하지 않음 엘리베이터 사용자 걸름
+                long curTime = System.currentTimeMillis() ;
+                if (cnt < 30  || (curTime - goupTime) < 3000 ) {
+                    mSleepCnt++ ;
+                    initMeasure();
+                    return;
+                }
+
+                if (step > 1) { // 걷기중이면
+
+                    AppUserBase user = DataHolder.instance().getAppUserBase() ;
+                    mCurBuildCount = user.getBuild_floor_amt() ;
+                    mIsBuild = user.getIsbuild() ;
+
+                    if (gapAlitude > 0) {
+                        mFloor++;
+                        mLogicCount++ ;
+                        mClimbCount = 0 ;
+
+                        if  (mIsBuild.equals("Y")) {
+                            mBuildCount++;
+                        } else {
+                            // 건물 모드 :건물높이의 1⁄2 이상이면 건물로 전환
+                            if (mLogicCount >= Math.ceil(mCurBuildCount / 2)) {
+                                mIsBuild = "Y";
+                                mBuildCount = mLogicCount;
+                            }
+                        }
+
+                        if (mBuildCount == 1) {
+                            startTime = System.currentTimeMillis() ;
+                        }
+
+                        if (mBuildCount == Math.ceil(mCurBuildCount / 2)  && mBuildCount >= 4  ) {
+                            endTime = System.currentTimeMillis() ;
+                            isRedDot = true  ;
+                        } else {
+                            isRedDot = false ;
+                        }
+                        isCount = true ;
+                        if (isTest) {
+                            getTextView(R.id.txt_m).setText(m);
+                        }
+
+                        goupTime = System.currentTimeMillis() ;
+                        sendDataToServer(1);
+                    } else {
+                        mBuildCount = 0 ;
+                        mClimbCount = 0 ;
+                        mLogicCount = 0 ;
+
+                        mFloor++;
+                        isCount = true ;
+                        if (isTest) {
+                            getTextView(R.id.txt_m).setText(m);
+                        }
+                        goupTime = System.currentTimeMillis() ;
+                        sendDataToServer(1);
+                    }
+
+                    // 90이상이면 높이는 클리어  방향은 보존
+                    MeasureObj obj_bb =  mStartList.get(0) ;
+                    isContinue = true ;
+                    mStartList.clear();
+                    for (int i = 0; i < 600; i++) {
+                        mStartList.add(new MeasureObj());
+                    }
+                    cnt = 0;
+                    mStartList.get(0).x = obj_bb.x  ;
+                    mStartList.get(0).y = obj_bb.y  ;
+                    mStartList.get(0).z = obj_bb.z  ;
+                    mStartList.get(0).xGap = obj_bb.xGap ;
+                    mStartList.get(0).yGap = obj_bb.yGap ;
+                    mStartList.get(0).zGap = obj_bb.zGap ;
+                    mStartList.get(0).step = obj_bb.step ;
+                    mStartList.get(0).altitude = mAltitude ;
+
+                    cnt++ ;
+                    return ;
+
+                }
+            }
+
+        }
+
+        if (mDir >  315 &&  isContinue   ) {  //
+            // 315 이상이면 높이는 클리어  방향은 보존
+            MeasureObj obj_bb =  mStartList.get(0) ;
+            isContinue = false ;
+            for (int i = 0; i < cnt; i++) {
+                mStartList.get(i).x = obj_bb.x  ;
+                mStartList.get(i).y = obj_bb.y  ;
+                mStartList.get(i).z = obj_bb.z  ;
+                mStartList.get(i).xGap = obj_bb.xGap ;
+                mStartList.get(i).yGap = obj_bb.yGap ;
+                mStartList.get(i).zGap = obj_bb.zGap ;
+                mStartList.get(i).step = obj_bb.step ;
+                mStartList.get(i).altitude = mAltitude ;
+            }
+            mStartList.get(cnt).x = obj_bb.x  ;
+            mStartList.get(cnt).y = obj_bb.y  ;
+            mStartList.get(cnt).z = obj_bb.z  ;
+            mStartList.get(cnt).xGap = obj_bb.xGap ;
+            mStartList.get(cnt).yGap = obj_bb.yGap ;
+            mStartList.get(cnt).zGap = obj_bb.zGap ;
+            mStartList.get(cnt).step = obj_bb.step ;
+            mStartList.get(cnt).altitude = mAltitude ;
+
+            is315 = true ;
+            cnt315 = cnt ;
+
+            cnt++ ;
+            return ;
+
+        }
+
+        // 1초뒤에 방향만 클리어
+        if ( is315 && cnt > (cnt315 + 10)  ) {  //
+            MeasureObj obj_bb =  mStartList.get(0) ;
+
+            for (int i = 0; i < cnt ; i++) {
+                mStartList.get(i).x = mX  ;
+                mStartList.get(i).y = mY  ;
+                mStartList.get(i).z = mZ  ;
+                mStartList.get(i).step = obj_bb.step ;
+                mStartList.get(i).altitude = obj_bb.altitude ;
+            }
+            mStartList.get(cnt).x = mX  ;
+            mStartList.get(cnt).y = mY  ;
+            mStartList.get(cnt).z = mZ  ;
+            mStartList.get(cnt).step = obj_bb.step ;
+            mStartList.get(cnt).altitude = obj_bb.altitude ;
+            is315 = false ;
+            cnt315 = 0 ;
+
+            cnt++ ;
+            return ;
+        }
+
+        //=================================
+        // 회전이 없고 3미터 이상이면 1층 측정
+        //=================================
+
+        if (Math.abs(gapAlitude) > 3   ) {
+            long curTime = System.currentTimeMillis() ;
+            if (cnt < 20  || (curTime - goupTime) < 2000 ) {
+                //mSleepCnt++;
+                initMeasure();
+                return;
+            } else {
+                if (step > 1) { // 걷기중이면
+                    if (gapAlitude > 0) {
+
+                        AppUserBase user = DataHolder.instance().getAppUserBase() ;
+                        mCurBuildCount = user.getBuild_floor_amt() ;
+                        mIsBuild = user.getIsbuild() ;
+                        mClimbCount++;
+                        mLogicCount = 0 ;
+
+                        if (mIsBuild.equals("Y")) {
+                            if (mClimbCount > mCurBuildCount ) {
+                                mIsBuild = "N" ;
+                                mFloor++;
+                                mBuildCount = mClimbCount ;
+
+                                if (mBuildCount == 1) {
+                                    startTime = System.currentTimeMillis();
+                                }
+                                if (mBuildCount == Math.ceil(mCurBuildCount / 2)  && mBuildCount >= 3 ) {
+                                    endTime = System.currentTimeMillis();
+                                    isRedDot = true;
+                                } else {
+                                    isRedDot = false;
+                                }
+                                if (isTest) {
+                                    getTextView(R.id.txt_m).setText(m);
+                                }
+                                goupTime = System.currentTimeMillis();
+                                sendDataToServer(1);
+                            }
+                        } else {
+                            mBuildCount++ ;
+                            mFloor++;
+                            if (mBuildCount == 1) {
+                                startTime = System.currentTimeMillis();
+                            }
+                            if (mBuildCount == Math.ceil(mCurBuildCount / 2) && mBuildCount >= 3 ) {
+                                endTime = System.currentTimeMillis();
+                                isRedDot = true;
+                            } else {
+                                isRedDot = false;
+                            }
+                            if (isTest) {
+                                getTextView(R.id.txt_m).setText(m);
+                            }
+                            goupTime = System.currentTimeMillis();
+                            sendDataToServer(1);
+                        }
+                    } else {
+                        mBuildCount = 0 ;
+                        mClimbCount = 0 ;
+                        mLogicCount = 0 ;
+                        if (mIsBuild.equals("Y")) {
+                            //mClimbCount++;
+                        } else {
+                            mFloor++;
+                            if (isTest) {
+                                getTextView(R.id.txt_m).setText(m);
+                            }
+                            goupTime = System.currentTimeMillis();
+                            sendDataToServer(1);
+                        }
+                    }
+                    initMeasure();
+                    return ;
+
+
+                }
+            }
+
+        }
+
+        if ( mDir > 400 ) {
+            initMeasure();
+            return ;
+        }
+
+        cnt++ ;
+    }
+
+    // 빌딩 층수 카운트 (빌딩 높이 )
+    private void saveBuildCount(int count) {
+
+    }
+
+    // 측정 시작 ,멈춤
+    public void startMeasure(boolean started){
+        if(!started){
+
+            saveBuildCount(mBuildCount);
+
+
+            goupTime = System.currentTimeMillis();
+
+            mAltitude = 0 ;
+            mOrientation = 0 ;
+            mStep = 0 ;
+            mX = 0 ;
+            mY = 0 ;
+            mZ = 0 ;
+
+            for (int i = 0; i < 600; i++) {
+                MeasureObj obj = mStartList.get(i) ;
+                obj.altitude = 0.0;
+                obj.orientation = 0.0 ;
+                obj.step = 0.0 ;
+                obj.x = 0.0 ;
+                obj.y = 0.0 ;
+                obj.z = 0.0;
+                obj.xGap = 0.0 ;
+                obj.yGap = 0.0 ;
+                obj.zGap = 0.0 ;
+            }
+            cnt = 0;
+
+            mAltiManager.stopMeasure();
+            mDirectionManager.stopMeasure();
+            mStepManager.stopMeasure();
+            findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
+           /*if(isMyServiceRunning(StepCounterService.class)) {
+               // 자동측정중이면
+               TextView tv =  findViewById(R.id.tvPauseMent);
+               tv.setText("자동측정중입니다.");
+           }*/
+
+
+        }else{
+
+
+            AppUserBase user = DataHolder.instance().getAppUserBase() ;
+
+            if (user != null) {
+                mCurBuildCount = user.getBuild_floor_amt(); // 현재 빌딩층수 (높이)
+            }
+
+            if (!isSleep) {
+                initMeasure();
+            }
+
+            goupTime = System.currentTimeMillis();
+
+            mAltitude = 0 ;
+            mOrientation = 0 ;
+            mStep = 0 ;
+            mX = 0 ;
+            mY = 0 ;
+            mZ = 0 ;
+
+            for (int i = 0; i < 600; i++) {
+                MeasureObj obj = mStartList.get(i) ;
+                obj.altitude = 0.0;
+                obj.orientation = 0.0 ;
+                obj.step = 0.0 ;
+                obj.x = 0.0 ;
+                obj.y = 0.0 ;
+                obj.z = 0.0;
+                obj.xGap = 0.0 ;
+                obj.yGap = 0.0 ;
+                obj.zGap = 0.0 ;
+
+            }
+            cnt = 0;
+
+            mAltiManager = new AltitudeManager(this);
+            mStepManager = new StepManager(this) ;
+            mDirectionManager = new DirectionManager(this) ;
+
+            isSleep = false  ;
+
+            mAltiManager.startMeasure();
+            mDirectionManager.startMeasure();
+            mStepManager.startMeasure();
+            findViewById(R.id.LayoutPause).setVisibility(View.INVISIBLE);
+            //mValue.setText("wait...");
+        }
+        mStarted = started ;
+    }
+
+    private void restartMeasure(){
+        if(!mStarted){
+            Toast.makeText(this, "측정이 시작되지 않았습니다.", Toast.LENGTH_SHORT).show();
+        }else{
+            mAltiManager.restartMeasure();
+            //mValue.setText("wait...");
+        }
+    }
+
+    public void setCurrentAltitude(double altitude){
+        mAltitude = altitude;
+        displayAlti();
+    }
+    public void setCurrentAltitude2(double altitude){
+        mAltitude2 = altitude;
+        displayAlti();
+    }
+
+    public void setCurrentOrientation(double val  ){
+        mOrientation = val;
+        displayAlti();
+    }
+
+    public void setCurrentOrientation2(double x ,double y, double z  ){
+        mX = x;
+        mY = y;
+        mZ = z;
+        //displayAlti();
+    }
+
+    public void setCurrentStep(double val  ){
+        mStep += val;
+        displayAlti();
+    }
+
+    private void displayAlti(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
+    }
+
+
+    private  void initMeasure() {
+        mStartList.clear();
+
+        if (mStartList.size() == 0) {
+            for (int i = 0; i < 600; i++) {
+                mStartList.add(new MeasureObj());
+            }
+        }
+
+        cnt = 0 ;
+
+        isStart = false ;
+        isTurn = false ;
+        isContinue = false ;
+        is315 = false ;
+        cnt315 = 0 ;
+
+        isCount = false ;
+        goupTime = System.currentTimeMillis();
+
+        // 5분 지나면 잠금
+        if (mSleepCnt >= mMaxSleepCnt ) {
+            isSleep = true;;
+            mSleepCnt = 0  ;
+            mStarted = false ;
+            getTextView(R.id.tvPauseMent).setText(sleepMsg[sleepMode]);
+            startMeasure(false);
+        }
+
+    }
+
+
+    private void sendDataToServer(int goupAmt ){
+        //Toast.makeText(this, "Send to Server2", Toast.LENGTH_SHORT).show();
+        mSleepCnt = 0 ;
+
+        String token = KUtil.getUserToken();
+        String buildCode = KUtil.getBuildingCode();
+        if(StringUtil.isEmptyOrWhiteSpace(token) || StringUtil.isEmptyOrWhiteSpace(buildCode)){
+            return;
+        }
+
+        AppUserBase user =  DataHolder.instance().getAppUserBase() ;
+
+        if (user == null) return;
+        //return;
+        try {
+            Map<String, Object> query = new HashMap<>();
+            query.put("token",user.getUserToken()) ;
+            query.put("beacon_uuid", "");
+            query.put("major_value", "");
+            query.put("minor_value", "");
+            query.put("install_floor", "");
+            //map.put("beacon_seq", getBeaconSeq());
+            query.put("beacon_seq",  user.getBeacon_seq());
+            if ( user.getBeacon_seq() == 0 ) {
+                DefaultCode.BEACON_SEQ.getValue() ;
+            }
+            query.put("stair_seq", user.getStair_seq());
+            query.put("build_seq", user.getBuild_seq());
+            query.put("build_name", user.getBuild_name());
+            query.put("floor_amount", 0);
+            query.put("stair_amount", 0);
+            query.put("cust_seq", user.getCust_seq());
+            query.put("cust_name", user.getCust_name());
+            query.put("build_code", user.getBuildingCode());
+            query.put("godo", mAltitude);
+            query.put("goup_amt", goupAmt);
+            query.put("curBuildCount",mCurBuildCount) ;
+            query.put("buildCount",mBuildCount) ;
+            query.put("isbuild",mIsBuild) ;
+            query.put("country",user.getCountry()) ;
+            query.put("city",user.getCity()) ;
+
+            if (isRedDot) {
+                query.put("start_time", startTime);
+                query.put("end_time", endTime);
+            }
+
+            final String localTime = DateUtil.currentDate("yyyyMMddHHmmss");
+            if(NetworkConnectivityReceiver.isConnected(getApplicationContext())) {
+                Call<BeaconUuid> call =
+                        new DefaultRestClient<App>(getApplicationContext())
+                                .getClient(App.class).sendStairGoUpAmountToServer(query);
+                final String goupSentTime = DateUtil.currentDate("yyyyMMdd HHmmss");
+
+                call.enqueue(new Callback<BeaconUuid>() {
+                    @Override
+                    public void onResponse(Call<BeaconUuid> call, Response<BeaconUuid> response) {
+                        /*
+                        if (isReddot) {
+                            mReddotStack.clear();
+                        }
+                        */
+                        LogUtils.e(TAG, "success-data response raw:" + response.raw().toString());
+                        if (response.isSuccessful()) {
+                            LogUtils.e(TAG, "success-data response body:" + response.body().string());
+
+                            BeaconUuid uuid = response.body();
+                            if (uuid != null && uuid.isSuccess()) {
+                                broadcastServerResult(uuid);
+                            }else {
+                                saveGoUpDataToLocalDb(query, localTime);
+                            }
+                            //sendBeaconLog(beaconUuid, floorDiff, "go up ", goupSentTime);//층간이동 전송 성공하면 로그 전송
+                        }else {
+                            saveGoUpDataToLocalDb(query, localTime);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<BeaconUuid> call, Throwable t) {
+                        saveGoUpDataToLocalDb(query, localTime);
+                    }
+                });
+            }else{
+                saveGoUpDataToLocalDb(query, localTime);
+            }
+        }catch (Exception e){
+        }
+    }
+
+    /**
+     * 계단 올라간 데이터 서버전송 실패하면 로컬에 저장 후 네트워크가 안정화 되면 전송
+     * @param goupData
+     */
+    private void saveGoUpDataToLocalDb(Map<String, Object> goupData, String localTime){
+        goupData.put("app_time", localTime);
+        if(KsDbWorker.insertFailData(getApplicationContext(), goupData)){
+            BusProvider.instance().post(
+                    new KsEvent<Map<String, Object>>()
+                            .setType(KsEvent.Type.UPDATE_FLOOR_AMOUNT_FAIL)
+                            .setValue(goupData)
+                            .setMainCharacterChanged(false));
+        }
+    }
+
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 올라간 층수 데이터 서버전송 성공시 데이터 전파
+     * @param beaconUuid
+     */
+    public static void broadcastServerResult(BeaconUuid beaconUuid){
+
+        Pref pref = Pref.instance();
+
+        //if (!StringUtil.isEmptyOrWhiteSpace(beaconUuid.getMainCharFilename()) ) {
+        pref.saveStringValue(PrefKey.CHARACTER_MAIN, beaconUuid.getMainCharFilename());
+        //}
+        //if(!StringUtil.isEmptyOrWhiteSpace(beaconUuid.getSubCharFilenane())) {
+        pref.saveStringValue(PrefKey.CHARACTER_SUB, beaconUuid.getSubCharFilenane());
+        //}
+
+        //LogUtils.err(TAG, beaconUuid.string());
+        //String prevChar = KUtil.getStringPref(PrefKey.CHARACTER_MAIN, "");
+        //boolean isMainChracterChanged = !StringUtil.isEquals(prevChar, beaconUuid.getMainCharFilename());
+        boolean isMainChracterChanged = false ;
+
+        String charImageFile = pref.getStringValue(PrefKey.CHARACTER_MAIN,"") ;
+
+        // 기존 이미지와 동일 하면 스킵
+        if ( !charImageFile.equals(beaconUuid.getMainCharFilename()) ) {
+            isMainChracterChanged = true ;
+        }
+
+        if(isMainChracterChanged) {
+            KUtil.saveStringPref(PrefKey.CHARACTER_MAIN, beaconUuid.getMainCharFilename());
+        }
+
+        if(!StringUtil.isEmptyOrWhiteSpace(beaconUuid.getSubCharFilenane())) {
+            KUtil.saveStringPref(PrefKey.CHARACTER_SUB, beaconUuid.getSubCharFilenane());
+        }
+
+        BusProvider.instance().post(
+                new KsEvent<BeaconUuid>()
+                        .setType(KsEvent.Type.UPDATE_FLOOR_AMOUNT)
+                        .setValue(beaconUuid)
+                        .setMainCharacterChanged(isMainChracterChanged)
+        );
+    }
+
+    @Override
+    protected void onDestroy() {
+        LogUtils.err(TAG, "BaseActivity#onDestroy()");
+        super.onDestroy();
+
+        //unregisterReceiver(restartService);
+    }
+
+    @Override
+    protected void onPause() {
+        LogUtils.err(TAG, "BaseActivity#onPause()");
+        super.onPause();
+    }
+
+    protected void measureDestroy() {
+        stopService(new Intent(getBaseContext(), StepSensorService.class));
+        mStepManager.stopMeasure();
+
+        SharedPreferences prefr = getSharedPreferences("background", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefr.edit();
+        editor.putString("background", "auto");
+        editor.commit();
+
+        // 자동측정서비스 시작
+        if (!isMyServiceRunning(StepCounterService.class)) {
+            Intent startintent = new Intent(this, StepCounterService.class);
+            startService(startintent);
+            toast("수동 종료 / 서비스 측정 시작 by onDestroy");
+        } else {
+            toast("수동 종료 / 서비스 측정 이미 시작됨 by onDestroy");
+        }
+    }
+
+    protected void measurePause() {
+        mStepManager.stopMeasure();
+
+        SharedPreferences prefr = getSharedPreferences("background", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefr.edit();
+        editor.putString("background", "auto");
+        editor.commit();
+
+        // 자동측정서비스 시작
+        Intent startintent = new Intent(this, StepCounterService.class);
+        startService(startintent);
+
+        toast("수동 종료 / 서비스 측정 시작 by onPause");
+
+        handler.removeCallbacks(runnable);
+        startMeasure(false);
+    }
+
+    protected void measureResume() {
+        startService(new Intent(getBaseContext(), StepSensorService.class));
+        mStepManager.startMeasure();
+
+        SharedPreferences prefr = getSharedPreferences("background", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefr.edit();
+        editor.putString("background", "manual");
+        editor.commit();
+
+        // 자동측정서비스 종료
+        Intent startintent = new Intent(this, StepCounterService.class);
+        stopService(startintent);
+
+        // 측정시작
+        startMeasure(true);
+        handler.post(runnable);
+
+        toast("측정 시작 by onResume");
+
+        LogUtils.err(TAG, "BaseActivity#onResume()");
+        mStarted = true;
+        mSleepCnt = 0;
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
 }
