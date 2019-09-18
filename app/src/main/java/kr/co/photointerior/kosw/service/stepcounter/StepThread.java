@@ -177,7 +177,7 @@ public class StepThread extends Thread {
             // Insert custom code here
             if (mStarted)  {
                 checkFloor() ;
-                isTest = true;
+                //isTest = true;
             }
 
             // Repeat every 2 seconds
@@ -199,12 +199,14 @@ public class StepThread extends Thread {
     };
 */
     public void checkFloor() {
-        if (isMyServiceRunning(StepCounterService.class)) {
+        /*if (isMyServiceRunning(StepCounterService.class)) {
             checkStart();
         } else {
             handler.removeCallbacks(runnable);
             startMeasure(false);
-        }
+        }*/
+
+        checkStart();
     }
 
 
