@@ -3,6 +3,7 @@ package kr.co.photointerior.kosw.service.stepcounter;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.widget.Toast;
 
 public class StepCounterService extends Service {
     StepThread thread;
@@ -15,6 +16,7 @@ public class StepCounterService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Toast.makeText(this, "StepCounterService 시작", Toast.LENGTH_SHORT);
         thread = new StepThread(this);
         thread.start();
         return Service.START_STICKY;
@@ -22,5 +24,7 @@ public class StepCounterService extends Service {
 
     //서비스가 종료될 때 할 작업
     public void onDestroy() {
+        Toast.makeText(this, "StepCounterService 종료", Toast.LENGTH_SHORT);
+        thread.stopForever();
     }
 }

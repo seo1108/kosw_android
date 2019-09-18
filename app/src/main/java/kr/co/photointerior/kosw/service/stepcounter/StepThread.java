@@ -213,7 +213,7 @@ public class StepThread extends Thread {
             //return ;
         }
 
-        Log.d("99999977777", String.valueOf(mStarted) + mTrashStep + "_______" + cnt + "___" + mSaveStep + "______" + mStep);
+        Log.d("99999999999977777", String.valueOf(mStarted) + mTrashStep + "_______" + cnt + "___" + mSaveStep + "______" + mStep);
 
         // 30초 이상 걷기 없으면 잠금
         if (cnt >= 10 * 30 )  {
@@ -244,7 +244,7 @@ public class StepThread extends Thread {
         }
         mSaveStep = 0 ;
 
-        Log.d("999999777778888", String.valueOf(mStarted) + mTrashStep + "_______" + cnt + "___" + mSaveStep + "______" + mStep);
+        Log.d("999999999999777778888", String.valueOf(mStarted) + mTrashStep + "_______" + cnt + "___" + mSaveStep + "______" + mStep);
 
         MeasureObj obj = mStartList.get(cnt) ;
         obj.altitude = mAltitude ;
@@ -279,7 +279,7 @@ public class StepThread extends Thread {
 
         double step = gapStep ; // 초당 걸음수
         mSaveStep = step ;
-        Log.d("999999777779999", String.valueOf(mStarted) + mTrashStep + "_______" + cnt + "___" + mSaveStep + "______" + mStep);
+        Log.d("999999999999777779999", String.valueOf(mStarted) + mTrashStep + "_______" + cnt + "___" + mSaveStep + "______" + mStep);
         List<Double> list = Arrays.asList(obj.xGap,obj.yGap,obj.zGap ) ;
         Double mDir =  Collections.max(list) ;
 

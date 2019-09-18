@@ -57,6 +57,8 @@ public class NotiService extends Service {
         if ("auto".equals(background)) {
             Intent startintent = new Intent(this, StepCounterService.class);
             startService(startintent);
+
+            Toast.makeText(mContext, "측정 서비스 재시작 byNotiService", Toast.LENGTH_SHORT).show();
         }
 
         buildNotification();
@@ -161,15 +163,14 @@ public class NotiService extends Service {
 
         PendingIntent contentPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        String title = "";
+        /*String title = "";
         if(!isMyServiceRunning(StepCounterService.class)) {
             title = "[수동측정]";
         } else {
             title = "[자동측정]";
-        }
+        }*/
 
-        builder.setContentTitle(title)
-                .setContentText("[랭킹:" + AppConst.NOTI_RANKS + "] " + AppConst.NOTI_FLOORS + "F / " + AppConst.NOTI_CALS + "kcal / " + AppConst.NOTI_SECS + "sec")
+        builder.setContentText("[랭킹:" + AppConst.NOTI_RANKS + "] " + AppConst.NOTI_FLOORS + "F / " + AppConst.NOTI_CALS + "kcal / " + AppConst.NOTI_SECS + "sec")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_floor))
                 .setWhen(System.currentTimeMillis())

@@ -85,6 +85,17 @@ public class ServiceThread extends Thread{
         while(isRun){
 
             try{
+                SharedPreferences pref = mContext.getSharedPreferences("background", MODE_PRIVATE);
+                String background = pref.getString("background", "auto");
+
+                if ("auto".equals(background)) {
+                    Intent startintent = new Intent(mContext, StepCounterService.class);
+                    mContext.stopService(startintent);
+                    Thread.sleep(1000);
+                    mContext.startService(startintent);
+                    Toast.makeText(mContext, "측정 서비스 재시작 byServiceThread", Toast.LENGTH_SHORT).show();
+                }
+
                 //requestToServer();
                 // 어제걸음수 전송된 데이터가 없다면 전송
                 DateFormat d_dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -103,7 +114,7 @@ public class ServiceThread extends Thread{
                 e.printStackTrace();
             }finally {
                 try {
-                    Thread.sleep(60*60*1000); //1시간에 한번 조회
+                    Thread.sleep(30*60*1000); //30분에 한번씩 조회 및 자동측정 재시작
                 } catch (Exception ex) {    }
             }
 

@@ -394,12 +394,14 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         }*/
 
         /******** 임시주석 ********/
-        if(!isMyServiceRunning(StepCounterService.class)) {
-            startMeasure(true);
-            handler.post(runnable);
-        }
+        //if(!isMyServiceRunning(StepCounterService.class)) {
+        //    startMeasure(true);
+        //    handler.post(runnable);
+        //}
         /**************************/
 
+        startMeasure(true);
+        handler.post(runnable);
 
 
         String gocafemain = getIntent().getStringExtra("_CAFEMAIN_ACTIVITY_");
@@ -416,12 +418,16 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         restartService = new RestartService();
         Intent intent = new Intent(MainActivity.this, NotiService.class);
 
-
         IntentFilter intentFilter = new IntentFilter("kr.co.photointerior.kosw.service.noti.NotiService");
         //브로드 캐스트에 등록
         registerReceiver(restartService,intentFilter);
         // 서비스 시작
         startService(intent);
+
+        SharedPreferences prefr = getSharedPreferences("background", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefr.edit();
+        editor.putString("background", "manual");
+        editor.commit();
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
@@ -447,12 +453,13 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     };
 
     public void checkFloor() {
-        if (!isMyServiceRunning(StepCounterService.class)) {
+        checkStart();
+        /*if (!isMyServiceRunning(StepCounterService.class)) {
             checkStart();
         } else {
             handler.removeCallbacks(runnable);
             startMeasure(false);
-        }
+        }*/
     }
 
     private  void checkStart() {
@@ -891,11 +898,11 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             mDirectionManager.stopMeasure();
             mStepManager.stopMeasure();
             findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
-           if(isMyServiceRunning(StepCounterService.class)) {
+           /*if(isMyServiceRunning(StepCounterService.class)) {
                // 자동측정중이면
                TextView tv =  findViewById(R.id.tvPauseMent);
                tv.setText("자동측정중입니다.");
-           }
+           }*/
 
 
         }else{
@@ -1615,7 +1622,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 if(mFinishFlag) {
                     finish();
                 }else{
-                    toast("한번 더 누르시면 종료됩니다.");
+                    //toast("한번 더 누르시면 종료됩니다.");
                     mFinishFlag = true;
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -1637,11 +1644,11 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 if (isSleep)
                     findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
 
-                if(isMyServiceRunning(StepCounterService.class)) {
+                /*if(isMyServiceRunning(StepCounterService.class)) {
                     // 자동측정중이면
                     TextView tv =  findViewById(R.id.tvPauseMent);
                     tv.setText("자동측정중입니다.");
-                }
+                }*/
 
                 LogUtils.err(TAG, entry.getName());
                 if(backStackCount <= 2 ){
@@ -1669,21 +1676,40 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
     @Override
     protected void onDestroy() {
-        if (!isMyServiceRunning(StepCounterService.class)) {
-            LogUtils.err(TAG, "MainActivity#onDestroy()");
-            stopService(new Intent(getBaseContext(), BeaconRagingInRegionService.class));
-            stopService(new Intent(getBaseContext(), StepSensorService.class));
-            mStepManager.stopMeasure();
-            //unregisterReceiver(mExitReceiver);
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(mCharacterChangeReceiver);
-            /*try {
-                BusProvider.instance().unregister(this);
-            }catch(IllegalArgumentException e){}*/
+//        if (!isMyServiceRunning(StepCounterService.class)) {
+//            LogUtils.err(TAG, "MainActivity#onDestroy()");
+//            stopService(new Intent(getBaseContext(), BeaconRagingInRegionService.class));
+//            stopService(new Intent(getBaseContext(), StepSensorService.class));
+//            mStepManager.stopMeasure();
+//            //unregisterReceiver(mExitReceiver);
+//            LocalBroadcastManager.getInstance(this).unregisterReceiver(mCharacterChangeReceiver);
+//            /*try {
+//                BusProvider.instance().unregister(this);
+//            }catch(IllegalArgumentException e){}*/
+//
+//        }
 
-        }
+        LogUtils.err(TAG, "MainActivity#onDestroy()");
+        stopService(new Intent(getBaseContext(), BeaconRagingInRegionService.class));
+        stopService(new Intent(getBaseContext(), StepSensorService.class));
+        mStepManager.stopMeasure();
+        //unregisterReceiver(mExitReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mCharacterChangeReceiver);
+
+        SharedPreferences prefr = getSharedPreferences("background", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefr.edit();
+        editor.putString("background", "auto");
+        editor.commit();
+
+        // 자동측정서비스 시작
+        Intent startintent = new Intent(this, StepCounterService.class);
+        startService(startintent);
+
+        toast("수동 종료 / 서비스 측정 시작 by onDestroy");
+
         super.onDestroy();
 
-        unregisterReceiver(restartService);
+        //unregisterReceiver(restartService);
     }
 
     @Override
@@ -1693,15 +1719,55 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         //setBeaconManagerMode(true);
         isActivity = false ;
 
+        stopService(new Intent(getBaseContext(), BeaconRagingInRegionService.class));
+        stopService(new Intent(getBaseContext(), StepSensorService.class));
+        mStepManager.stopMeasure();
+        //unregisterReceiver(mExitReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mCharacterChangeReceiver);
+
+        SharedPreferences prefr = getSharedPreferences("background", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefr.edit();
+        editor.putString("background", "auto");
+        editor.commit();
+
+        // 자동측정서비스 시작
+        Intent startintent = new Intent(this, StepCounterService.class);
+        startService(startintent);
+
+        toast("수동 종료 / 서비스 측정 시작 by onPause");
+
+        handler.removeCallbacks(runnable);
+        startMeasure(false);
+
         super.onPause();
     }
 
     @Override
     protected void onResume() {
-        SharedPreferences prefr = getSharedPreferences("background", MODE_PRIVATE);
-        String background = prefr.getString("background", "manual");
+        startService(new Intent(getBaseContext(), BeaconRagingInRegionService.class));
+        startService(new Intent(getBaseContext(), StepSensorService.class));
+        mStepManager.startMeasure();
+        //unregisterReceiver(mExitReceiver);
+        LocalBroadcastManager.getInstance(this)
+                .registerReceiver(mCharacterChangeReceiver, new IntentFilter(Env.Action.CHARACTER_CHANGED_ACTION.action()));
 
-        if ("auto".equals(background)) {
+        SharedPreferences prefr = getSharedPreferences("background", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefr.edit();
+        editor.putString("background", "manual");
+        editor.commit();
+
+
+        // 자동측정서비스 종료
+        Intent startintent = new Intent(this, StepCounterService.class);
+        stopService(startintent);
+
+        // 측정시작
+        startMeasure(true);
+        handler.post(runnable);
+
+        toast("측정 시작 by onResume");
+
+        /*if ("auto".equals(background)) {
             findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
             TextView tv =  findViewById(R.id.tvPauseMent);
             tv.setText("자동측정중입니다.");
@@ -1709,7 +1775,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             findViewById(R.id.LayoutPause).setVisibility(View.INVISIBLE);
             startMeasure(true);
             handler.post(runnable);
-        }
+        }*/
 
 
         /*if(!isMyServiceRunning(StepCounterService.class)) {
