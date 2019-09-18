@@ -221,26 +221,26 @@ public class StepThread extends Thread {
             if (mSaveStep <=  0 ) { // 걷기중이아니면
                 //Toast.makeText(mContext, "걷기중이아니면", Toast.LENGTH_SHORT).show();
                 // 원본소스
-                /*mSleepCnt = mMaxSleepCnt;
+                mSleepCnt = mMaxSleepCnt;
                 sleepMode = 0 ;
                 initMeasure();
-                return;*/
+                return;
 
                 // 수정소스
                 //Toast.makeText(mContext, "측정이 없으면 측정 잠금", Toast.LENGTH_SHORT).show();
-                sleepMode = 1 ;
-                mSleepCnt++ ;
-                initMeasure();
-                return;
+                //sleepMode = 1 ;
+                //mSleepCnt++ ;
+                //initMeasure();
+                //return;
             }
 
-           /* else {  // 120초이상 측정이 없으면 측정 잠금  mSleepCnt >= 4
+           else {  // 120초이상 측정이 없으면 측정 잠금  mSleepCnt >= 4
                 Toast.makeText(mContext, "120초이상 측정이 없으면 측정 잠금", Toast.LENGTH_SHORT).show();
                 sleepMode = 1 ;
                 mSleepCnt++ ;
                 initMeasure();
                 return;
-            }*/
+            }
         }
         mSaveStep = 0 ;
 

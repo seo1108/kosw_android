@@ -1702,10 +1702,15 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         editor.commit();
 
         // 자동측정서비스 시작
-        Intent startintent = new Intent(this, StepCounterService.class);
-        startService(startintent);
+        if(!isMyServiceRunning(StepCounterService.class)) {
+            Intent startintent = new Intent(this, StepCounterService.class);
+            startService(startintent);
+            toast("수동 종료 / 서비스 측정 시작 by onDestroy");
+        } else {
+            toast("수동 종료 / 서비스 측정 이미 시작됨 by onDestroy");
+        }
 
-        toast("수동 종료 / 서비스 측정 시작 by onDestroy");
+
 
         super.onDestroy();
 
@@ -1744,7 +1749,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
     @Override
     protected void onResume() {
-        startService(new Intent(getBaseContext(), BeaconRagingInRegionService.class));
+        //startService(new Intent(getBaseContext(), BeaconRagingInRegionService.class));
         startService(new Intent(getBaseContext(), StepSensorService.class));
         mStepManager.startMeasure();
         //unregisterReceiver(mExitReceiver);
