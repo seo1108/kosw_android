@@ -55,6 +55,7 @@ import kr.co.photointerior.kosw.db.KsDbWorker;
 import kr.co.photointerior.kosw.global.DefaultCode;
 import kr.co.photointerior.kosw.global.Env;
 import kr.co.photointerior.kosw.global.KoswApp;
+import kr.co.photointerior.kosw.listener.ClickListener;
 import kr.co.photointerior.kosw.pref.Pref;
 import kr.co.photointerior.kosw.pref.PrefKey;
 import kr.co.photointerior.kosw.rest.DefaultRestClient;
@@ -891,6 +892,24 @@ public abstract class BaseActivity extends AppCompatActivity {
     private  int mLogicCount = 0 ;  // 로직 카운트 (회전 )
 
     protected void startCalcStairs() {
+        try {
+            getView(R.id.btn_pause).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startMeasure(false);
+                    startMeasure(true);
+                    mStartList.clear();
+                    for (int i = 0; i < 600; i++) {
+                        mStartList.add(new MeasureObj());
+                    }
+                    cnt = 0;
+
+                    displayFragment(Env.FragmentType.HOME);
+                }
+            });
+        } catch (Exception ex) {
+        }
+
         AppUserBase user = DataHolder.instance().getAppUserBase() ;
         mIsBuild = "N" ;
 
@@ -949,6 +968,11 @@ public abstract class BaseActivity extends AppCompatActivity {
                     }
                     mStarted = true;
                     startMeasure(mStarted);
+                    mStartList.clear();
+                    for (int i = 0; i < 600; i++) {
+                        mStartList.add(new MeasureObj());
+                    }
+                    cnt = 0;
                     handler.post(runnable);
                 }
             } else {

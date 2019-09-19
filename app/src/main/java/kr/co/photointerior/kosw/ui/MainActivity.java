@@ -1352,7 +1352,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             getView(va).setOnClickListener(clickListener);
         }
 
-        getView(R.id.btn_pause).setOnClickListener(clickListener);
+        //getView(R.id.btn_pause).setOnClickListener(clickListener);
     }
 
     @Override
@@ -1378,7 +1378,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             case R.id.btn_navi_close://drawer close
                 onBackPressed();
                 break;
-            case R.id.btn_pause://측정 중지 상태
+            /*case R.id.btn_pause://측정 중지 상태
 
                // callActivity(GPSAcceptActivity.class, false);
                 startMeasure(false);
@@ -1401,7 +1401,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
                 //
 
-                break;
+                break;*/
                 /*
                 String s_lat = Pref.instance().getStringValue(PrefKey.BUILDING_LAT, "");
                 String s_lng = Pref.instance().getStringValue(PrefKey.BUILDING_LNG, "");
@@ -1573,7 +1573,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                         R.anim.slide_in_left, R.anim.slide_out_right);*/
                 findViewById(R.id.LayoutPause).setVisibility(View.INVISIBLE);
             }else{
-                if (isSleep)
+                /*if (isSleep)
                 findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
 
                 if(isMyServiceRunning(StepCounterService.class)) {
@@ -1581,7 +1581,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                     TextView tv =  findViewById(R.id.tvPauseMent);
                     tv.setText("자동측정중입니다.");
                 }
-
+*/
             }
             transaction.replace(R.id.content_frame, fragment);
             transaction.addToBackStack(title + "-" + fragment.getClass().getSimpleName());
@@ -1635,8 +1635,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
                 getSupportFragmentManager().popBackStackImmediate();
 
-                if (isSleep)
-                    findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
+                //if (isSleep)
+                 //   findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
 
                 /*if(isMyServiceRunning(StepCounterService.class)) {
                     // 자동측정중이면
