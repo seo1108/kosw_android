@@ -50,4 +50,29 @@ public class CafeGuideActivity extends BaseActivity {
         super.onBackPressed();
         overridePendingTransition(R.anim.fade_in_full,R.anim.slide_out_right);
     }
+
+    @Override
+    protected void onStart() {
+        measureStart();
+        super.onStart();
+    }
+
+    @Override
+    protected void onDestroy() {
+        measureStop();
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        measureStop();
+        super.onPause();
+    }
+
+
+    @Override
+    protected void onResume() {
+        measureStart();
+        super.onResume();
+    }
 }

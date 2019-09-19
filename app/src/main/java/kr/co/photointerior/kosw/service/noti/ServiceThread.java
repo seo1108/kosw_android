@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -55,12 +56,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.Context.ACTIVITY_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static java.text.DateFormat.getDateTimeInstance;
 import static java.text.DateFormat.getTimeInstance;
 
-public class ServiceThread extends Thread{
+public class ServiceThread extends Thread {
     Handler handler;
     boolean isRun = true;
     private static Context mContext = null;
@@ -85,15 +87,40 @@ public class ServiceThread extends Thread{
         while(isRun){
 
             try{
+                int mServiceCnt = 0;
+
+
+                boolean isback = isAppOnForeground();
+
+                Log.d("DDDDDDDDDDDDDDDDD", "isFore : " + isback);
+
+
+
+
+
                 SharedPreferences pref = mContext.getSharedPreferences("background", MODE_PRIVATE);
                 String background = pref.getString("background", "auto");
 
-                if ("auto".equals(background)) {
-                    Intent startintent = new Intent(mContext, StepCounterService.class);
-                    mContext.stopService(startintent);
-                    Thread.sleep(1000);
-                    mContext.startService(startintent);
-                    Toast.makeText(mContext, "측정 서비스 재시작 byServiceThread", Toast.LENGTH_SHORT).show();
+                // 앱이 백그라운드 실행중이고, 측정서비스가 미구동시 서비스 실행
+                if (!isAppOnForeground()) {
+                    if (!isMyServiceRunning(StepCounterService.class)) {
+                  /*      Intent startintent = new Intent(mContext, StepCounterService.class);
+                        mContext.stopService(startintent);
+                        Thread.sleep(1000);
+                        mContext.startService(startintent);*/
+                        Intent startintent = new Intent(mContext, StepCounterService.class);
+                        mContext.startService(startintent);
+                    }
+
+                    // 서비스 실행 후, 30분이 지나면, 서비스 재시작
+                    if (mServiceCnt > 30) {
+                        Intent startintent = new Intent(mContext, StepCounterService.class);
+                        mContext.stopService(startintent);
+                        Thread.sleep(5000);
+                        mContext.startService(startintent);
+
+                        mServiceCnt = 0;
+                    }
                 }
 
                 //requestToServer();
@@ -110,11 +137,14 @@ public class ServiceThread extends Thread{
                 if (!today_date.equals(lastSendDate)) {
                     readYesterdayHistoryData();
                 }
+
+                mServiceCnt++;
             }catch (Exception e) {
                 e.printStackTrace();
             }finally {
                 try {
-                    Thread.sleep(30*60*1000); //30분에 한번씩 조회 및 자동측정 재시작
+                    //Thread.sleep(30*60*1000); //30분에 한번씩 조회 및 자동측정 재시작
+                    Thread.sleep(1*60*1000); //1분에 한번씩 조회 및 자동측정 재시작
                 } catch (Exception ex) {    }
             }
 
@@ -123,7 +153,7 @@ public class ServiceThread extends Thread{
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        ActivityManager manager = (ActivityManager) mContext.getSystemService(ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(service.service.getClassName())) {
                 return true;
@@ -136,6 +166,8 @@ public class ServiceThread extends Thread{
         try {
             Map<String, Object> query = KUtil.getDefaultQueryMap();
             AppUserBase user = DataHolder.instance().getAppUserBase();
+
+            if (null == user) return;
 
             query.put("user_seq", user.getUser_seq());
             query.put("walk_date", date);
@@ -444,6 +476,22 @@ public class ServiceThread extends Thread{
 
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(AppConst.NOTIFICATION_ID, builder.build());
+    }
+
+    public boolean isAppOnForeground() {
+        ActivityManager activityManager = (ActivityManager) mContext.getSystemService(ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+        if (appProcesses == null) {
+            return false;
+        }
+        final String packageName = mContext.getPackageName();
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+                    && appProcess.processName.equals(packageName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

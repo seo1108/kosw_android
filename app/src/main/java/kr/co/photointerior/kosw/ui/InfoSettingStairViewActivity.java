@@ -282,4 +282,29 @@ public class InfoSettingStairViewActivity extends BaseUserActivity implements It
             onItemClick(view, getAdapterPosition());
         }
     }
+
+    @Override
+    protected void onStart() {
+        measureStart();
+        super.onStart();
+    }
+
+    @Override
+    protected void onDestroy() {
+        measureStop();
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        measureStop();
+        super.onPause();
+    }
+
+
+    @Override
+    protected void onResume() {
+        measureStart();
+        super.onResume();
+    }
 }

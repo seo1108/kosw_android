@@ -826,7 +826,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
-    private static boolean isTest = false ;
+    private boolean isMessureOn = false;
+    private boolean isTest = false ;
     private Location mLocation ;
     private Address mAddr ;
     private boolean mStarted;
@@ -894,6 +895,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         mSleepCnt = 0 ;
 
+
+        mStarted = true;
         startMeasure(true);
         handler.post(runnable);
 
@@ -901,6 +904,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = prefr.edit();
         editor.putString("background", "manual");
         editor.commit();
+
+        toast("start________");
 
 
     }
@@ -1269,7 +1274,10 @@ public abstract class BaseActivity extends AppCompatActivity {
             mAltiManager.stopMeasure();
             mDirectionManager.stopMeasure();
             mStepManager.stopMeasure();
-            findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
+            try {
+                findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
+            } catch (Exception e) {}
+
            /*if(isMyServiceRunning(StepCounterService.class)) {
                // 자동측정중이면
                TextView tv =  findViewById(R.id.tvPauseMent);
@@ -1323,7 +1331,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             mAltiManager.startMeasure();
             mDirectionManager.startMeasure();
             mStepManager.startMeasure();
-            findViewById(R.id.LayoutPause).setVisibility(View.INVISIBLE);
+            try {
+                findViewById(R.id.LayoutPause).setVisibility(View.INVISIBLE);
+            } catch (Exception e) {}
             //mValue.setText("wait...");
         }
         mStarted = started ;
@@ -1399,7 +1409,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             isSleep = true;;
             mSleepCnt = 0  ;
             mStarted = false ;
-            getTextView(R.id.tvPauseMent).setText(sleepMsg[sleepMode]);
+            try {
+                getTextView(R.id.tvPauseMent).setText(sleepMsg[sleepMode]);
+            } catch (Exception e) {}
             startMeasure(false);
         }
 
@@ -1566,8 +1578,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
     protected void onDestroy() {
-        LogUtils.err(TAG, "BaseActivity#onDestroy()");
         super.onDestroy();
 
         //unregisterReceiver(restartService);
@@ -1575,9 +1591,18 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        LogUtils.err(TAG, "BaseActivity#onPause()");
         super.onPause();
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+
+
+
 
     protected void measureDestroy() {
         stopService(new Intent(getBaseContext(), StepSensorService.class));
@@ -1597,6 +1622,22 @@ public abstract class BaseActivity extends AppCompatActivity {
             toast("수동 종료 / 서비스 측정 이미 시작됨 by onDestroy");
         }
     }
+
+    protected void measureStart() {
+        toast("수동 시작 / 측정 시작 by measureStart");
+        stopService(new Intent(getBaseContext(), StepCounterService.class));
+        mStarted = true;
+        startMeasure(mStarted);
+        handler.post(runnable);
+    }
+
+    protected void measureStop() {
+        toast("수동 종료 / 서비스 측정 시작 by measureStop");
+        mStarted = false;
+        startMeasure(mStarted);
+        handler.removeCallbacks(runnable);
+    }
+
 
     protected void measurePause() {
         mStepManager.stopMeasure();
@@ -1640,10 +1681,19 @@ public abstract class BaseActivity extends AppCompatActivity {
         mSleepCnt = 0;
     }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
+    public boolean isAppOnForeground() {
+        ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+        if (appProcesses == null) {
+            return false;
+        }
+        final String packageName = getPackageName();
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+                    && appProcess.processName.equals(packageName)) {
+                return true;
+            }
+        }
+        return false;
     }
-
 }

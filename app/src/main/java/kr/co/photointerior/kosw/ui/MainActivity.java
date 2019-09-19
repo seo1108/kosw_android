@@ -1688,6 +1688,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         //unregisterReceiver(mExitReceiver);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mCharacterChangeReceiver);
 
+        measureStop();
+
         super.onDestroy();
 
         //unregisterReceiver(restartService);
@@ -1701,6 +1703,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         stopService(new Intent(getBaseContext(), BeaconRagingInRegionService.class));
         stopService(new Intent(getBaseContext(), StepSensorService.class));
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mCharacterChangeReceiver);
+
+        measureStop();
 
         super.onPause();
     }
@@ -1773,6 +1777,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             thread.start();
             app.push = null ;
         }
+
+        measureStart();
     }
 
     private void setBeaconManagerMode(boolean mode){
@@ -1981,7 +1987,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         }
     }
 
-    public boolean isAppOnBackground() {
+    public boolean isAppOnForeground() {
         ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
         if (appProcesses == null) {

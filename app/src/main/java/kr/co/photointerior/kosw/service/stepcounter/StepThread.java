@@ -151,6 +151,7 @@ public class StepThread extends Thread {
 
     public void stopForever(){
         synchronized (this) {
+            mStarted = false;
             this.isRun = false;
         }
     }
