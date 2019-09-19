@@ -1275,7 +1275,7 @@ public class MainFragment extends BaseFragment {
             title = "[자동측정]";
         }*/
 
-        builder.setContentTitle("[랭킹: + ranking + ]")
+        builder.setContentTitle("[랭킹:" + ranking + "]")
                 .setContentText(floor + "F / " + cal + "kcal / " + sec + "sec")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.ic_floor))
