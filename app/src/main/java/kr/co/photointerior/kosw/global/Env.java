@@ -202,7 +202,8 @@ public class Env {
         BEACON_BEACON_TEST_INTO_ACTION("kr.co.photointerior.kosw.BEACON_BEACON_TEST_INTO_ACTION"),
         KOSW_SERVICE_RESTART_ACTION("kr.co.photointerior.kosw.KOSW_SERVICE_RESTART_ACTION"),
         KOSW_RANGE_RESTART_ACTION("kr.co.photointerior.kosw.KOSW_RANGE_RESTART_ACTION"),
-        CAFE_LOGO_GAIN_ACTION("kr.co.photointerior.kosw.CAFE_LOGO_GAIN_ACTION");
+        CAFE_LOGO_GAIN_ACTION("kr.co.photointerior.kosw.CAFE_LOGO_GAIN_ACTION"),
+        APP_IS_BACKGROUND_ACTION("kr.co.photointerior.kosw.APP_IS_BACKGROUND_ACTION");
         private String action;
         Action(String action){
             this.action = action;

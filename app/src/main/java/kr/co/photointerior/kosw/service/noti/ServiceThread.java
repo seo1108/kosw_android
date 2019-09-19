@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ import java.util.concurrent.TimeUnit;
 
 import kr.co.photointerior.kosw.R;
 import kr.co.photointerior.kosw.conf.AppConst;
+import kr.co.photointerior.kosw.global.Env;
 import kr.co.photointerior.kosw.pref.Pref;
 import kr.co.photointerior.kosw.pref.PrefKey;
 import kr.co.photointerior.kosw.rest.DefaultRestClient;
@@ -88,7 +90,7 @@ public class ServiceThread extends Thread {
 
             try{
                 int mServiceCnt = 0;
-
+                int mWalkinfInfoCnt = 0;
 
                 boolean isback = isAppOnForeground();
 
@@ -121,24 +123,32 @@ public class ServiceThread extends Thread {
 
                         mServiceCnt = 0;
                     }
+                    //LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Env.Action.APP_IS_BACKGROUND_ACTION.action()));
+                } else {
+                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Env.Action.APP_IS_BACKGROUND_ACTION.action()));
                 }
 
-                //requestToServer();
-                // 어제걸음수 전송된 데이터가 없다면 전송
-                DateFormat d_dateFormat = new SimpleDateFormat("yyyyMMdd");
-                Calendar cal = Calendar.getInstance();
-                Date now = new Date();
-                cal.setTime(now);
-                String today_date = d_dateFormat.format(cal.getTime());
+                // 1시간에 한번씩 전송체크
+                if (mWalkinfInfoCnt > 60) {
+                    //requestToServer();
+                    // 어제걸음수 전송된 데이터가 없다면 전송
+                    DateFormat d_dateFormat = new SimpleDateFormat("yyyyMMdd");
+                    Calendar cal = Calendar.getInstance();
+                    Date now = new Date();
+                    cal.setTime(now);
+                    String today_date = d_dateFormat.format(cal.getTime());
 
-                SharedPreferences prefr = mContext.getSharedPreferences("saveWalkInfo", MODE_PRIVATE);
-                String lastSendDate = prefr.getString("lastSendDate", "");
+                    SharedPreferences prefr = mContext.getSharedPreferences("saveWalkInfo", MODE_PRIVATE);
+                    String lastSendDate = prefr.getString("lastSendDate", "");
 
-                if (!today_date.equals(lastSendDate)) {
-                    readYesterdayHistoryData();
+                    if (!today_date.equals(lastSendDate)) {
+                        readYesterdayHistoryData();
+                    }
+                    mWalkinfInfoCnt = 0;
                 }
 
                 mServiceCnt++;
+                mWalkinfInfoCnt++;
             }catch (Exception e) {
                 e.printStackTrace();
             }finally {

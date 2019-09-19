@@ -399,7 +399,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
         /*startMeasure(true);
         handler.post(runnable);*/
-
         startCalcStairs();
 
         String gocafemain = getIntent().getStringExtra("_CAFEMAIN_ACTIVITY_");

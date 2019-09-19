@@ -116,6 +116,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     };
 
+    protected BroadcastReceiver mMeasureStairActionDetectReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(Env.Action.APP_IS_BACKGROUND_ACTION.isMatch(intent.getAction())) {
+                toast("수동 측정 중 by mMeasureStairActionDetectReceiver");
+            }
+        }
+    };
+
     /** 카페 로고 획득 리시버 */
    /* protected BroadcastReceiver mCafeLogoGainReceiver = new BroadcastReceiver() {
         @Override
@@ -133,7 +142,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         app = (KoswApp) getApplication() ;
 
-
+        LocalBroadcastManager.getInstance(this)
+                .registerReceiver(mMeasureStairActionDetectReceiver, new IntentFilter(Env.Action.APP_IS_BACKGROUND_ACTION.action()));
 
         //Thread.setDefaultUncaughtExceptionHandler(((KoswApp)getApplication()).getUncaughtExceptionHandler());
     }
@@ -861,6 +871,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private  boolean isContinue = false ;
     // Create the Handler
     private Handler handler = new Handler();
+    private Handler processHandler = new Handler();
     private ArrayList<MeasureObj> mStartList = new ArrayList<>() ;
 
     private int cnt = 0 ;
@@ -899,15 +910,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         mStarted = true;
         startMeasure(true);
         handler.post(runnable);
+        processHandler.post(checkProcessRunnable);
 
         SharedPreferences prefr = getSharedPreferences("background", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefr.edit();
         editor.putString("background", "manual");
         editor.commit();
-
-        toast("start________");
-
-
     }
 
     private Runnable runnable = new Runnable() {
@@ -922,259 +930,311 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     };
 
+    private Runnable checkProcessRunnable = new Runnable() {
+        @Override
+        public void run() {
+            // Insert custom code here
+
+            if (isAppOnForeground()) {
+                if (mStarted == false) {
+                    toast("FORE? START MEASURE" + isAppOnForeground());
+
+                    stopService(new Intent(getBaseContext(), StepCounterService.class));
+                    mStarted = false;
+                    startMeasure(mStarted);
+                    handler.removeCallbacks(runnable);
+                    try {
+                        Thread.sleep(300);
+                    } catch (Exception ex) {
+                    }
+                    mStarted = true;
+                    startMeasure(mStarted);
+                    handler.post(runnable);
+                }
+            } else {
+                toast("FORE?" + isAppOnForeground());
+                mStarted = false;
+                startMeasure(mStarted);
+                handler.removeCallbacks(runnable);
+            }
+            // Repeat every 2 seconds
+            processHandler.postDelayed(checkProcessRunnable, 10000);
+        }
+    };
+
     public void checkFloor() {
         checkStart();
     }
 
     private  void checkStart() {
-        if (mAltitude == 0 )  {
-            //return ;
-        }
-        Log.d("999999999999", cnt + "__");
-        // 30초 이상 걷기 없으면 잠금
-        if (cnt >= 30 * 10   )  {
-            if (mSaveStep <=  0 ) { // 걷기중이아니면
-                mSleepCnt = mMaxSleepCnt;
-                sleepMode = 0 ;
-                initMeasure();
-                return;
-            } else {  // 120초이상 측정이 없으면 측정 잠금  mSleepCnt >= 4
-                sleepMode = 1 ;
-                mSleepCnt++ ;
-                initMeasure();
-                return;
+        try {
+            if (mAltitude == 0) {
+                //return ;
             }
-        }
-
-        mSaveStep = 0 ;
-
-        MeasureObj obj = mStartList.get(cnt) ;
-        obj.altitude = mAltitude ;
-        obj.orientation = mOrientation ;
-        obj.step = mStep ;
-        obj.x = mX ;
-        obj.y = mY ;
-        obj.z = mZ ;
-
-        MeasureObj obj_b = mStartList.get(0) ;
-        obj.altitudeGap =  obj.altitude -  obj_b.altitude ;
-        obj.orientationGap =  Math.abs(obj.orientation -  obj_b.orientation) ;
-        obj.stepGap =  Math.abs(obj.step -  obj_b.step) ;
-        obj.xGap =  Math.abs(obj.x -  obj_b.x) ;
-        obj.yGap =  Math.abs(obj.y -  obj_b.y) ;
-        obj.zGap =  Math.abs(obj.z -  obj_b.z) ;
-
-        // 고도 합계
-        double gapAlitude =   0 ;
-        gapAlitude = obj.altitude - obj_b.altitude ;
-
-        // 스텝 합계
-        double gapStep =   0 ;
-        gapStep = obj.step - obj_b.step ;
-        if (cnt > 50) {
-            MeasureObj obj_c ;
-            obj_c = mStartList.get(cnt - 50 ) ;
-            obj.stepGap = Math.abs(obj.step - obj_c.step);
-            gapStep = obj.step - obj_c.step ;
-        }
-
-        double step = gapStep ; // 초당 걸음수
-        mSaveStep = step ;
-
-        List<Double> list = Arrays.asList(obj.xGap,obj.yGap,obj.zGap ) ;
-        Double mDir =  Collections.max(list) ;
-
-        //Log.v("kmj",String.format("count %d ,높이 :  %.2f , 걸음수 : %.2f , 방향 : %.2f",cnt,gapAlitude,step,mDir)) ;
-        //tvStep.setText(String.format("스텝 : %.2f" ,step));
-        //mValue.setText(String.format("높이 : %.2fm \n 방향  %.2f " , gapAlitude ,mDir)  );
-        //getTextView(R.id.txt_m).setText("");
-        String m = String.format("높이 : %.2f , 방향 : %.2f , 걷기 : %.2f , 시간 : %d" , gapAlitude, mDir, step, cnt);
-        if (isTest) {
-            // ==========================   test    ==============================
-            getTextView(R.id.txt_height).setText(String.format("높이 : %.2f", gapAlitude));
-            getTextView(R.id.txt_dir).setText(String.format("방향 : %.2f", mDir));
-            getTextView(R.id.txt_step).setText(String.format("걷기 : %.2f", step));
-            getTextView(R.id.txt_time).setText(String.format("시간 : %d (%d)", 300 - cnt,mSleepCnt ));
-            getTextView(R.id.txt_count).setText(String.format("%d  (B:%d,M:%d)", mFloor, mLogicCount, mClimbCount));
-            if (mAddr != null && mAddr.getAddressLine(0) != null) {
-                getTextView(R.id.txt_addr).setText(String.format("%s", mAddr.getAddressLine(0)));
-            }
-            if (mLocation != null) {
-                getTextView(R.id.txt_gps).setText(String.format("%s,%s", String.valueOf(mLocation.getLatitude()), String.valueOf(mLocation.getLongitude())));
-            }
-        }
-
-        if (!isContinue) {
-            if (mDir > 135 && Math.abs(gapAlitude) > 1.5  ) {
-                // 2초 이내 측정이면  카운트 하지 않음 엘리베이터 사용자 걸름
-                long curTime = System.currentTimeMillis() ;
-                if (cnt < 30  || (curTime - goupTime) < 3000 ) {
-                    mSleepCnt++ ;
+            Log.d("999999999999", cnt + "__");
+            // 30초 이상 걷기 없으면 잠금
+            if (cnt >= 30 * 10) {
+                if (mSaveStep <= 0) { // 걷기중이아니면
+                    mSleepCnt = mMaxSleepCnt;
+                    sleepMode = 0;
+                    initMeasure();
+                    return;
+                } else {  // 120초이상 측정이 없으면 측정 잠금  mSleepCnt >= 4
+                    sleepMode = 1;
+                    mSleepCnt++;
                     initMeasure();
                     return;
                 }
+            }
 
-                if (step > 1) { // 걷기중이면
+            mSaveStep = 0;
 
-                    AppUserBase user = DataHolder.instance().getAppUserBase() ;
-                    mCurBuildCount = user.getBuild_floor_amt() ;
-                    mIsBuild = user.getIsbuild() ;
+            MeasureObj obj = mStartList.get(cnt);
+            obj.altitude = mAltitude;
+            obj.orientation = mOrientation;
+            obj.step = mStep;
+            obj.x = mX;
+            obj.y = mY;
+            obj.z = mZ;
 
-                    if (gapAlitude > 0) {
-                        mFloor++;
-                        mLogicCount++ ;
-                        mClimbCount = 0 ;
+            MeasureObj obj_b = mStartList.get(0);
+            obj.altitudeGap = obj.altitude - obj_b.altitude;
+            obj.orientationGap = Math.abs(obj.orientation - obj_b.orientation);
+            obj.stepGap = Math.abs(obj.step - obj_b.step);
+            obj.xGap = Math.abs(obj.x - obj_b.x);
+            obj.yGap = Math.abs(obj.y - obj_b.y);
+            obj.zGap = Math.abs(obj.z - obj_b.z);
 
-                        if  (mIsBuild.equals("Y")) {
-                            mBuildCount++;
-                        } else {
-                            // 건물 모드 :건물높이의 1⁄2 이상이면 건물로 전환
-                            if (mLogicCount >= Math.ceil(mCurBuildCount / 2)) {
-                                mIsBuild = "Y";
-                                mBuildCount = mLogicCount;
-                            }
-                        }
+            // 고도 합계
+            double gapAlitude = 0;
+            gapAlitude = obj.altitude - obj_b.altitude;
 
-                        if (mBuildCount == 1) {
-                            startTime = System.currentTimeMillis() ;
-                        }
+            // 스텝 합계
+            double gapStep = 0;
+            gapStep = obj.step - obj_b.step;
+            if (cnt > 50) {
+                MeasureObj obj_c;
+                obj_c = mStartList.get(cnt - 50);
+                obj.stepGap = Math.abs(obj.step - obj_c.step);
+                gapStep = obj.step - obj_c.step;
+            }
 
-                        if (mBuildCount == Math.ceil(mCurBuildCount / 2)  && mBuildCount >= 4  ) {
-                            endTime = System.currentTimeMillis() ;
-                            isRedDot = true  ;
-                        } else {
-                            isRedDot = false ;
-                        }
-                        isCount = true ;
-                        if (isTest) {
-                            getTextView(R.id.txt_m).setText(m);
-                        }
+            double step = gapStep; // 초당 걸음수
+            mSaveStep = step;
 
-                        goupTime = System.currentTimeMillis() ;
-                        sendDataToServer(1);
-                    } else {
-                        mBuildCount = 0 ;
-                        mClimbCount = 0 ;
-                        mLogicCount = 0 ;
+            List<Double> list = Arrays.asList(obj.xGap, obj.yGap, obj.zGap);
+            Double mDir = Collections.max(list);
 
-                        mFloor++;
-                        isCount = true ;
-                        if (isTest) {
-                            getTextView(R.id.txt_m).setText(m);
-                        }
-                        goupTime = System.currentTimeMillis() ;
-                        sendDataToServer(1);
-                    }
-
-                    // 90이상이면 높이는 클리어  방향은 보존
-                    MeasureObj obj_bb =  mStartList.get(0) ;
-                    isContinue = true ;
-                    mStartList.clear();
-                    for (int i = 0; i < 600; i++) {
-                        mStartList.add(new MeasureObj());
-                    }
-                    cnt = 0;
-                    mStartList.get(0).x = obj_bb.x  ;
-                    mStartList.get(0).y = obj_bb.y  ;
-                    mStartList.get(0).z = obj_bb.z  ;
-                    mStartList.get(0).xGap = obj_bb.xGap ;
-                    mStartList.get(0).yGap = obj_bb.yGap ;
-                    mStartList.get(0).zGap = obj_bb.zGap ;
-                    mStartList.get(0).step = obj_bb.step ;
-                    mStartList.get(0).altitude = mAltitude ;
-
-                    cnt++ ;
-                    return ;
-
+            //Log.v("kmj",String.format("count %d ,높이 :  %.2f , 걸음수 : %.2f , 방향 : %.2f",cnt,gapAlitude,step,mDir)) ;
+            //tvStep.setText(String.format("스텝 : %.2f" ,step));
+            //mValue.setText(String.format("높이 : %.2fm \n 방향  %.2f " , gapAlitude ,mDir)  );
+            //getTextView(R.id.txt_m).setText("");
+            String m = String.format("높이 : %.2f , 방향 : %.2f , 걷기 : %.2f , 시간 : %d", gapAlitude, mDir, step, cnt);
+            if (isTest) {
+                // ==========================   test    ==============================
+                getTextView(R.id.txt_height).setText(String.format("높이 : %.2f", gapAlitude));
+                getTextView(R.id.txt_dir).setText(String.format("방향 : %.2f", mDir));
+                getTextView(R.id.txt_step).setText(String.format("걷기 : %.2f", step));
+                getTextView(R.id.txt_time).setText(String.format("시간 : %d (%d)", 300 - cnt, mSleepCnt));
+                getTextView(R.id.txt_count).setText(String.format("%d  (B:%d,M:%d)", mFloor, mLogicCount, mClimbCount));
+                if (mAddr != null && mAddr.getAddressLine(0) != null) {
+                    getTextView(R.id.txt_addr).setText(String.format("%s", mAddr.getAddressLine(0)));
+                }
+                if (mLocation != null) {
+                    getTextView(R.id.txt_gps).setText(String.format("%s,%s", String.valueOf(mLocation.getLatitude()), String.valueOf(mLocation.getLongitude())));
                 }
             }
 
-        }
+            if (!isContinue) {
+                if (mDir > 135 && Math.abs(gapAlitude) > 1.5) {
+                    // 2초 이내 측정이면  카운트 하지 않음 엘리베이터 사용자 걸름
+                    long curTime = System.currentTimeMillis();
+                    if (cnt < 30 || (curTime - goupTime) < 3000) {
+                        mSleepCnt++;
+                        initMeasure();
+                        return;
+                    }
 
-        if (mDir >  315 &&  isContinue   ) {  //
-            // 315 이상이면 높이는 클리어  방향은 보존
-            MeasureObj obj_bb =  mStartList.get(0) ;
-            isContinue = false ;
-            for (int i = 0; i < cnt; i++) {
-                mStartList.get(i).x = obj_bb.x  ;
-                mStartList.get(i).y = obj_bb.y  ;
-                mStartList.get(i).z = obj_bb.z  ;
-                mStartList.get(i).xGap = obj_bb.xGap ;
-                mStartList.get(i).yGap = obj_bb.yGap ;
-                mStartList.get(i).zGap = obj_bb.zGap ;
-                mStartList.get(i).step = obj_bb.step ;
-                mStartList.get(i).altitude = mAltitude ;
+                    if (step > 1) { // 걷기중이면
+
+                        AppUserBase user = DataHolder.instance().getAppUserBase();
+                        mCurBuildCount = user.getBuild_floor_amt();
+                        mIsBuild = user.getIsbuild();
+
+                        if (gapAlitude > 0) {
+                            mFloor++;
+                            mLogicCount++;
+                            mClimbCount = 0;
+
+                            if (mIsBuild.equals("Y")) {
+                                mBuildCount++;
+                            } else {
+                                // 건물 모드 :건물높이의 1⁄2 이상이면 건물로 전환
+                                if (mLogicCount >= Math.ceil(mCurBuildCount / 2)) {
+                                    mIsBuild = "Y";
+                                    mBuildCount = mLogicCount;
+                                }
+                            }
+
+                            if (mBuildCount == 1) {
+                                startTime = System.currentTimeMillis();
+                            }
+
+                            if (mBuildCount == Math.ceil(mCurBuildCount / 2) && mBuildCount >= 4) {
+                                endTime = System.currentTimeMillis();
+                                isRedDot = true;
+                            } else {
+                                isRedDot = false;
+                            }
+                            isCount = true;
+                            if (isTest) {
+                                getTextView(R.id.txt_m).setText(m);
+                            }
+
+                            goupTime = System.currentTimeMillis();
+                            sendDataToServer(1);
+                        } else {
+                            mBuildCount = 0;
+                            mClimbCount = 0;
+                            mLogicCount = 0;
+
+                            mFloor++;
+                            isCount = true;
+                            if (isTest) {
+                                getTextView(R.id.txt_m).setText(m);
+                            }
+                            goupTime = System.currentTimeMillis();
+                            sendDataToServer(1);
+                        }
+
+                        // 90이상이면 높이는 클리어  방향은 보존
+                        MeasureObj obj_bb = mStartList.get(0);
+                        isContinue = true;
+                        mStartList.clear();
+                        for (int i = 0; i < 600; i++) {
+                            mStartList.add(new MeasureObj());
+                        }
+                        Log.d("9999999999", "CNT 0 point1");
+                        cnt = 0;
+                        mStartList.get(0).x = obj_bb.x;
+                        mStartList.get(0).y = obj_bb.y;
+                        mStartList.get(0).z = obj_bb.z;
+                        mStartList.get(0).xGap = obj_bb.xGap;
+                        mStartList.get(0).yGap = obj_bb.yGap;
+                        mStartList.get(0).zGap = obj_bb.zGap;
+                        mStartList.get(0).step = obj_bb.step;
+                        mStartList.get(0).altitude = mAltitude;
+
+                        cnt++;
+                        return;
+
+                    }
+                }
+
             }
-            mStartList.get(cnt).x = obj_bb.x  ;
-            mStartList.get(cnt).y = obj_bb.y  ;
-            mStartList.get(cnt).z = obj_bb.z  ;
-            mStartList.get(cnt).xGap = obj_bb.xGap ;
-            mStartList.get(cnt).yGap = obj_bb.yGap ;
-            mStartList.get(cnt).zGap = obj_bb.zGap ;
-            mStartList.get(cnt).step = obj_bb.step ;
-            mStartList.get(cnt).altitude = mAltitude ;
 
-            is315 = true ;
-            cnt315 = cnt ;
+            if (mDir > 315 && isContinue) {  //
+                // 315 이상이면 높이는 클리어  방향은 보존
+                MeasureObj obj_bb = mStartList.get(0);
+                isContinue = false;
+                for (int i = 0; i < cnt; i++) {
+                    mStartList.get(i).x = obj_bb.x;
+                    mStartList.get(i).y = obj_bb.y;
+                    mStartList.get(i).z = obj_bb.z;
+                    mStartList.get(i).xGap = obj_bb.xGap;
+                    mStartList.get(i).yGap = obj_bb.yGap;
+                    mStartList.get(i).zGap = obj_bb.zGap;
+                    mStartList.get(i).step = obj_bb.step;
+                    mStartList.get(i).altitude = mAltitude;
+                }
+                mStartList.get(cnt).x = obj_bb.x;
+                mStartList.get(cnt).y = obj_bb.y;
+                mStartList.get(cnt).z = obj_bb.z;
+                mStartList.get(cnt).xGap = obj_bb.xGap;
+                mStartList.get(cnt).yGap = obj_bb.yGap;
+                mStartList.get(cnt).zGap = obj_bb.zGap;
+                mStartList.get(cnt).step = obj_bb.step;
+                mStartList.get(cnt).altitude = mAltitude;
 
-            cnt++ ;
-            return ;
+                is315 = true;
+                cnt315 = cnt;
 
-        }
-
-        // 1초뒤에 방향만 클리어
-        if ( is315 && cnt > (cnt315 + 10)  ) {  //
-            MeasureObj obj_bb =  mStartList.get(0) ;
-
-            for (int i = 0; i < cnt ; i++) {
-                mStartList.get(i).x = mX  ;
-                mStartList.get(i).y = mY  ;
-                mStartList.get(i).z = mZ  ;
-                mStartList.get(i).step = obj_bb.step ;
-                mStartList.get(i).altitude = obj_bb.altitude ;
-            }
-            mStartList.get(cnt).x = mX  ;
-            mStartList.get(cnt).y = mY  ;
-            mStartList.get(cnt).z = mZ  ;
-            mStartList.get(cnt).step = obj_bb.step ;
-            mStartList.get(cnt).altitude = obj_bb.altitude ;
-            is315 = false ;
-            cnt315 = 0 ;
-
-            cnt++ ;
-            return ;
-        }
-
-        //=================================
-        // 회전이 없고 3미터 이상이면 1층 측정
-        //=================================
-
-        if (Math.abs(gapAlitude) > 3   ) {
-            long curTime = System.currentTimeMillis() ;
-            if (cnt < 20  || (curTime - goupTime) < 2000 ) {
-                //mSleepCnt++;
-                initMeasure();
+                cnt++;
                 return;
-            } else {
-                if (step > 1) { // 걷기중이면
-                    if (gapAlitude > 0) {
 
-                        AppUserBase user = DataHolder.instance().getAppUserBase() ;
-                        mCurBuildCount = user.getBuild_floor_amt() ;
-                        mIsBuild = user.getIsbuild() ;
-                        mClimbCount++;
-                        mLogicCount = 0 ;
+            }
 
-                        if (mIsBuild.equals("Y")) {
-                            if (mClimbCount > mCurBuildCount ) {
-                                mIsBuild = "N" ;
+            // 1초뒤에 방향만 클리어
+            if (is315 && cnt > (cnt315 + 10)) {  //
+                MeasureObj obj_bb = mStartList.get(0);
+
+                for (int i = 0; i < cnt; i++) {
+                    mStartList.get(i).x = mX;
+                    mStartList.get(i).y = mY;
+                    mStartList.get(i).z = mZ;
+                    mStartList.get(i).step = obj_bb.step;
+                    mStartList.get(i).altitude = obj_bb.altitude;
+                }
+                mStartList.get(cnt).x = mX;
+                mStartList.get(cnt).y = mY;
+                mStartList.get(cnt).z = mZ;
+                mStartList.get(cnt).step = obj_bb.step;
+                mStartList.get(cnt).altitude = obj_bb.altitude;
+                is315 = false;
+                cnt315 = 0;
+
+                cnt++;
+                return;
+            }
+
+            //=================================
+            // 회전이 없고 3미터 이상이면 1층 측정
+            //=================================
+
+            if (Math.abs(gapAlitude) > 3) {
+                long curTime = System.currentTimeMillis();
+                if (cnt < 20 || (curTime - goupTime) < 2000) {
+                    //mSleepCnt++;
+                    initMeasure();
+                    return;
+                } else {
+                    if (step > 1) { // 걷기중이면
+                        if (gapAlitude > 0) {
+
+                            AppUserBase user = DataHolder.instance().getAppUserBase();
+                            mCurBuildCount = user.getBuild_floor_amt();
+                            mIsBuild = user.getIsbuild();
+                            mClimbCount++;
+                            mLogicCount = 0;
+
+                            if (mIsBuild.equals("Y")) {
+                                if (mClimbCount > mCurBuildCount) {
+                                    mIsBuild = "N";
+                                    mFloor++;
+                                    mBuildCount = mClimbCount;
+
+                                    if (mBuildCount == 1) {
+                                        startTime = System.currentTimeMillis();
+                                    }
+                                    if (mBuildCount == Math.ceil(mCurBuildCount / 2) && mBuildCount >= 3) {
+                                        endTime = System.currentTimeMillis();
+                                        isRedDot = true;
+                                    } else {
+                                        isRedDot = false;
+                                    }
+                                    if (isTest) {
+                                        getTextView(R.id.txt_m).setText(m);
+                                    }
+                                    goupTime = System.currentTimeMillis();
+                                    sendDataToServer(1);
+                                }
+                            } else {
+                                mBuildCount++;
                                 mFloor++;
-                                mBuildCount = mClimbCount ;
-
                                 if (mBuildCount == 1) {
                                     startTime = System.currentTimeMillis();
                                 }
-                                if (mBuildCount == Math.ceil(mCurBuildCount / 2)  && mBuildCount >= 3 ) {
+                                if (mBuildCount == Math.ceil(mCurBuildCount / 2) && mBuildCount >= 3) {
                                     endTime = System.currentTimeMillis();
                                     isRedDot = true;
                                 } else {
@@ -1187,53 +1247,38 @@ public abstract class BaseActivity extends AppCompatActivity {
                                 sendDataToServer(1);
                             }
                         } else {
-                            mBuildCount++ ;
-                            mFloor++;
-                            if (mBuildCount == 1) {
-                                startTime = System.currentTimeMillis();
-                            }
-                            if (mBuildCount == Math.ceil(mCurBuildCount / 2) && mBuildCount >= 3 ) {
-                                endTime = System.currentTimeMillis();
-                                isRedDot = true;
+                            mBuildCount = 0;
+                            mClimbCount = 0;
+                            mLogicCount = 0;
+                            if (mIsBuild.equals("Y")) {
+                                //mClimbCount++;
                             } else {
-                                isRedDot = false;
+                                mFloor++;
+                                if (isTest) {
+                                    getTextView(R.id.txt_m).setText(m);
+                                }
+                                goupTime = System.currentTimeMillis();
+                                sendDataToServer(1);
                             }
-                            if (isTest) {
-                                getTextView(R.id.txt_m).setText(m);
-                            }
-                            goupTime = System.currentTimeMillis();
-                            sendDataToServer(1);
                         }
-                    } else {
-                        mBuildCount = 0 ;
-                        mClimbCount = 0 ;
-                        mLogicCount = 0 ;
-                        if (mIsBuild.equals("Y")) {
-                            //mClimbCount++;
-                        } else {
-                            mFloor++;
-                            if (isTest) {
-                                getTextView(R.id.txt_m).setText(m);
-                            }
-                            goupTime = System.currentTimeMillis();
-                            sendDataToServer(1);
-                        }
+                        initMeasure();
+                        return;
+
+
                     }
-                    initMeasure();
-                    return ;
-
-
                 }
+
             }
 
-        }
+            if (mDir > 400) {
+                initMeasure();
+                return;
+            }
 
-        if ( mDir > 400 ) {
-            initMeasure();
-            return ;
+            cnt++;
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-
-        cnt++ ;
     }
 
     // 빌딩 층수 카운트 (빌딩 높이 )
@@ -1242,101 +1287,108 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     // 측정 시작 ,멈춤
-    public void startMeasure(boolean started){
-        if(!started){
+    public void startMeasure(boolean started) {
+        try {
+            if (!started) {
 
-            saveBuildCount(mBuildCount);
+                saveBuildCount(mBuildCount);
 
 
-            goupTime = System.currentTimeMillis();
+                goupTime = System.currentTimeMillis();
 
-            mAltitude = 0 ;
-            mOrientation = 0 ;
-            mStep = 0 ;
-            mX = 0 ;
-            mY = 0 ;
-            mZ = 0 ;
+                mAltitude = 0;
+                mOrientation = 0;
+                mStep = 0;
+                mX = 0;
+                mY = 0;
+                mZ = 0;
 
-            for (int i = 0; i < 600; i++) {
-                MeasureObj obj = mStartList.get(i) ;
-                obj.altitude = 0.0;
-                obj.orientation = 0.0 ;
-                obj.step = 0.0 ;
-                obj.x = 0.0 ;
-                obj.y = 0.0 ;
-                obj.z = 0.0;
-                obj.xGap = 0.0 ;
-                obj.yGap = 0.0 ;
-                obj.zGap = 0.0 ;
+                for (int i = 0; i < 600; i++) {
+                    MeasureObj obj = mStartList.get(i);
+                    obj.altitude = 0.0;
+                    obj.orientation = 0.0;
+                    obj.step = 0.0;
+                    obj.x = 0.0;
+                    obj.y = 0.0;
+                    obj.z = 0.0;
+                    obj.xGap = 0.0;
+                    obj.yGap = 0.0;
+                    obj.zGap = 0.0;
+                }
+                Log.d("9999999999", "CNT 0 point2");
+                cnt = 0;
+
+                mAltiManager.stopMeasure();
+                mDirectionManager.stopMeasure();
+                mStepManager.stopMeasure();
+                try {
+                    findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
+                } catch (Exception e) {
+                }
+
+               /*if(isMyServiceRunning(StepCounterService.class)) {
+                   // 자동측정중이면
+                   TextView tv =  findViewById(R.id.tvPauseMent);
+                   tv.setText("자동측정중입니다.");
+               }*/
+
+
+            } else {
+
+
+                AppUserBase user = DataHolder.instance().getAppUserBase();
+
+                if (user != null) {
+                    mCurBuildCount = user.getBuild_floor_amt(); // 현재 빌딩층수 (높이)
+                }
+
+                if (!isSleep) {
+                    initMeasure();
+                }
+
+                goupTime = System.currentTimeMillis();
+
+                mAltitude = 0;
+                mOrientation = 0;
+                mStep = 0;
+                mX = 0;
+                mY = 0;
+                mZ = 0;
+
+                for (int i = 0; i < 600; i++) {
+                    MeasureObj obj = mStartList.get(i);
+                    obj.altitude = 0.0;
+                    obj.orientation = 0.0;
+                    obj.step = 0.0;
+                    obj.x = 0.0;
+                    obj.y = 0.0;
+                    obj.z = 0.0;
+                    obj.xGap = 0.0;
+                    obj.yGap = 0.0;
+                    obj.zGap = 0.0;
+
+                }
+                cnt = 0;
+
+                mAltiManager = new AltitudeManager(this);
+                mStepManager = new StepManager(this);
+                mDirectionManager = new DirectionManager(this);
+
+                isSleep = false;
+
+                mAltiManager.startMeasure();
+                mDirectionManager.startMeasure();
+                mStepManager.startMeasure();
+                try {
+                    findViewById(R.id.LayoutPause).setVisibility(View.INVISIBLE);
+                } catch (Exception e) {
+                }
+                //mValue.setText("wait...");
             }
-            cnt = 0;
-
-            mAltiManager.stopMeasure();
-            mDirectionManager.stopMeasure();
-            mStepManager.stopMeasure();
-            try {
-                findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
-            } catch (Exception e) {}
-
-           /*if(isMyServiceRunning(StepCounterService.class)) {
-               // 자동측정중이면
-               TextView tv =  findViewById(R.id.tvPauseMent);
-               tv.setText("자동측정중입니다.");
-           }*/
-
-
-        }else{
-
-
-            AppUserBase user = DataHolder.instance().getAppUserBase() ;
-
-            if (user != null) {
-                mCurBuildCount = user.getBuild_floor_amt(); // 현재 빌딩층수 (높이)
-            }
-
-            if (!isSleep) {
-                initMeasure();
-            }
-
-            goupTime = System.currentTimeMillis();
-
-            mAltitude = 0 ;
-            mOrientation = 0 ;
-            mStep = 0 ;
-            mX = 0 ;
-            mY = 0 ;
-            mZ = 0 ;
-
-            for (int i = 0; i < 600; i++) {
-                MeasureObj obj = mStartList.get(i) ;
-                obj.altitude = 0.0;
-                obj.orientation = 0.0 ;
-                obj.step = 0.0 ;
-                obj.x = 0.0 ;
-                obj.y = 0.0 ;
-                obj.z = 0.0;
-                obj.xGap = 0.0 ;
-                obj.yGap = 0.0 ;
-                obj.zGap = 0.0 ;
-
-            }
-            cnt = 0;
-
-            mAltiManager = new AltitudeManager(this);
-            mStepManager = new StepManager(this) ;
-            mDirectionManager = new DirectionManager(this) ;
-
-            isSleep = false  ;
-
-            mAltiManager.startMeasure();
-            mDirectionManager.startMeasure();
-            mStepManager.startMeasure();
-            try {
-                findViewById(R.id.LayoutPause).setVisibility(View.INVISIBLE);
-            } catch (Exception e) {}
-            //mValue.setText("wait...");
+            mStarted = started;
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-        mStarted = started ;
     }
 
     private void restartMeasure(){
@@ -1604,6 +1656,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
 
+
+
     protected void measureDestroy() {
         stopService(new Intent(getBaseContext(), StepSensorService.class));
         mStepManager.stopMeasure();
@@ -1624,18 +1678,22 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void measureStart() {
-        toast("수동 시작 / 측정 시작 by measureStart");
+        /*toast("수동 시작 / 측정 시작 by measureStart");
         stopService(new Intent(getBaseContext(), StepCounterService.class));
-        mStarted = true;
-        startMeasure(mStarted);
-        handler.post(runnable);
-    }
-
-    protected void measureStop() {
-        toast("수동 종료 / 서비스 측정 시작 by measureStop");
         mStarted = false;
         startMeasure(mStarted);
         handler.removeCallbacks(runnable);
+        try { Thread.sleep(300); } catch (Exception ex) { }
+        mStarted = true;
+        startMeasure(mStarted);
+        handler.post(runnable);*/
+    }
+
+    protected void measureStop() {
+        /*toast("수동 종료 / 서비스 측정 시작 by measureStop");
+        mStarted = false;
+        startMeasure(mStarted);
+        handler.removeCallbacks(runnable);*/
     }
 
 
@@ -1696,4 +1754,29 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         return false;
     }
+
+    /** 캐릭터 변경 리시버 */
+    /*protected BroadcastReceiver mIsAppBackgroundReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(Env.Action.APP_IS_BACKGROUND_ACTION.isMatch(intent.getAction())) {
+                //updateCharacter();
+                mStepManager.stopMeasure();
+
+                SharedPreferences prefr = getSharedPreferences("background", MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefr.edit();
+                editor.putString("background", "auto");
+                editor.commit();
+
+                // 자동측정서비스 시작
+                Intent startintent = new Intent(getApplicationContext(), StepCounterService.class);
+                startService(startintent);
+
+                toast("수동 종료 / 서비스 측정 시작 by onPause");
+
+                handler.removeCallbacks(runnable);
+                startMeasure(false);
+            }
+        }
+    };*/
 }
