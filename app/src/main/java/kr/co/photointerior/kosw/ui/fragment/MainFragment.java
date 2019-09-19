@@ -910,7 +910,7 @@ public class MainFragment extends BaseFragment {
                         if (null != r_rank) {
                             AppConst.NOTI_RANKS = StringUtil.format(Double.parseDouble(r_rank.getRank()), "#,##0");
                         } else {
-                            AppConst.NOTI_RANKS = "0";
+                            AppConst.NOTI_RANKS = "-";
                         }
                         AppConst.NOTI_FLOORS = StringUtil.format(total.getAmountToFloat(), "#,##0");
                         AppConst.NOTI_CALS = KUtil.calcCalorie(total.getAmountToFloat(), total.getStairAmountToFloat());
@@ -925,9 +925,9 @@ public class MainFragment extends BaseFragment {
 
                         tot_rank = "0";
                         rank = "0";
-                        AppConst.NOTI_FLOORS = "0";
-                        AppConst.NOTI_CALS = "0";
-                        AppConst.NOTI_SECS = "0";
+                        AppConst.NOTI_FLOORS = "-";
+                        AppConst.NOTI_CALS = "-";
+                        AppConst.NOTI_SECS = "-";
                     }
                 } else {
                     totalFloor.setRecordAmount("0");
@@ -935,11 +935,11 @@ public class MainFragment extends BaseFragment {
                     totalLife.setRecordAmount("0");
                     toast(R.string.warn_commu_to_server);
 
-                    AppConst.NOTI_RANKS = "0";
+                    AppConst.NOTI_RANKS = "-";
                     rank = "0";
-                    AppConst.NOTI_FLOORS = "0";
-                    AppConst.NOTI_CALS = "0";
-                    AppConst.NOTI_SECS = "0";
+                    AppConst.NOTI_FLOORS = "-";
+                    AppConst.NOTI_CALS = "-";
+                    AppConst.NOTI_SECS = "-";
                 }
 
                 updateNotification(AppConst.NOTI_RANKS, AppConst.NOTI_FLOORS, AppConst.NOTI_CALS, AppConst.NOTI_SECS);

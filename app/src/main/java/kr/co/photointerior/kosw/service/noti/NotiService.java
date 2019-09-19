@@ -170,7 +170,8 @@ public class NotiService extends Service {
             title = "[자동측정]";
         }*/
 
-        builder.setContentText("[랭킹:" + AppConst.NOTI_RANKS + "] " + AppConst.NOTI_FLOORS + "F / " + AppConst.NOTI_CALS + "kcal / " + AppConst.NOTI_SECS + "sec")
+        builder.setContentTitle("[랭킹:" + AppConst.NOTI_RANKS + "]")
+                .setContentText(AppConst.NOTI_FLOORS + "F / " + AppConst.NOTI_CALS + "kcal / " + AppConst.NOTI_SECS + "sec")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_floor))
                 .setWhen(System.currentTimeMillis())
