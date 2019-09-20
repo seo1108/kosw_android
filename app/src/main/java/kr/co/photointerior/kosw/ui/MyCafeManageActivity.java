@@ -1,6 +1,8 @@
 package kr.co.photointerior.kosw.ui;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -34,6 +36,9 @@ import kr.co.photointerior.kosw.rest.model.CafeMainList;
 import kr.co.photointerior.kosw.rest.model.CafeSubCategory;
 import kr.co.photointerior.kosw.rest.model.DataHolder;
 import kr.co.photointerior.kosw.rest.model.ResponseBase;
+import kr.co.photointerior.kosw.ui.dialog.DialogCommon;
+import kr.co.photointerior.kosw.utils.AbstractAcceptor;
+import kr.co.photointerior.kosw.utils.Acceptor;
 import kr.co.photointerior.kosw.utils.KUtil;
 import kr.co.photointerior.kosw.utils.LogUtils;
 import kr.co.photointerior.kosw.widget.KoswButton;
@@ -44,10 +49,11 @@ import retrofit2.Response;
 
 public class MyCafeManageActivity extends BaseActivity {
     private String TAG = LogUtils.makeLogTag(MyCafeManageActivity.class);
+    private Dialog mDialog;
     private RecyclerView mRecyclerView;
     private CafeAdapter mAdapter;
     private ImageView btn_back;
-    private CafeMainList mCMList ;
+    private CafeMainList mCMList;
     private List<Cafe> mList = new ArrayList<>();
     private List<CafeSubCategory> mCateList = new ArrayList<>();
 
@@ -78,6 +84,28 @@ public class MyCafeManageActivity extends BaseActivity {
         btn_back.setOnClickListener(v->{
             finish();
         });
+    }
+    private void showConfirmPopup(final String cafeseq, final String seq, final String additions){
+        if(!isFinishing()){
+            if(mDialog != null){
+                mDialog.dismiss();
+            }
+            Acceptor acceptor = new AbstractAcceptor() {
+                @Override
+                public void accept() {
+                    updateMyInfo(cafeseq, seq, additions);
+                }
+            };
+            String msg = getString(R.string.txt_confirm_message);
+            mDialog =
+                    new DialogCommon(this,
+                            acceptor,
+                            getString(R.string.txt_warn),
+                            msg,
+                            new String[]{getString(R.string.txt_cancel), null, getString(R.string.txt_confirm)});
+            mDialog.setCancelable(false);
+            mDialog.show();
+        }
     }
 
     @Override
@@ -124,6 +152,45 @@ public class MyCafeManageActivity extends BaseActivity {
             @Override
             public void onFailure(Call<CafeMainList> call, Throwable t) {
                 closeSpinner();
+                LogUtils.err(TAG, t);
+                toast(R.string.warn_server_not_smooth);
+            }
+        });
+    }
+
+    private void updateMyInfo(String cafeseq, String cateseq, String additions) {
+        showSpinner("");
+
+        AppUserBase user = DataHolder.instance().getAppUserBase() ;
+        Map<String, Object> query = KUtil.getDefaultQueryMap();
+        query.put("user_seq",user.getUser_seq() );
+        query.put("cafeseq", cafeseq);
+        query.put("cateseq", cateseq);
+        query.put("additions", additions);
+
+        Call<ResponseBase> call =
+                new DefaultRestClient<CafeService>(this)
+                        .getClient(CafeService.class).updateMyInfo(query);
+
+        call.enqueue(new Callback<ResponseBase>() {
+            @Override
+            public void onResponse(Call<ResponseBase> call, Response<ResponseBase> response) {
+                closeSpinner();
+                LogUtils.err(TAG, response.raw().toString());
+                if(response.isSuccessful()){
+                    ResponseBase base = response.body();
+                    if(base.isSuccess()) {
+                        toast(R.string.cafe_my_category_update_success);
+                    }else{
+                        toast(R.string.warn_cafe_fail_category_edit);
+                    }
+                }else{
+                    toast(R.string.warn_cafe_fail_category_edit);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBase> call, Throwable t) {
                 LogUtils.err(TAG, t);
                 toast(R.string.warn_server_not_smooth);
             }
@@ -215,6 +282,10 @@ public class MyCafeManageActivity extends BaseActivity {
                     kickUser(String.valueOf(user.getUser_seq()), position, item.getCafeseq());
                 });
             }
+
+            holder.btn_edit.setOnClickListener(v->{
+                showConfirmPopup(item.getCafeseq(), catelist.get(holder.spinner.getSelectedItemPosition()).getCateseq(), holder.input_additions.getText().toString());
+            });
         }
 
         @Override
@@ -285,6 +356,8 @@ public class MyCafeManageActivity extends BaseActivity {
         super.onBackPressed();
         overridePendingTransition(R.anim.fade_in_full,R.anim.slide_out_right);
     }
+
+
 
 
     public class SubCategory {

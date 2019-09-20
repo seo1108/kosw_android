@@ -129,12 +129,14 @@
     <string name="cafe_comment_success">댓글을 작성하였습니다.</string>
     <string name="cafe_notice_post_success">공지사항을 작성하였습니다.</string>
     <string name="cafe_notice_edit_success">공지사항을 수정하였습니다.</string>
+    <string name="cafe_notice_delete_success">공지사항을 삭제하였습니다.</string>
     <string name="cafe_member_kick_success">강퇴되었습니다.</string>
     <string name="cafe_member_kick_myself_success">카페를 탈퇴하였습니다.</string>
     <string name="cafe_open">공개 카페가 되었습니다.</string>
     <string name="cafe_close">비공개 카페가 되었습니다.</string>
     <string name="cafe_info_edit_success">카페정보를 수정하였습니다.</string>
     <string name="cafe_category_edit_success">분류정보를 수정하였습니다.</string>
+    <string name="cafe_my_category_update_success">분류정보을 수정하였습니다.</string>
 
     <string name="help_company_code">도움말 보기 ></string>
     <string name="help_company_code_1">계단 고유코드란?</string>

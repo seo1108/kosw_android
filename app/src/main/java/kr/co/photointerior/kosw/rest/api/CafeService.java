@@ -204,4 +204,21 @@ public interface CafeService {
      */
     @POST("api/cafe/modifyCategory")
     Call<ResponseBase> modifyCategory(@QueryMap Map<String, Object> queryMap);
+
+    /**
+     * 카페 나의 분류 정보 수정
+     * @param queryMap
+     * @return
+     */
+    @POST("api/cafe/updateMyInfo")
+    Call<ResponseBase> updateMyInfo(@QueryMap Map<String, Object> queryMap);
+
+    /**
+     * 카페 공지사항 삭제
+     * @param queryMap
+     * @return
+     */
+    @POST("api/cafe/deleteNotice")
+    Call<ResponseBase> deleteNotice(@QueryMap Map<String, Object> queryMap);
+
 }

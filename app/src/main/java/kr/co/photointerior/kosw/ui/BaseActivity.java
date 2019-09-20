@@ -149,14 +149,14 @@ public abstract class BaseActivity extends AppCompatActivity {
         //        .registerReceiver(mMeasureStairActionDetectReceiver, new IntentFilter(Env.Action.APP_IS_BACKGROUND_ACTION.action()));
 
         // 죽지않는 서비스 구현
-        restartService = new RestartService();
+        /*restartService = new RestartService();
         Intent intent = new Intent(BaseActivity.this, NotiService.class);
 
         IntentFilter intentFilter = new IntentFilter("kr.co.photointerior.kosw.service.noti.NotiService");
         //브로드 캐스트에 등록
         registerReceiver(restartService,intentFilter);
         // 서비스 시작
-        startService(intent);
+        startService(intent);*/
 
         //Thread.setDefaultUncaughtExceptionHandler(((KoswApp)getApplication()).getUncaughtExceptionHandler());
     }

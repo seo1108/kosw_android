@@ -438,14 +438,14 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         }
 
         // 죽지않는 서비스 구현
-        /*restartService = new RestartService();
+        restartService = new RestartService();
         Intent intent = new Intent(MainActivity.this, NotiService.class);
 
         IntentFilter intentFilter = new IntentFilter("kr.co.photointerior.kosw.service.noti.NotiService");
         //브로드 캐스트에 등록
         registerReceiver(restartService,intentFilter);
         // 서비스 시작
-        startService(intent);*/
+        startService(intent);
 
         AppConst.IS_MAIN_RUNNED = true;
     }
