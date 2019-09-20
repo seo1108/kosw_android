@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Address;
@@ -64,6 +65,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.Context.MODE_PRIVATE;
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class StepThread extends Thread {
@@ -704,15 +706,7 @@ public class StepThread extends Thread {
             return;
         }
 
-        MediaPlayer mMediaPlayer = new MediaPlayer();
-        Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.alert);
-        try {
-            mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
-            mMediaPlayer.prepare();
-            mMediaPlayer.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
 
             //Toast.makeText(mContext, "Send to Server", Toast.LENGTH_SHORT).show();
         mSleepCnt = 0 ;
@@ -725,27 +719,44 @@ public class StepThread extends Thread {
         }
 
         AppUserBase user =  DataHolder.instance().getAppUserBase() ;
+
+        SharedPreferences prefr = mContext.getSharedPreferences("userInfo", MODE_PRIVATE);
+        if (null == prefr) return;
+        String userToken = prefr.getString("token", "");
+        if ("".equals(userToken)) return;
+
+
+        MediaPlayer mMediaPlayer = new MediaPlayer();
+        Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.alert);
+        try {
+            mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+            mMediaPlayer.prepare();
+            mMediaPlayer.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         //return;
         try {
             Map<String, Object> query = new HashMap<>();
-            query.put("token",user.getUserToken()) ;
+            query.put("token", prefr.getString("token", "")) ;
             query.put("beacon_uuid", "");
             query.put("major_value", "");
             query.put("minor_value", "");
             query.put("install_floor", "");
             //map.put("beacon_seq", getBeaconSeq());
-            query.put("beacon_seq",  user.getBeacon_seq());
+            query.put("beacon_seq", prefr.getInt("beacon_seq", 0));
             if ( user.getBeacon_seq() == 0 ) {
                 DefaultCode.BEACON_SEQ.getValue() ;
             }
-            query.put("stair_seq", user.getStair_seq());
-            query.put("build_seq", user.getBuild_seq());
-            query.put("build_name", user.getBuild_name());
+            query.put("stair_seq", prefr.getInt("stair_seq", 0));
+            query.put("build_seq", prefr.getString("build_seq", "")) ;
+            query.put("build_name", prefr.getString("build_name", "")) ;
             query.put("floor_amount", 0);
             query.put("stair_amount", 0);
-            query.put("cust_seq", user.getCust_seq());
-            query.put("cust_name", user.getCust_name());
-            query.put("build_code", user.getBuildingCode());
+            query.put("cust_seq", prefr.getInt("cust_seq", 0));
+            query.put("cust_name", prefr.getString("cust_name", "")) ;
+            query.put("build_code", prefr.getString("build_code", "")) ;
             query.put("godo", mAltitude);
             query.put("goup_amt", goupAmt);
             query.put("curBuildCount",mCurBuildCount) ;
@@ -790,6 +801,10 @@ public class StepThread extends Thread {
 
                             // 노티피케이션 업데이트
                             requestgetActivityRecords();
+
+
+
+
                         }else {
                             saveGoUpDataToLocalDb(query, localTime);
                         }
@@ -915,7 +930,8 @@ public class StepThread extends Thread {
 
         PendingIntent contentPendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        builder.setContentText("[랭킹:" + ranking + "] " + floor + "F / " + cal + "kcal / " + sec + "sec")
+        builder.setContentTitle("[랭킹:" + ranking + "]")
+                .setContentText(floor + "F / " + cal + "kcal / " + sec + "sec")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_floor))
                 .setWhen(System.currentTimeMillis())

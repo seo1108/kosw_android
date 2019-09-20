@@ -57,6 +57,7 @@ public class CafeNoticePostActivity extends BaseActivity {
 
         title_done.setOnClickListener(v->{
             // 포스팅
+            writeNotice();
         });
     }
 
@@ -65,7 +66,7 @@ public class CafeNoticePostActivity extends BaseActivity {
         et_content.setHint("새로운 소식을 남겨보세요.");
     }
 
-    private void writeBbs() {
+    private void writeNotice() {
         showSpinner("");
 
         String content = et_content.getText().toString();
@@ -79,11 +80,11 @@ public class CafeNoticePostActivity extends BaseActivity {
         Map<String, Object> query = KUtil.getDefaultQueryMap();
         query.put("user_seq",user.getUser_seq() );
         query.put("cafeseq", mCafeseq);
-        query.put("content", content);
+        query.put("contents", content);
 
         Call<ResponseBase> call =
                 new DefaultRestClient<CafeService>(this)
-                        .getClient(CafeService.class).writeBbs(query);
+                        .getClient(CafeService.class).writeNotice(query);
 
         call.enqueue(new Callback<ResponseBase>() {
             @Override
@@ -92,15 +93,15 @@ public class CafeNoticePostActivity extends BaseActivity {
                 if(response.isSuccessful()){
                     ResponseBase base = response.body();
                     if(base.isSuccess()) {
-                        toast(R.string.cafe_bbs_success);
+                        toast(R.string.cafe_notice_post_success);
                         Intent intent = new Intent() ;
                         setResult(RESULT_OK, intent);
                         finish();
                     }else{
-                        toast(R.string.warn_cafe_fail_bbs_write);
+                        toast(R.string.warn_cafe_fail_notice_write);
                     }
                 }else{
-                    toast(R.string.warn_cafe_fail_bbs_write);
+                    toast(R.string.warn_cafe_fail_notice_write);
                 }
             }
 

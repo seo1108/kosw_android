@@ -391,15 +391,8 @@ public class InfoSettingFragment extends BaseFragment {
 
         PendingIntent contentPendingIntent = PendingIntent.getActivity(mActivity, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        String title = "";
-        if(!isMyServiceRunning(StepCounterService.class)) {
-            title = "[수동측정]";
-        } else {
-            title = "[자동측정]";
-        }
-
-        builder.setContentTitle(title)
-                .setContentText("[랭킹:" + AppConst.NOTI_RANKS + "] " + AppConst.NOTI_FLOORS + "F / " + AppConst.NOTI_CALS + "kcal / " + AppConst.NOTI_SECS + "sec")
+        builder.setContentTitle("[랭킹:" + AppConst.NOTI_RANKS + "]")
+                .setContentText(AppConst.NOTI_FLOORS + "F / " + AppConst.NOTI_CALS + "kcal / " + AppConst.NOTI_SECS + "sec")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.ic_floor))
                 .setWhen(System.currentTimeMillis())

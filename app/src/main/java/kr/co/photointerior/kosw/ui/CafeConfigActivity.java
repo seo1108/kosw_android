@@ -46,7 +46,7 @@ public class CafeConfigActivity extends BaseActivity {
     private CheckBox check_privacy_hide, check_privacy_open;
     private RelativeLayout rl_category, rl_notice, rl_member;
 
-    private String mCafeseq;
+    private String mCafeseq, mConfirm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +114,8 @@ public class CafeConfigActivity extends BaseActivity {
                     check_privacy_hide.setChecked(true);
                     check_privacy_open.setChecked(false);
 
-                    updateConfirm("Y");
+                    //updateConfirm("Y");
+                    mConfirm = "Y";
                 } else {
                     // TODO : CheckBox is unchecked.
                     check_privacy_hide.setChecked(true);
@@ -137,7 +138,8 @@ public class CafeConfigActivity extends BaseActivity {
                     check_privacy_hide.setChecked(false);
                     check_privacy_open.setChecked(true);
 
-                    updateConfirm("N");
+                    //updateConfirm("N");
+                    mConfirm = "N";
                 } else {
                     // TODO : CheckBox is unchecked.
                     check_privacy_hide.setChecked(false);
@@ -167,9 +169,7 @@ public class CafeConfigActivity extends BaseActivity {
         });
 
         btn_edit_cafe.setOnClickListener(v->{
-            Intent intent = new Intent() ;
-            setResult(RESULT_OK, intent);
-            finish();
+            modifyCafeInfo();
         });
 
         btn_back.setOnClickListener(v->{
@@ -189,6 +189,7 @@ public class CafeConfigActivity extends BaseActivity {
             txt_cafekey.setText("");
         }
 
+        mConfirm = mCafe.getConfirm();
         if ("Y".equals(mCafe.getConfirm())) {
             check_privacy_hide.setChecked(true);
             check_privacy_open.setChecked(false);
@@ -291,6 +292,56 @@ public class CafeConfigActivity extends BaseActivity {
                     }
                 }else{
                     toast(R.string.warn_cafe_member_fail_kick);
+                }
+
+                closeSpinner();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBase> call, Throwable t) {
+                closeSpinner();
+                LogUtils.err(TAG, t);
+                toast(R.string.warn_server_not_smooth);
+            }
+        });
+    }
+
+    private void modifyCafeInfo() {
+        showSpinner("");
+
+        String cafename = txt_cafename.getText().toString();
+        String cafedesc = txt_cafedesc.getText().toString();
+
+        if ("".equals(cafename)) {
+            toast(R.string.warn_cafe_name);
+            return;
+        }
+
+        AppUserBase user = DataHolder.instance().getAppUserBase() ;
+        Map<String, Object> query = KUtil.getDefaultQueryMap();
+        query.put("user_seq",user.getUser_seq() );
+        query.put("cafename", cafename);
+        query.put("cafedesc", cafedesc);
+        query.put("confirm", mConfirm);
+        query.put("cafeseq", mCafeseq);
+
+        Call<ResponseBase> call =
+                new DefaultRestClient<CafeService>(this)
+                        .getClient(CafeService.class).modifyCafeInfo(query);
+
+        call.enqueue(new Callback<ResponseBase>() {
+            @Override
+            public void onResponse(Call<ResponseBase> call, Response<ResponseBase> response) {
+                LogUtils.err(TAG, response.raw().toString());
+                if(response.isSuccessful()){
+                    ResponseBase base = response.body();
+                    if(base.isSuccess()) {
+                        toast(R.string.cafe_info_edit_success);
+                    }else{
+                        toast(R.string.warn_cafe_fail_info_modify);
+                    }
+                }else{
+                    toast(R.string.warn_cafe_fail_info_modify);
                 }
 
                 closeSpinner();

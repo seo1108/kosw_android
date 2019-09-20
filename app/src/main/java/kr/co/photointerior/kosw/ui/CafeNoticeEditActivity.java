@@ -59,7 +59,7 @@ public class CafeNoticeEditActivity extends BaseActivity {
     protected void attachEvents() {
         btn_edit.setOnClickListener(v->{
             // 수정
-
+            modifyNotice();
         });
 
         btn_delete.setOnClickListener(v->{
@@ -79,7 +79,7 @@ public class CafeNoticeEditActivity extends BaseActivity {
         et_content.setText(mContent);
     }
 
-    private void modifyBbs() {
+    private void modifyNotice() {
         showSpinner("");
 
         String content = et_content.getText().toString();
@@ -93,11 +93,11 @@ public class CafeNoticeEditActivity extends BaseActivity {
         Map<String, Object> query = KUtil.getDefaultQueryMap();
         query.put("user_seq",user.getUser_seq() );
         query.put("notiseq", mNotiseq);
-        query.put("content", content);
+        query.put("contents", content);
 
         Call<ResponseBase> call =
                 new DefaultRestClient<CafeService>(this)
-                        .getClient(CafeService.class).modifyBbs(query);
+                        .getClient(CafeService.class).modifyNotice(query);
 
         call.enqueue(new Callback<ResponseBase>() {
             @Override

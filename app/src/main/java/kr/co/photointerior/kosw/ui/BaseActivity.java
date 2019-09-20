@@ -73,6 +73,8 @@ import kr.co.photointerior.kosw.service.beacon.MeasureObj;
 import kr.co.photointerior.kosw.service.beacon.StepManager;
 import kr.co.photointerior.kosw.service.beacon.StepSensorService;
 import kr.co.photointerior.kosw.service.net.NetworkConnectivityReceiver;
+import kr.co.photointerior.kosw.service.noti.NotiService;
+import kr.co.photointerior.kosw.service.noti.RestartService;
 import kr.co.photointerior.kosw.service.stepcounter.StepCounterService;
 import kr.co.photointerior.kosw.social.kakao.KakaoSignupActivity;
 import kr.co.photointerior.kosw.ui.dialog.DialogCommon;
@@ -143,8 +145,18 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         app = (KoswApp) getApplication() ;
 
-        LocalBroadcastManager.getInstance(this)
-                .registerReceiver(mMeasureStairActionDetectReceiver, new IntentFilter(Env.Action.APP_IS_BACKGROUND_ACTION.action()));
+        //LocalBroadcastManager.getInstance(this)
+        //        .registerReceiver(mMeasureStairActionDetectReceiver, new IntentFilter(Env.Action.APP_IS_BACKGROUND_ACTION.action()));
+
+        // 죽지않는 서비스 구현
+        restartService = new RestartService();
+        Intent intent = new Intent(BaseActivity.this, NotiService.class);
+
+        IntentFilter intentFilter = new IntentFilter("kr.co.photointerior.kosw.service.noti.NotiService");
+        //브로드 캐스트에 등록
+        registerReceiver(restartService,intentFilter);
+        // 서비스 시작
+        startService(intent);
 
         //Thread.setDefaultUncaughtExceptionHandler(((KoswApp)getApplication()).getUncaughtExceptionHandler());
     }
@@ -890,6 +902,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     private  String mIsBuild = "" ; // Y :건물계단    N : 등산계단
     private  int mClimbCount = 0 ;  // 등산 카운트 (4미터 체크)
     private  int mLogicCount = 0 ;  // 로직 카운트 (회전 )
+
+    private RestartService restartService;
 
     protected void startCalcStairs() {
         try {

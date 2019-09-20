@@ -172,4 +172,28 @@ public interface CafeService {
      */
     @POST("api/cafe/updateConfirm")
     Call<ResponseBase> updateConfirm(@QueryMap Map<String, Object> queryMap);
+
+    /**
+     * 카페 공지사항 작성
+     * @param queryMap
+     * @return
+     */
+    @POST("api/cafe/writeNotice")
+    Call<ResponseBase> writeNotice(@QueryMap Map<String, Object> queryMap);
+
+    /**
+     * 카페 공지사항 수정
+     * @param queryMap
+     * @return
+     */
+    @POST("api/cafe/modifyNotice")
+    Call<ResponseBase> modifyNotice(@QueryMap Map<String, Object> queryMap);
+
+    /**
+     * 카페 정보 수정
+     * @param queryMap
+     * @return
+     */
+    @POST("api/cafe/modifyCafeInfo")
+    Call<ResponseBase> modifyCafeInfo(@QueryMap Map<String, Object> queryMap);
 }
