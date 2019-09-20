@@ -232,12 +232,21 @@ public class CafeCreateOptionActivity extends BaseActivity {
             if (null != et) {
                 if (et.isShown()) {
                     if (null != et.getText().toString() && !"".equals(et.getText().toString().trim())) {
-                        category += "#@#" + et.getText().toString();
+                        if ("".equals(category)) {
+                            if (i == 0) {
+                                category += et.getText().toString();
+                            } else {
+                                category += "#@#" + et.getText().toString();
+                            }
+                        } else {
+                            category += "#@#" + et.getText().toString();
+                        }
                     }
                 }
             } else {
             }
         }
+
 
         showSpinner("");
         AppUserBase user = DataHolder.instance().getAppUserBase() ;

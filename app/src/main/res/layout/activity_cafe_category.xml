@@ -95,6 +95,8 @@
                             android:paddingBottom="5dp"
                             android:singleLine="true"
                             android:textColor="#000"
+                            android:focusable="false"
+                            android:clickable="false"
                             android:textCursorDrawable="@null"
                             android:textSize="@dimen/sp_16"
                             app:layout_constraintEnd_toEndOf="parent"

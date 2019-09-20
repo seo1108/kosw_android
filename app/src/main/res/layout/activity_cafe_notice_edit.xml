@@ -104,9 +104,9 @@
                 android:text="@string/txt_delete"
                 android:textColor="@color/text_btn_click"
                 android:textSize="@dimen/sp_16"
-                android:layout_alignParentBottom="true" />
+                android:layout_alignParentBottom="true"
+                />
         </LinearLayout>
     </LinearLayout>
-
 
 </RelativeLayout>

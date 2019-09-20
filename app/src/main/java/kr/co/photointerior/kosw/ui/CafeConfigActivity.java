@@ -1,6 +1,7 @@
 package kr.co.photointerior.kosw.ui;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -24,6 +25,9 @@ import kr.co.photointerior.kosw.rest.model.CafeDetail;
 import kr.co.photointerior.kosw.rest.model.CafeSubCategory;
 import kr.co.photointerior.kosw.rest.model.DataHolder;
 import kr.co.photointerior.kosw.rest.model.ResponseBase;
+import kr.co.photointerior.kosw.ui.dialog.DialogCommon;
+import kr.co.photointerior.kosw.utils.AbstractAcceptor;
+import kr.co.photointerior.kosw.utils.Acceptor;
 import kr.co.photointerior.kosw.utils.KUtil;
 import kr.co.photointerior.kosw.utils.LogUtils;
 import kr.co.photointerior.kosw.widget.KoswButton;
@@ -37,7 +41,7 @@ public class CafeConfigActivity extends BaseActivity {
     private String TAG = LogUtils.makeLogTag(CafeConfigActivity.class);
     private Cafe mCafe;
     private List<CafeSubCategory> mCate;
-
+    private Dialog mDialog;
     private ImageView btn_back;
     private KoswTextView txt_cafekey, txt_privacy;
     private TextView txt_category, txt_notice, txt_member;
@@ -169,7 +173,7 @@ public class CafeConfigActivity extends BaseActivity {
         });
 
         btn_edit_cafe.setOnClickListener(v->{
-            modifyCafeInfo();
+            showConfirmPopup();
         });
 
         btn_back.setOnClickListener(v->{
@@ -332,6 +336,7 @@ public class CafeConfigActivity extends BaseActivity {
         call.enqueue(new Callback<ResponseBase>() {
             @Override
             public void onResponse(Call<ResponseBase> call, Response<ResponseBase> response) {
+                closeSpinner();
                 LogUtils.err(TAG, response.raw().toString());
                 if(response.isSuccessful()){
                     ResponseBase base = response.body();
@@ -343,8 +348,6 @@ public class CafeConfigActivity extends BaseActivity {
                 }else{
                     toast(R.string.warn_cafe_fail_info_modify);
                 }
-
-                closeSpinner();
             }
 
             @Override
@@ -355,6 +358,31 @@ public class CafeConfigActivity extends BaseActivity {
             }
         });
     }
+
+    private void showConfirmPopup(){
+        if(!isFinishing()){
+            if(mDialog != null){
+                mDialog.dismiss();
+            }
+            Acceptor acceptor = new AbstractAcceptor() {
+                @Override
+                public void accept() {
+                    modifyCafeInfo();
+
+                }
+            };
+            String msg = getString(R.string.txt_confirm_message);
+            mDialog =
+                    new DialogCommon(this,
+                            acceptor,
+                            getString(R.string.txt_warn),
+                            msg,
+                            new String[]{getString(R.string.txt_cancel), null, getString(R.string.txt_confirm)});
+            mDialog.setCancelable(false);
+            mDialog.show();
+        }
+    }
+
 
     @Override
     public void onBackPressed() {
