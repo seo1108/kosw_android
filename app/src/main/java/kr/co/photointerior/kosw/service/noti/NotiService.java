@@ -92,8 +92,8 @@ public class NotiService extends Service {
     }
 
     private void initData(){
-        countDownTimer();
-        countDownTimer.start();
+        //countDownTimer();
+        //countDownTimer.start();
     }
 
     public void countDownTimer(){
