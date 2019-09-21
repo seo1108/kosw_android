@@ -88,7 +88,8 @@ public class StepThread extends Thread {
     private int mFloor ;
 
     private int mSleepCnt = 0 ;
-    static private  int mMaxSleepCnt = 10 ;
+    //static private  int mMaxSleepCnt = 10 ;
+    static private  int mMaxSleepCnt = 2 ;
     static private  String sleepMsg[] = {"걷기중 측정시간(30초)이 지났습니다.","계단이용 측정시간(5분)이 지났습니다."} ;
     private int sleepMode = 0 ;
 
@@ -901,7 +902,7 @@ public class StepThread extends Thread {
                         if (null != r_rank) {
                             AppConst.NOTI_RANKS = StringUtil.format(Double.parseDouble(r_rank.getRank()), "#,##0");
                         } else {
-                            AppConst.NOTI_RANKS = "0";
+                            AppConst.NOTI_RANKS = "-";
                         }
                         AppConst.NOTI_FLOORS = StringUtil.format(total.getAmountToFloat(), "#,##0");
                         AppConst.NOTI_CALS = KUtil.calcCalorie(total.getAmountToFloat(), total.getStairAmountToFloat());
@@ -931,15 +932,27 @@ public class StepThread extends Thread {
 
         PendingIntent contentPendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        builder.setContentTitle("[랭킹:" + ranking + "]")
-                .setContentText(floor + "F / " + cal + "kcal / " + sec + "sec")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_floor))
-                .setWhen(System.currentTimeMillis())
-                .setOngoing(true)
-                //.setColorized(true)
-                .setColor(ContextCompat.getColor(mContext, R.color.colorPrimaryDark))
-                .setContentIntent(contentPendingIntent);
+        if ("-".equals(ranking)) {
+            builder.setContentTitle("건강한 습관, 계단왕")
+                    .setContentText("지금 시작하십시오.")
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_floor))
+                    .setWhen(System.currentTimeMillis())
+                    .setOngoing(true)
+                    //.setColorized(true)
+                    .setColor(ContextCompat.getColor(mContext, R.color.colorPrimaryDark))
+                    .setContentIntent(contentPendingIntent);
+        } else {
+            builder.setContentTitle("[랭킹:" + ranking + "]")
+                    .setContentText(floor + "F / " + cal + "kcal / " + sec + "sec")
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_floor))
+                    .setWhen(System.currentTimeMillis())
+                    .setOngoing(true)
+                    //.setColorized(true)
+                    .setColor(ContextCompat.getColor(mContext, R.color.colorPrimaryDark))
+                    .setContentIntent(contentPendingIntent);
+        }
 
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(AppConst.NOTIFICATION_ID, builder.build());

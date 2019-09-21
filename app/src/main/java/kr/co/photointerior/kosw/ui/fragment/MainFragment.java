@@ -594,11 +594,11 @@ public class MainFragment extends BaseFragment {
         }
 
 
-        if(isMyServiceRunning(StepCounterService.class)) {
+        /*if(isMyServiceRunning(StepCounterService.class)) {
             // 자동측정중이면
             TextView tv =  mActivity.findViewById(R.id.tvPauseMent);
             tv.setText("자동측정중입니다.");
-        }
+        }*/
 
         super.onResume();
     }
@@ -1276,7 +1276,7 @@ public class MainFragment extends BaseFragment {
         }*/
         if ("-".equals(ranking)) {
             builder.setContentTitle("건강한 습관, 계단왕")
-                    .setContentText("지금 시작 하십시요.")
+                    .setContentText("지금 시작하십시오.")
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setLargeIcon(BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.ic_floor))
                     .setWhen(System.currentTimeMillis())

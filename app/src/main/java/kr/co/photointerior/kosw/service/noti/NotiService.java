@@ -181,7 +181,7 @@ public class NotiService extends Service {
 
         if ("-".equals(AppConst.NOTI_RANKS)) {
             builder.setContentTitle("건강한 습관, 계단왕")
-                    .setContentText("지금 시작 하십시요.")
+                    .setContentText("지금 시작하십시오.")
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_floor))
                     .setWhen(System.currentTimeMillis())

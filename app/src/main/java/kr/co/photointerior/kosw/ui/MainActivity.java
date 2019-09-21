@@ -1681,7 +1681,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     }
 
     private void showStartPopup() {
-        Toast.makeText(this, "건강한 습관, 계단왕\n지금 시작 하십시요.", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "건강한 습관, 계단왕\n지금 시작하십시오.", Toast.LENGTH_LONG).show();
 
     }
 

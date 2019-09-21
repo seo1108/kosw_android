@@ -970,7 +970,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
             if (isAppOnForeground()) {
                 if (mStarted == false) {
-                    toast("FORE? START MEASURE" + isAppOnForeground());
+                   // toast("FORE? START MEASURE" + isAppOnForeground());
 
                     stopService(new Intent(getBaseContext(), StepCounterService.class));
                     mStarted = false;
@@ -990,7 +990,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     handler.post(runnable);
                 }
             } else {
-                toast("FORE?" + isAppOnForeground());
+                //toast("FORE?" + isAppOnForeground());
                 mStarted = false;
                 startMeasure(mStarted);
                 handler.removeCallbacks(runnable);
