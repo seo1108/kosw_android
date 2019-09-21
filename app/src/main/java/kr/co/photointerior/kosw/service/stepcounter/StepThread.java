@@ -88,6 +88,7 @@ public class StepThread extends Thread {
     private int mFloor ;
 
     private int mSleepCnt = 0 ;
+    private int mMeasureStep = 0;
     //static private  int mMaxSleepCnt = 10 ;
     static private  int mMaxSleepCnt = 2 ;
     static private  String sleepMsg[] = {"걷기중 측정시간(30초)이 지났습니다.","계단이용 측정시간(5분)이 지났습니다."} ;
@@ -223,7 +224,7 @@ public class StepThread extends Thread {
 
         // 30초 이상 걷기 없으면 잠금
         if (cnt >= 10 * 30 )  {
-
+            mMeasureStep = 0;
             if (mSaveStep <=  0 ) { // 걷기중이아니면
                 //Toast.makeText(mContext, "걷기중이아니면", Toast.LENGTH_SHORT).show();
                 // 원본소스
@@ -241,7 +242,7 @@ public class StepThread extends Thread {
             }
 
            else {  // 120초이상 측정이 없으면 측정 잠금  mSleepCnt >= 4
-                Toast.makeText(mContext, "120초이상 측정이 없으면 측정 잠금", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "측정 잠금", Toast.LENGTH_SHORT).show();
                 sleepMode = 1 ;
                 mSleepCnt++ ;
                 initMeasure();
@@ -657,8 +658,9 @@ public class StepThread extends Thread {
     public void setCurrentStep(double val  ){
         mStep += val;
         mTrashStep += val;
+        mMeasureStep += val;
 
-        if (!mStarted) {
+        if (!mStarted && mMeasureStep > 20) {
             restartTracking();
         }
     }
@@ -673,7 +675,8 @@ public class StepThread extends Thread {
             mStartList.add(new MeasureObj());
         }
         cnt = 0;
-        Toast.makeText(mContext, "측정시작", Toast.LENGTH_SHORT).show();
+        mMeasureStep = 0;
+        Toast.makeText(mContext, "측정시작 " + mMeasureStep, Toast.LENGTH_SHORT).show();
     }
 
     public void setCurrentOrientation2(double x ,double y, double z  ){
