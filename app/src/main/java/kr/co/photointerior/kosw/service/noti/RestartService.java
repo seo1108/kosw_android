@@ -1,8 +1,10 @@
 package kr.co.photointerior.kosw.service.noti;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 
 public class RestartService  extends BroadcastReceiver {
@@ -19,8 +21,14 @@ public class RestartService  extends BroadcastReceiver {
 
             Log.i("000 RestartService" ,"ACTION.RESTART.NotiService " );
 
-            Intent i = new Intent(context, NotiService.class);
-            context.startService(i);
+            /*Intent i = new Intent(context, NotiService.class);
+
+            context.startService(i);*/
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(new Intent(context, NotiService.class));
+            } else {
+                context.startService(new Intent(context, NotiService.class));
+            }
         }
 
         /**
@@ -29,8 +37,14 @@ public class RestartService  extends BroadcastReceiver {
         if(intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)){
 
             Log.i("RestartService" , "ACTION_BOOT_COMPLETED" );
-            Intent i = new Intent(context, NotiService.class);
-            context.startService(i);
+            //Intent i = new Intent(context, NotiService.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(new Intent(context, NotiService.class));
+            } else {
+                context.startService(new Intent(context, NotiService.class));
+            }
+
+            //context.startService(i);
 
         }
 

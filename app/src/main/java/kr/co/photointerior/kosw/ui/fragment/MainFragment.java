@@ -1274,16 +1274,27 @@ public class MainFragment extends BaseFragment {
         } else {
             title = "[자동측정]";
         }*/
-
-        builder.setContentTitle("[랭킹:" + ranking + "]")
-                .setContentText(floor + "F / " + cal + "kcal / " + sec + "sec")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.ic_floor))
-                .setWhen(System.currentTimeMillis())
-                .setOngoing(true)
-                //.setColorized(true)
-                .setColor(ContextCompat.getColor(mActivity, R.color.colorPrimaryDark))
-                .setContentIntent(contentPendingIntent);
+        if ("-".equals(ranking)) {
+            builder.setContentTitle("건강한 습관, 계단왕")
+                    .setContentText("지금 시작 하십시요.")
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setLargeIcon(BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.ic_floor))
+                    .setWhen(System.currentTimeMillis())
+                    .setOngoing(true)
+                    //.setColorized(true)
+                    .setColor(ContextCompat.getColor(mActivity, R.color.colorPrimaryDark))
+                    .setContentIntent(contentPendingIntent);
+        } else {
+            builder.setContentTitle("[랭킹:" + ranking + "]")
+                    .setContentText(floor + "F / " + cal + "kcal / " + sec + "sec")
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setLargeIcon(BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.ic_floor))
+                    .setWhen(System.currentTimeMillis())
+                    .setOngoing(true)
+                    //.setColorized(true)
+                    .setColor(ContextCompat.getColor(mActivity, R.color.colorPrimaryDark))
+                    .setContentIntent(contentPendingIntent);
+        }
 
         NotificationManager notificationManager = (NotificationManager) mActivity.getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(AppConst.NOTIFICATION_ID, builder.build());

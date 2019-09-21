@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import kr.co.photointerior.kosw.R;
 import kr.co.photointerior.kosw.conf.AppConst;
+import kr.co.photointerior.kosw.rest.api.App;
 import kr.co.photointerior.kosw.service.stepcounter.StepCounterService;
 import kr.co.photointerior.kosw.ui.MainActivity;
 
@@ -49,6 +50,9 @@ public class NotiService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         mContext = this;
+
+        if (null !=thread) thread.stopForever();
+        try { Thread.sleep(1000); } catch (Exception e) { }
         thread = new ServiceThread(this);
         thread.start();
         SharedPreferences prefr = getSharedPreferences("background", MODE_PRIVATE);
@@ -68,6 +72,7 @@ public class NotiService extends Service {
     @Override
     public void onCreate() {
         unregisterRestartAlarm();
+        //registerRestartAlarm();
         super.onCreate();
 
         initData();
@@ -101,6 +106,9 @@ public class NotiService extends Service {
             public void onFinish() {
 
                 Log.i("NotiService","onFinish");
+
+                //registerRestartAlarm();
+                countDownTimer.start();
             }
         };
     }
@@ -120,12 +128,13 @@ public class NotiService extends Service {
         /**
          * 알람 등록
          */
-        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,firstTime,1*1000,sender);
+        Intent i = new Intent(this, NotiService.class);
+        startService(i);
 
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,firstTime,1*1000,sender);
     }
 
     private void unregisterRestartAlarm(){
-
         Log.i("000 NotiService" , "unregisterRestartAlarm" );
 
         Intent intent = new Intent(NotiService.this,RestartService.class);
@@ -170,16 +179,29 @@ public class NotiService extends Service {
             title = "[자동측정]";
         }*/
 
-        builder.setContentTitle("[랭킹:" + AppConst.NOTI_RANKS + "]")
-                .setContentText(AppConst.NOTI_FLOORS + "F / " + AppConst.NOTI_CALS + "kcal / " + AppConst.NOTI_SECS + "sec")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_floor))
-                .setWhen(System.currentTimeMillis())
-                .setOngoing(true)
-                //.setColorized(true)
-                .setColor(ContextCompat.getColor(this, R.color.colorPrimaryDark))
-                .setContentIntent(contentPendingIntent)
-                .setDeleteIntent(createOnDismissedIntent(getApplicationContext(), AppConst.NOTIFICATION_ID));
+        if ("-".equals(AppConst.NOTI_RANKS)) {
+            builder.setContentTitle("건강한 습관, 계단왕")
+                    .setContentText("지금 시작 하십시요.")
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_floor))
+                    .setWhen(System.currentTimeMillis())
+                    .setOngoing(true)
+                    //.setColorized(true)
+                    .setColor(ContextCompat.getColor(this, R.color.colorPrimaryDark))
+                    .setContentIntent(contentPendingIntent)
+                    .setDeleteIntent(createOnDismissedIntent(getApplicationContext(), AppConst.NOTIFICATION_ID));
+        } else {
+            builder.setContentTitle("[랭킹:" + AppConst.NOTI_RANKS + "]")
+                    .setContentText(AppConst.NOTI_FLOORS + "F / " + AppConst.NOTI_CALS + "kcal / " + AppConst.NOTI_SECS + "sec")
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_floor))
+                    .setWhen(System.currentTimeMillis())
+                    .setOngoing(true)
+                    //.setColorized(true)
+                    .setColor(ContextCompat.getColor(this, R.color.colorPrimaryDark))
+                    .setContentIntent(contentPendingIntent)
+                    .setDeleteIntent(createOnDismissedIntent(getApplicationContext(), AppConst.NOTIFICATION_ID));
+        }
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
