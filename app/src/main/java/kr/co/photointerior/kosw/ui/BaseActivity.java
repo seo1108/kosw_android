@@ -1089,7 +1089,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     // 자동측정일 경우, 5초 이내 측정이면  카운트 하지 않음 엘리베이터 사용자 걸름
                     // 수동측정은 2초
                     long curTime = System.currentTimeMillis();
-                    if (cnt < 30 || (curTime - goupTime) < 6000) {
+                    if (cnt < 30 || (curTime - goupTime) < 3000) {
                         mSleepCnt++;
                         initMeasure();
                         return;
