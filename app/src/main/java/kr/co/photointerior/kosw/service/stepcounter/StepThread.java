@@ -89,8 +89,8 @@ public class StepThread extends Thread {
 
     private int mSleepCnt = 0 ;
     private int mMeasureStep = 0;
-    //static private  int mMaxSleepCnt = 10 ;
-    static private  int mMaxSleepCnt = 2 ;
+    static private  int mMaxSleepCnt = 10 ;
+    //static private  int mMaxSleepCnt = 2 ;
     static private  String sleepMsg[] = {"걷기중 측정시간(30초)이 지났습니다.","계단이용 측정시간(5분)이 지났습니다."} ;
     private int sleepMode = 0 ;
 
@@ -114,6 +114,7 @@ public class StepThread extends Thread {
 
     private  boolean isStart = false ;
     private  boolean isTurn = false ;
+    private boolean isFirstRunned = false;
     private static boolean isContinue = false ;
     // Create the Handler
     private Handler handler = new Handler(Looper.getMainLooper());
@@ -151,16 +152,27 @@ public class StepThread extends Thread {
 
     public StepThread(Context context){
         mContext = context;
+
+
     }
 
     public void stopForever(){
         synchronized (this) {
             mStarted = false;
             this.isRun = false;
+            mMeasureStep = 0;
+            handler.removeCallbacks(runnable);
+            try {
+                if (mAltiManager != null) mAltiManager.stopMeasure();
+                if (mDirectionManager != null) mDirectionManager.stopMeasure();
+                if (mStepManager != null) mStepManager.stopMeasure();
+            } catch (Exception ex) {
+            }
         }
     }
 
     public void run(){
+        mMeasureStep = 0;
         startMeasure(true);
         handler.post(runnable) ;
         /*while(isRun){
@@ -220,11 +232,12 @@ public class StepThread extends Thread {
             //return ;
         }
 
-        Log.d("99999999999977777", String.valueOf(mStarted) + mTrashStep + "_______" + cnt + "___" + mSaveStep + "______" + mStep);
+        Log.d("999999999999777771", String.valueOf(mStarted) + mMeasureStep + "_______" + cnt + "___" + mSaveStep + "______" + mStep);
+
+        //if (0 == cnt%15)  mMeasureStep = 0;
 
         // 30초 이상 걷기 없으면 잠금
         if (cnt >= 10 * 30 )  {
-            mMeasureStep = 0;
             if (mSaveStep <=  0 ) { // 걷기중이아니면
                 //Toast.makeText(mContext, "걷기중이아니면", Toast.LENGTH_SHORT).show();
                 // 원본소스
@@ -547,8 +560,10 @@ public class StepThread extends Thread {
         isCount = false ;
         goupTime = System.currentTimeMillis();
 
+
         // 5분 지나면 잠금
         if (mSleepCnt >= mMaxSleepCnt ) {
+            mMeasureStep = 0;
             Toast.makeText(mContext, "슬립모드", Toast.LENGTH_SHORT).show();
             isSleep = true;;
             mSleepCnt = 0  ;
@@ -596,12 +611,11 @@ public class StepThread extends Thread {
 
             if (mAltiManager != null) mAltiManager.stopMeasure();
             if (mDirectionManager != null) mDirectionManager.stopMeasure();
+            //if (mStepManager != null) mStepManager.stopMeasure();
             //mStepManager.stopMeasure();
             //findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
 
         }else{
-
-
             AppUserBase user = DataHolder.instance().getAppUserBase() ;
 
             if (user != null) {
@@ -636,15 +650,26 @@ public class StepThread extends Thread {
             }
             cnt = 0;
 
-            mAltiManager = new AltitudeManager(mContext);
             mStepManager = new StepManager(mContext) ;
+            mAltiManager = new AltitudeManager(mContext);
             mDirectionManager = new DirectionManager(mContext) ;
 
             isSleep = false  ;
 
             mAltiManager.startMeasure();
             mDirectionManager.startMeasure();
+            Log.d("stepsensor", "START");
             mStepManager.startMeasure();
+/*
+            if (!isFirstRunned) {
+                Log.d("999999999999777771", "[stepsensor] start");
+                if (null != mStepManager) mStepManager.stopMeasure();
+                mStepManager.restartMeasure();
+            }
+
+            isFirstRunned = true;
+*/
+
             //findViewById(R.id.LayoutPause).setVisibility(View.INVISIBLE);
             //mValue.setText("wait...");
         }
@@ -658,25 +683,60 @@ public class StepThread extends Thread {
     public void setCurrentStep(double val  ){
         mStep += val;
         mTrashStep += val;
-        mMeasureStep += val;
-
+        mMeasureStep++;
+        Log.d("999999999999777771", "[stepsensor]" + mMeasureStep + " " + mStarted);
         if (!mStarted && mMeasureStep > 20) {
+            Toast.makeText(mContext, "측정시작 " + mMeasureStep, Toast.LENGTH_SHORT).show();
+            mMeasureStep = 0;
             restartTracking();
         }
     }
 
     private void restartTracking() {
+
+        Log.d("999999999999777771", "[stepsensor] 측정시작 " + mMeasureStep + " " + mStarted);
+        startMeasure(false);
+
+        Intent startintent = new Intent(mContext, StepCounterService.class);
+        mContext.stopService(startintent);
+
+        /*try {
+            Toast.makeText(mContext, "자동 측정재시작", Toast.LENGTH_SHORT);
+            Thread.sleep(2000);
+            mContext.stopService(startintent);
+        } catch (Exception e) { }*/
+
+        try {
+            Thread.sleep(2000);
+            mContext.startService(startintent);
+        } catch (Exception e) { }
+
+
+
+        /*try {
+            Log.d("stepsensor", "STOP_RE");
+            mStepManager.stopMeasure();
+            mStepManager = null;
+        } catch (Exception ex) {
+            Log.d("stepsensor", ex.toString());
+        }
+
+        try { Thread.sleep(1000); } catch (Exception e) { }
+
         startMeasure(false);
         mStarted = true;
+
+        cnt = 0;
+        mMeasureStep = 0;
 
         startMeasure(true);
         mStartList.clear();
         for (int i = 0; i < 600; i++) {
             mStartList.add(new MeasureObj());
         }
-        cnt = 0;
-        mMeasureStep = 0;
-        Toast.makeText(mContext, "측정시작 " + mMeasureStep, Toast.LENGTH_SHORT).show();
+
+
+*/
     }
 
     public void setCurrentOrientation2(double x ,double y, double z  ){

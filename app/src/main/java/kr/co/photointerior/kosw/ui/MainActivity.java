@@ -971,6 +971,11 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             mAltiManager.startMeasure();
             mDirectionManager.startMeasure();
             mStepManager.startMeasure();
+            /*if (null != mStepManager) {
+                mStepManager.restartMeasure();
+            } else {
+                mStepManager.startMeasure();
+            }*/
             findViewById(R.id.LayoutPause).setVisibility(View.INVISIBLE);
             //mValue.setText("wait...");
         }
