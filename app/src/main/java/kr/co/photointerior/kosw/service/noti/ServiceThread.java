@@ -115,14 +115,14 @@ public class ServiceThread extends Thread {
                     }
 
                     // 서비스 실행 후, 30분이 지나면, 서비스 재시작
-                    if (mServiceCnt > 30) {
+                    /*if (mServiceCnt > 30) {
                         Intent startintent = new Intent(mContext, StepCounterService.class);
                         mContext.stopService(startintent);
                         Thread.sleep(5000);
                         mContext.startService(startintent);
 
                         mServiceCnt = 0;
-                    }
+                    }*/
                     //LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Env.Action.APP_IS_BACKGROUND_ACTION.action()));
                 } else {
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Env.Action.APP_IS_BACKGROUND_ACTION.action()));
