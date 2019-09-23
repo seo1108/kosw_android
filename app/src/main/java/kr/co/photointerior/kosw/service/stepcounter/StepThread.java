@@ -255,7 +255,7 @@ public class StepThread extends Thread {
             }
 
            else {  // 120초이상 측정이 없으면 측정 잠금  mSleepCnt >= 4
-                Toast.makeText(mContext, "측정 잠금", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "걷기 중 초기화", Toast.LENGTH_SHORT).show();
                 sleepMode = 1 ;
                 mSleepCnt++ ;
                 initMeasure();
@@ -564,7 +564,7 @@ public class StepThread extends Thread {
         // 5분 지나면 잠금
         if (mSleepCnt >= mMaxSleepCnt ) {
             mMeasureStep = 0;
-            Toast.makeText(mContext, "슬립모드", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "초기화", Toast.LENGTH_SHORT).show();
             isSleep = true;;
             mSleepCnt = 0  ;
             mStarted = false ;
@@ -686,7 +686,7 @@ public class StepThread extends Thread {
         mMeasureStep++;
         Log.d("999999999999777771", "[stepsensor]" + mMeasureStep + " " + mStarted);
         if (!mStarted && mMeasureStep > 20) {
-            Toast.makeText(mContext, "측정시작 " + mMeasureStep, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "측정서비스재시작 " + mMeasureStep, Toast.LENGTH_SHORT).show();
             mMeasureStep = 0;
             restartTracking();
         }
