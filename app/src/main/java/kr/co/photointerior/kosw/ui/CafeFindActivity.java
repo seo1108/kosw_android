@@ -1,6 +1,7 @@
 package kr.co.photointerior.kosw.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -59,6 +60,8 @@ public class CafeFindActivity extends BaseActivity {
 
         btn_back = findViewById(R.id.btn_back);
         btn_back.setOnClickListener(v->{
+            Intent intent = new Intent() ;
+            setResult(RESULT_OK, intent);
             finish();
         });
 
@@ -98,7 +101,6 @@ public class CafeFindActivity extends BaseActivity {
         call.enqueue(new Callback<CafeMainList>() {
             @Override
             public void onResponse(Call<CafeMainList> call, Response<CafeMainList> response) {
-                closeSpinner();
                 LogUtils.err(TAG, response.toString());
                 if (response.isSuccessful()) {
                     CafeMainList cafelist = response.body();
@@ -122,6 +124,8 @@ public class CafeFindActivity extends BaseActivity {
                     }
                 } else {
                 }
+
+                closeSpinner();
             }
 
             @Override

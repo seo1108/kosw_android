@@ -280,6 +280,7 @@ public class CafeCreateOptionActivity extends BaseActivity {
 
             @Override
             public void onResponse(Call<ResponseBase> call, Response<ResponseBase> response) {
+                closeSpinner();
                 LogUtils.err(TAG, response.raw().toString());
                 if (response.isSuccessful()) {
                     ResponseBase base = response.body();

@@ -888,6 +888,7 @@ public class MainFragment extends BaseFragment {
         RowActivityRecord totalLife = getView(R.id.row_record_life);
 
         Map<String, Object> query = KUtil.getDefaultQueryMap();
+
         Call<ActivityRecord> call =
                 new DefaultRestClient<UserService>(mActivity).getClient(UserService.class)
                         .getActivityRecords(query);
@@ -899,13 +900,34 @@ public class MainFragment extends BaseFragment {
                     ActivityRecord record = response.body();
                     if (record.isSuccess()) {
                         mActivityRecord = record;
+                        List<Record> dailyRecords = mActivityRecord.getDailyRecords();
+
+                        String todayDate = DateUtil.currentDate("yyyyMMdd");
+                        String todayFloor = "0";
+                        String todayCalories = "0";
+                        String todayLife = "0";
+
+                        if (null == dailyRecords || dailyRecords.size() > 0) {
+                            if (todayDate.equals(dailyRecords.get(0).getDate())) {
+                                todayFloor = StringUtil.format(dailyRecords.get(0).getAmountToFloat(), "#,##0");
+                                todayCalories = KUtil.calcCalorie(dailyRecords.get(0).getAmountToFloat(), dailyRecords.get(0).getStairAmountToFloat());
+                                todayLife = KUtil.calcLife(dailyRecords.get(0).getAmountToFloat(), dailyRecords.get(0).getStairAmountToFloat());
+                            }
+                        }
+
                         Record total = mActivityRecord.getTotalRecord();
                         Record r_rank = mActivityRecord.getTotalRank();
                         //Record r_rank = mActivityRecord.getTodayRank();
 
-                        totalFloor.setRecordAmount(StringUtil.format(total.getAmountToFloat(), "#,##0"));
-                        totalCalorie.setRecordAmount(KUtil.calcCalorie(total.getAmountToFloat(), total.getStairAmountToFloat()));
-                        totalLife.setRecordAmount(KUtil.calcLife(total.getAmountToFloat(), total.getStairAmountToFloat()));
+                        if (!"0".equals(todayFloor)) {
+                            totalFloor.setRecordAmount(todayFloor + " | " + StringUtil.format(total.getAmountToFloat(), "#,##0"));
+                            totalCalorie.setRecordAmount(todayCalories + " | " + KUtil.calcCalorie(total.getAmountToFloat(), total.getStairAmountToFloat()));
+                            totalLife.setRecordAmount(todayLife + " | " + KUtil.calcLife(total.getAmountToFloat(), total.getStairAmountToFloat()));
+                        } else {
+                            totalFloor.setRecordAmount(StringUtil.format(total.getAmountToFloat(), "#,##0"));
+                            totalCalorie.setRecordAmount(KUtil.calcCalorie(total.getAmountToFloat(), total.getStairAmountToFloat()));
+                            totalLife.setRecordAmount(KUtil.calcLife(total.getAmountToFloat(), total.getStairAmountToFloat()));
+                        }
 
                         if (null != r_rank) {
                             AppConst.NOTI_RANKS = StringUtil.format(Double.parseDouble(r_rank.getRank()), "#,##0");
@@ -1153,7 +1175,7 @@ public class MainFragment extends BaseFragment {
         user.setIsbuild(isbuild);
 
 
-        tx_today.setText(DateUtil.currentDate("yyyy.MM.dd hh:mm") + " " + getString(R.string.txt_today_floors));
+        tx_today.setText(DateUtil.currentDate("yyyy.MM.dd HH:mm") + " " + getString(R.string.txt_today_floors));
 
 
         /*if (data.getCust_build_seq() == data.getBuild_seq() ) {

@@ -294,6 +294,8 @@
                         android:textColor="@color/colorBlack"
                         android:textStyle="bold"
                         android:background="@null"
+                        android:clickable="false"
+                        android:focusable="false"
                         android:layout_weight="1.0"
                         android:textSize="@dimen/sp_15" />
 

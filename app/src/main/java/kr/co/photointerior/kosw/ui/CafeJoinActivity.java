@@ -1,5 +1,7 @@
 package kr.co.photointerior.kosw.ui;
 
+import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
@@ -19,6 +21,9 @@ import kr.co.photointerior.kosw.rest.api.CafeService;
 import kr.co.photointerior.kosw.rest.model.AppUserBase;
 import kr.co.photointerior.kosw.rest.model.DataHolder;
 import kr.co.photointerior.kosw.rest.model.ResponseBase;
+import kr.co.photointerior.kosw.ui.dialog.DialogCommon;
+import kr.co.photointerior.kosw.utils.AbstractAcceptor;
+import kr.co.photointerior.kosw.utils.Acceptor;
 import kr.co.photointerior.kosw.utils.KUtil;
 import kr.co.photointerior.kosw.utils.LogUtils;
 import kr.co.photointerior.kosw.widget.KoswButton;
@@ -30,6 +35,7 @@ import retrofit2.Response;
 
 public class CafeJoinActivity extends BaseActivity {
     private String TAG = LogUtils.makeLogTag(CafeJoinActivity.class);
+    private Dialog mDialog;
     private Spinner mDeptSpinner;
     private KoswTextView txt_join_message, title_cate, txt_additions_message;
     private KoswEditText txt_additions;
@@ -98,22 +104,40 @@ public class CafeJoinActivity extends BaseActivity {
         });
         btn_join = findViewById(R.id.btn_join);
         btn_join.setOnClickListener(v->{
-            if (!"".equals(mCafeseq)) {
+            if (mNames.size() > 1) {
                 if (mDeptSpinner.getSelectedItemPosition() == 0) {
                     toast(R.string.txt_cafe_category_select);
                 } else if ("".equals(txt_additions.getText().toString())) {
                     toast(R.string.txt_cafe_additions_select);
                 } else {
                     mSeledtedCateseq = mSeqs.get(mDeptSpinner.getSelectedItemPosition());
-                    join();
+                    showConfirmPopup();
+                }
+            } else {
+                if (txt_additions.isShown() && "".equals(txt_additions.getText().toString())) {
+                    toast(R.string.txt_cafe_additions_select);
+                } else {
+                    showConfirmPopup();
+                }
+            }
+
+
+            /*if (!"".equals(mCateseqs)) {
+                if (mDeptSpinner.getSelectedItemPosition() == 0) {
+                    toast(R.string.txt_cafe_category_select);
+                } else if ("".equals(txt_additions.getText().toString())) {
+                    toast(R.string.txt_cafe_additions_select);
+                } else {
+                    mSeledtedCateseq = mSeqs.get(mDeptSpinner.getSelectedItemPosition());
+                    showConfirmPopup();
                 }
             } else {
                 if ("".equals(txt_additions.getText().toString())) {
                     toast(R.string.txt_cafe_additions_select);
                 } else {
-                    join();
+                    showConfirmPopup();
                 }
-            }
+            }*/
 
         });
 
@@ -129,6 +153,29 @@ public class CafeJoinActivity extends BaseActivity {
 
     @Override
     protected void setInitialData() {
+    }
+
+    private void showConfirmPopup(){
+        if(!isFinishing()){
+            if(mDialog != null){
+                mDialog.dismiss();
+            }
+            Acceptor acceptor = new AbstractAcceptor() {
+                @Override
+                public void accept() {
+                    join();
+                }
+            };
+            String msg = getString(R.string.txt_confirm_message);
+            mDialog =
+                    new DialogCommon(this,
+                            acceptor,
+                            getString(R.string.txt_warn),
+                            msg,
+                            new String[]{getString(R.string.txt_cancel), null, getString(R.string.txt_confirm)});
+            mDialog.setCancelable(false);
+            mDialog.show();
+        }
     }
 
     private void setDepartData() {
@@ -154,12 +201,21 @@ public class CafeJoinActivity extends BaseActivity {
         call.enqueue(new Callback<ResponseBase>() {
             @Override
             public void onResponse(Call<ResponseBase> call, Response<ResponseBase> response) {
+                closeSpinner();
                 LogUtils.err(TAG, response.raw().toString());
                 if(response.isSuccessful()){
                     ResponseBase base = response.body();
                     if(base.isSuccess()) {
                         toast(R.string.warn_cafe_success_join);
+                        //finish();
+
+                        Intent intent = new Intent() ;
+                        setResult(RESULT_OK, intent);
                         finish();
+
+                        /*Bundle bu = new Bundle();
+                        bu.putSerializable("_CAFEMAIN_ACTIVITY_", "GOCAFEMAIN");
+                        callActivity2(MainActivity.class, bu,true);*/
                     }else{
                         toast(R.string.warn_cafe_fail_join);
                     }
@@ -170,6 +226,7 @@ public class CafeJoinActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<ResponseBase> call, Throwable t) {
+                closeSpinner();
                 LogUtils.err(TAG, t);
                 toast(R.string.warn_server_not_smooth);
             }

@@ -1,6 +1,7 @@
 package kr.co.photointerior.kosw.ui;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +15,9 @@ import kr.co.photointerior.kosw.rest.api.CafeService;
 import kr.co.photointerior.kosw.rest.model.AppUserBase;
 import kr.co.photointerior.kosw.rest.model.DataHolder;
 import kr.co.photointerior.kosw.rest.model.ResponseBase;
+import kr.co.photointerior.kosw.ui.dialog.DialogCommon;
+import kr.co.photointerior.kosw.utils.AbstractAcceptor;
+import kr.co.photointerior.kosw.utils.Acceptor;
 import kr.co.photointerior.kosw.utils.KUtil;
 import kr.co.photointerior.kosw.utils.LogUtils;
 import kr.co.photointerior.kosw.widget.KoswButton;
@@ -24,6 +28,7 @@ import retrofit2.Response;
 
 public class BbsEditActivity extends BaseActivity {
     private String TAG = LogUtils.makeLogTag(BbsDetailActivity.class);
+    private Dialog mDialog;
     private KoswEditText et_content;
     private KoswButton btn_edit, btn_cancel;
     private ImageView btn_back;
@@ -61,7 +66,7 @@ public class BbsEditActivity extends BaseActivity {
     @Override
     protected void attachEvents() {
         btn_edit.setOnClickListener(v->{
-            modifyBbs();
+            showConfirmPopup();
         });
 
         btn_cancel.setOnClickListener(v->{
@@ -75,6 +80,29 @@ public class BbsEditActivity extends BaseActivity {
             setResult(RESULT_CANCELED, intent);
             mActivity.finish();
         });
+    }
+
+    private void showConfirmPopup(){
+        if(!isFinishing()){
+            if(mDialog != null){
+                mDialog.dismiss();
+            }
+            Acceptor acceptor = new AbstractAcceptor() {
+                @Override
+                public void accept() {
+                    modifyBbs();
+                }
+            };
+            String msg = getString(R.string.txt_confirm_message);
+            mDialog =
+                    new DialogCommon(this,
+                            acceptor,
+                            getString(R.string.txt_warn),
+                            msg,
+                            new String[]{getString(R.string.txt_cancel), null, getString(R.string.txt_confirm)});
+            mDialog.setCancelable(false);
+            mDialog.show();
+        }
     }
 
     private void modifyBbs() {

@@ -107,6 +107,7 @@ public class CafeDetailActivity extends BaseActivity {
     private List<Cafe> mCAdminList = new ArrayList<>();
 
     private String isAdmin = "N";
+    private String mMyCatename = "";
 
     @Override
     protected  void onCreate(Bundle savedInstanceState) {
@@ -194,6 +195,11 @@ public class CafeDetailActivity extends BaseActivity {
                         LinearLayoutManager.VERTICAL, false));
 
         img_post = findViewById(R.id.img_post);
+        // 미가입 카페일 경우
+        if (!"1".equals(join))
+        {
+            img_post.setVisibility(View.GONE);
+        }
         btn_back = findViewById(R.id.btn_back);
 
     }
@@ -283,15 +289,27 @@ public class CafeDetailActivity extends BaseActivity {
                     // 부서 정보와 추가 정보가 없으면 바로 카페 가입
                     toast("바로가입");
                 } else {
-                    Bundle bu = new Bundle();
+                    /*Bundle bu = new Bundle();
                     bu.putSerializable("cafeseq", mCafe.getCafeseq());
                     bu.putSerializable("cafename", mCafe.getCafename());
                     bu.putSerializable("catenames", catenames);
                     bu.putSerializable("cateseqs", cateseqs);
-                    bu.putSerializable("additions", additions);
+                    bu.putSerializable("additions", additions);*/
+
+                    /*Intent intent = new Intent(this, BbsPostActivity.class);
+                    intent.putExtra("cafeseq", mCafeseq);
+                    intent.putExtra("postType", "BBS");
+                    startActivityForResult(intent, mBbsCreateResultCode);*/
 
                     // kmj mod
-                    callActivity(CafeJoinActivity.class, bu,true);
+                    //callActivity(CafeJoinActivity.class, bu,true);
+                    Intent intent = new Intent(this, CafeJoinActivity.class);
+                    intent.putExtra("cafeseq", mCafe.getCafeseq());
+                    intent.putExtra("cafename", mCafe.getCafename());
+                    intent.putExtra("catenames", catenames);
+                    intent.putExtra("cateseqs", cateseqs);
+                    intent.putExtra("additions", additions);
+                    startActivityForResult(intent, mCafeConfigurationResultCode);
                 }
             }
         });
@@ -305,6 +323,8 @@ public class CafeDetailActivity extends BaseActivity {
         });
 
         btn_back.setOnClickListener(v->{
+            Intent intent = new Intent() ;
+            setResult(RESULT_OK, intent);
             finish();
         });
 
@@ -582,6 +602,15 @@ public class CafeDetailActivity extends BaseActivity {
                     } else {
                         mList = response.body().getList();
 
+                        if (null != mMyInfo) {
+                            for (int idx = 0; idx < mList.size(); idx++) {
+                                if (mMyInfo.getCatename().equals(mList.get(idx).getCatename())) {
+                                    mList.get(idx).setIsmine("Y");
+                                    mList.add(0, mList.get(idx));
+                                    break;
+                                }
+                            }
+                        }
                         mAdapter = new RankingAdapter(getApplicationContext(), mList);
                         mRecyclerView.setAdapter(mAdapter);
                         mRecyclerView.setNestedScrollingEnabled(false);
@@ -707,7 +736,9 @@ public class CafeDetailActivity extends BaseActivity {
 
                             ImageView bbs_config = (ImageView) con.findViewById(R.id.bbs_config);
                             bbs_config.setId(bbs_config_id);
+
                             //if ((mBbsList.get(idx).getUser_seq()).equals(String.valueOf(user.getUser_seq()))) {
+                            if ("1".equals(mCafe.getIsjoin())) {
                                 bbs_config.setVisibility(View.VISIBLE);
                                 bbs_config.setOnClickListener(v->{
                                     // 게시글 상세
@@ -726,7 +757,7 @@ public class CafeDetailActivity extends BaseActivity {
                                     startActivityForResult(intent, mBbsCreateResultCode);
 
                                 });
-                            //}
+                            }
 
 
 
@@ -734,18 +765,22 @@ public class CafeDetailActivity extends BaseActivity {
 
                             KoswEditText et_notice_comment = (KoswEditText) con.findViewById(R.id.notice_comment);
                             et_notice_comment.setId(replycomm_id);
-                            et_notice_comment.setOnClickListener(v->{
-                                //con.setTranslationY();
-                                bbsType = "COMMENT";
-                                offsetY = sv.getScrollY();
+                            if ("1".equals(mCafe.getIsjoin())) {
+                                et_notice_comment.setOnClickListener(v -> {
+                                    //con.setTranslationY();
+                                    bbsType = "COMMENT";
+                                    offsetY = sv.getScrollY();
 
-                                et_notice_comment.getTranslationY();
-                                Intent intent = new Intent(getApplicationContext(), BbsPostActivity.class);
-                                intent.putExtra("bbsseq", bbsseq);
-                                intent.putExtra("postType", "COMMENT");
+                                    et_notice_comment.getTranslationY();
+                                    Intent intent = new Intent(getApplicationContext(), BbsPostActivity.class);
+                                    intent.putExtra("bbsseq", bbsseq);
+                                    intent.putExtra("postType", "COMMENT");
 
-                                startActivityForResult(intent, mBbsCreateResultCode);
-                            });
+                                    startActivityForResult(intent, mBbsCreateResultCode);
+                                });
+                            } else {
+                                et_notice_comment.setVisibility(View.GONE);
+                            }
 
                             if (null != mBbsList.get(idx).getComments() && mBbsList.get(idx).getComments().size() > 0) {
                                 et_comm_count.setText(mBbsList.get(idx).getComments().size() + "");

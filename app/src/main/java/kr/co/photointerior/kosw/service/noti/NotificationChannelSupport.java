@@ -16,7 +16,7 @@ public class NotificationChannelSupport {
             int importance = NotificationManager.IMPORTANCE_LOW;
             NotificationChannel channel = new NotificationChannel(ChannelID, name, importance);
             channel.setDescription(description);
-
+            channel.setShowBadge(false);
 
             NotificationManager notificationManager = ctx.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);

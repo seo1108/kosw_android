@@ -36,6 +36,7 @@ import kr.co.photointerior.kosw.rest.model.ResponseBase;
 import kr.co.photointerior.kosw.service.beacon.BeaconRagingInRegionService;
 import kr.co.photointerior.kosw.service.stepcounter.StepCounterService;
 import kr.co.photointerior.kosw.ui.BaseActivity;
+import kr.co.photointerior.kosw.ui.HelpActivity;
 import kr.co.photointerior.kosw.ui.InfoSettingGoupActivity;
 import kr.co.photointerior.kosw.ui.InfoSettingStairAddActivity;
 import kr.co.photointerior.kosw.ui.InfoSettingPasswordActivity;
@@ -86,6 +87,7 @@ public class InfoSettingFragment extends BaseFragment {
             R.id.btn_logout,
             R.id.btn_withdraw,
             R.id.btn_menu_provision,
+            R.id.btn_help,
             R.id.btn_menu_notice
     };
 
@@ -156,6 +158,10 @@ public class InfoSettingFragment extends BaseFragment {
             case R.id.btn_menu_provision://이용약관 보기
                 //openWebBrowser(Env.UrlPath.PROVISION.url(), false);
                 mActivity.callActivity(ProvisionActivity.class, false);
+                break;
+            case R.id.btn_help://도움말 보기
+                //openWebBrowser(Env.UrlPath.PROVISION.url(), false);
+                mActivity.callActivity(HelpActivity.class, false);
                 break;
             case R.id.btn_menu_notice://이용약관 보기
                 //openWebBrowser(Env.UrlPath.PROVISION.url(), false);

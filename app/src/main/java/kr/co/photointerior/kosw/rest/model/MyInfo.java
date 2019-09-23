@@ -15,6 +15,8 @@ public class MyInfo extends ResponseBase {
     private String status;
     @SerializedName("expdate")
     private String expdate;
+    @SerializedName("catename")
+    private String catename;
 
     public String getAdditions() {
         return additions;
@@ -56,6 +58,14 @@ public class MyInfo extends ResponseBase {
         this.expdate = expdate;
     }
 
+    public String getCatename() {
+        return catename;
+    }
+
+    public void setCatename(String catename) {
+        this.catename = catename;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -65,12 +75,13 @@ public class MyInfo extends ResponseBase {
                 Objects.equals(regdate, myInfo.regdate) &&
                 Objects.equals(isAdmin, myInfo.isAdmin) &&
                 Objects.equals(status, myInfo.status) &&
-                Objects.equals(expdate, myInfo.expdate);
+                Objects.equals(expdate, myInfo.expdate) &&
+                Objects.equals(catename, myInfo.catename);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(additions, regdate, isAdmin, status, expdate);
+        return Objects.hash(additions, regdate, isAdmin, status, expdate, catename);
     }
 
     @Override
@@ -81,6 +92,7 @@ public class MyInfo extends ResponseBase {
                 ", isAdmin='" + isAdmin + '\'' +
                 ", status='" + status + '\'' +
                 ", expdate='" + expdate + '\'' +
+                ", catename='" + catename + '\'' +
                 '}';
     }
 }

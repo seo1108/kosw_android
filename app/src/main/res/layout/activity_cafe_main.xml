@@ -9,6 +9,8 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="0dp"
         android:background="@color/colorWhite"
         android:focusable="true"
         android:focusableInTouchMode="true">
@@ -58,16 +60,16 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/ic_top_set" />
-
+    </android.support.constraint.ConstraintLayout>
 
         <LinearLayout
             android:id="@+id/top_btn_box"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_40"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="56dp"
             android:layout_marginBottom="20dp"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/btn_config">
+            >
 
             <Button
                 android:id="@+id/btn_make_cafe"
@@ -107,7 +109,7 @@
                 android:textSize="@dimen/sp_15"
                 android:textStyle="bold" />
         </LinearLayout>
-    </android.support.constraint.ConstraintLayout>
+
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/sv"
@@ -124,39 +126,174 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-
-            <kr.co.photointerior.kosw.widget.KoswTextView
-                android:id="@+id/txt_privacy"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="25dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="32dp"
-                android:text="@string/txt_set_key"
-                android:textAlignment="viewStart"
-                android:textColor="#000"
-                android:textSize="@dimen/sp_16"
-                android:textStyle="bold" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
+
+                <kr.co.photointerior.kosw.widget.KoswTextView
+                    android:id="@+id/txt_privacy"
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="32dp"
+                    android:text="@string/txt_set_key"
+                    android:textAlignment="viewStart"
+                    android:textColor="#000"
+                    android:textSize="@dimen/sp_16"
+                    android:textStyle="bold" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="32dp"
+                    android:orientation="horizontal"
+                    android:paddingBottom="10dp">
+
+                    <kr.co.photointerior.kosw.widget.KoswEditText
+                        android:id="@+id/txt_cafekey"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_border_bottom_cccccc"
+                        android:drawableLeft="@drawable/ic_action_search"
+                        android:hint="키값을 입력하세요"
+                        android:paddingStart="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:singleLine="true"
+                        android:textColor="#000"
+                        android:textCursorDrawable="@null"
+                        android:textSize="@dimen/sp_16" />
+
+                    <kr.co.photointerior.kosw.widget.KoswButton
+                        android:id="@+id/btn_join"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:background="@drawable/button_border_1a1a1a"
+                        android:text="@string/txt_cafe_join"
+                        android:textColor="@color/text_btn_click"
+                        android:textSize="@dimen/sp_14"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toStartOf="parent" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_cafe_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/ll_cafe_mine_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <kr.co.photointerior.kosw.widget.KoswTextView
+                        android:id="@+id/txt_cafe_mine"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/list_divider"
+                        android:paddingLeft="15dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text="@string/txt_cafe_mine"
+                        android:textAlignment="viewStart"
+                        android:textColor="#000"
+                        android:textSize="@dimen/sp_16"
+                        android:textStyle="bold" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_view_mine"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginEnd="32dp"
+                        android:scrollbars="none"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/ll_cafe_my_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <kr.co.photointerior.kosw.widget.KoswTextView
+                        android:id="@+id/txt_cafe_my"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/list_divider"
+                        android:paddingLeft="15dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text="@string/txt_cafe_my"
+                        android:textAlignment="viewStart"
+                        android:textColor="#000"
+                        android:textSize="@dimen/sp_16"
+                        android:textStyle="bold" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_view_my"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginEnd="32dp"
+                        android:scrollbars="none"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+                </LinearLayout>
+            </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_find"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_16"
+                android:background="@drawable/button_border_bottom_dot_777777" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="20dp"
                 android:layout_marginEnd="32dp"
                 android:orientation="horizontal"
                 android:paddingBottom="10dp">
 
                 <kr.co.photointerior.kosw.widget.KoswEditText
-                    android:id="@+id/txt_cafekey"
+                    android:id="@+id/input_name"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
                     android:background="@drawable/button_border_bottom_cccccc"
                     android:drawableLeft="@drawable/ic_action_search"
-                    android:hint="키값을 입력하세요"
+                    android:hint="카페 키값, 키워드 검색"
                     android:paddingStart="10dp"
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
@@ -166,12 +303,12 @@
                     android:textSize="@dimen/sp_16" />
 
                 <kr.co.photointerior.kosw.widget.KoswButton
-                    android:id="@+id/btn_join"
+                    android:id="@+id/btn_find"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
                     android:background="@drawable/button_border_1a1a1a"
-                    android:text="@string/txt_cafe_join"
+                    android:text="@string/txt_cafe_find"
                     android:textColor="@color/text_btn_click"
                     android:textSize="@dimen/sp_14"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -180,65 +317,13 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ll_cafe_mine_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <kr.co.photointerior.kosw.widget.KoswTextView
-                    android:id="@+id/txt_cafe_mine"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@color/list_divider"
-                    android:paddingLeft="15dp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:text="@string/txt_cafe_mine"
-                    android:textAlignment="viewStart"
-                    android:textColor="#000"
-                    android:textSize="@dimen/sp_16"
-                    android:textStyle="bold" />
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recycler_view_mine"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginEnd="32dp"
-                    android:scrollbars="none"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/ll_cafe_my_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <kr.co.photointerior.kosw.widget.KoswTextView
-                    android:id="@+id/txt_cafe_my"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@color/list_divider"
-                    android:paddingLeft="15dp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:text="@string/txt_cafe_my"
-                    android:textAlignment="viewStart"
-                    android:textColor="#000"
-                    android:textSize="@dimen/sp_16"
-                    android:textStyle="bold" />
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recycler_view_my"
+                    android:id="@+id/recycler_view_find"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
@@ -248,6 +333,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
             </LinearLayout>
+
+        </LinearLayout>
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
