@@ -1620,6 +1620,20 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
             setNavigationTitle(title);
             if(isHomeScreen()){
+                // 백그라운드 색상 변경
+                /*SharedPreferences prefr = getSharedPreferences("backgroundColor", MODE_PRIVATE);
+                int initColor = prefr.getInt("backgroundColor", -99);
+                Log.d("DDDDDDDDDDDDD", initColor + "");
+                if (initColor != -99) {
+                    Log.d("DDDDDDDDDDDDD11", initColor + "");
+                    mToolBar.setBackgroundColor(initColor);
+                    toggleDrawerIcon(true);
+
+                } else {
+                    mToolBar.setBackgroundColor(getCompanyColor());
+                    toggleDrawerIcon(true);
+                }*/
+
                 mToolBar.setBackgroundColor(getCompanyColor());
                 toggleDrawerIcon(true);
             }else{
@@ -1753,8 +1767,23 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         //BusProvider.instance().register(this);
         LogUtils.err(TAG, "MainActivity#onResume()");
         //startService(new Intent(getBaseContext(), BeaconRagingInRegionService.class));
+
+
+        /*SharedPreferences prefr = getSharedPreferences("backgroundColor", MODE_PRIVATE);
+        int initColor = prefr.getInt("backgroundColor", -99);
+        Log.d("DDDDDDDDDDDDD22", initColor + "");
+        if (initColor != -99) {
+            int bglist[] = DataHolder.instance().getBgColors() ;
+            changeColorsBySharedPreferences(getResources().getColor(bglist[initColor]));
+            mToolBar.setBackgroundColor(getResources().getColor(bglist[initColor]));
+        } else {
+            changeColors();
+            mToolBar.setBackgroundColor(getCompanyColor());
+        }*/
         changeColors();
         mToolBar.setBackgroundColor(getCompanyColor());
+
+
         updateCharacter();
         //fireMainRefreshEvent();
         setBeaconManagerMode(false);

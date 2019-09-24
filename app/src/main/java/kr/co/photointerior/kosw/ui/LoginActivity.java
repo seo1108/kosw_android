@@ -227,6 +227,7 @@ public class LoginActivity extends BaseUserActivity {
         public void onSessionOpenFailed(KakaoException exception) {
             if (exception != null) {
                 Logger.e(exception);
+                toast("카카오 로그인에 실패하였습니다.");
             }
         }
     }

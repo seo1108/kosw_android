@@ -248,6 +248,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         changeColors(intColor);
     }
 
+    public void changeColorsBySharedPreferences(int intColor) {
+        changeStatusBarColor(intColor);
+        changeColors(intColor);
+    }
+
     /**
      * 회사칼라 HEX 를 int로 변환한 것 반환.
      * @return

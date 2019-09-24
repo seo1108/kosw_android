@@ -3,6 +3,7 @@ package kr.co.photointerior.kosw.ui;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -129,6 +130,12 @@ public class InfoSettingProfileActivity extends BaseUserActivity {
                     int tag = Integer.valueOf(view.getTag().toString()) - 2101 ;
                     Pref.instance().saveIntValue (PrefKey.COMPANY_COLOR_NUM,tag);
                     selectBgColor(tag);
+
+                    SharedPreferences prefr = getSharedPreferences("backgroundColor", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = prefr.edit();
+                    editor.putInt("backgroundColor", tag);
+                    editor.commit();
+
                     changeColors();
                 }
             });
