@@ -39,6 +39,8 @@ public class Cafe extends ResponseBase {
     private String myadditions;
     @SerializedName("cateseq")
     private String cateseq;
+    @SerializedName("joindate")
+    private String joindate;
 
 
     private boolean selected;
@@ -183,6 +185,14 @@ public class Cafe extends ResponseBase {
         this.cateseq = cateseq;
     }
 
+    public String getJoindate() {
+        return joindate;
+    }
+
+    public void setJoindate(String joindate) {
+        this.joindate = joindate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -204,12 +214,13 @@ public class Cafe extends ResponseBase {
                 Objects.equals(adminseq, cafe.adminseq) &&
                 Objects.equals(myadditions, cafe.myadditions) &&
                 Objects.equals(cateseq, cafe.cateseq) &&
+                Objects.equals(joindate, cafe.joindate) &&
                 Objects.equals(cafetype, cafe.cafetype);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(total, cafedesc, additions, cafename, cafekey, logo, opendate, category, cafeseq, confirm, isjoin, admin, adminseq, myadditions, cateseq, selected, cafetype);
+        return Objects.hash(total, cafedesc, additions, cafename, cafekey, logo, opendate, category, cafeseq, confirm, isjoin, admin, adminseq, myadditions, cateseq, joindate, selected, cafetype);
     }
 
     @Override
@@ -230,6 +241,7 @@ public class Cafe extends ResponseBase {
                 ", adminseq='" + adminseq + '\'' +
                 ", myadditions='" + myadditions + '\'' +
                 ", cateseq='" + cateseq + '\'' +
+                ", joindate='" + joindate + '\'' +
                 ", selected=" + selected +
                 ", cafetype='" + cafetype + '\'' +
                 '}';

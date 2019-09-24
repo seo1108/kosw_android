@@ -98,6 +98,7 @@ public class BbsPostActivity extends BaseActivity {
         call.enqueue(new Callback<ResponseBase>() {
             @Override
             public void onResponse(Call<ResponseBase> call, Response<ResponseBase> response) {
+                closeSpinner();
                 LogUtils.err(TAG, response.raw().toString());
                 if(response.isSuccessful()){
                     ResponseBase base = response.body();
@@ -116,6 +117,7 @@ public class BbsPostActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<ResponseBase> call, Throwable t) {
+                closeSpinner();
                 LogUtils.err(TAG, t);
                 toast(R.string.warn_server_not_smooth);
             }

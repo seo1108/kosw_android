@@ -452,8 +452,8 @@ public class CafeMainActivity extends BaseActivity {
                 callActivity(CafeDetailActivity.class, bu,false);
             });
 
-            String opendate = item.getOpendate();
-            holder.tvOpendate.setText("가입일: " + opendate);
+            String joindate = item.getJoindate();
+            holder.tvOpendate.setText("가입일: " + joindate);
         }
 
         @Override

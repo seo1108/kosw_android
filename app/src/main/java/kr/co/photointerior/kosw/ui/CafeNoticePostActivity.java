@@ -108,9 +108,9 @@ public class CafeNoticePostActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<ResponseBase> call, Throwable t) {
+                closeSpinner();
                 LogUtils.err(TAG, t);
                 toast(R.string.warn_server_not_smooth);
-                closeSpinner();
             }
         });
     }
