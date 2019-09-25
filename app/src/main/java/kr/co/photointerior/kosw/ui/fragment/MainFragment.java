@@ -1286,7 +1286,8 @@ public class MainFragment extends BaseFragment {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mActivity, AppConst.NOTIFICATION_CHANNEL_ID);
 
         Intent intent = new Intent(mActivity, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         PendingIntent contentPendingIntent = PendingIntent.getActivity(mActivity, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -1296,17 +1297,7 @@ public class MainFragment extends BaseFragment {
         } else {
             title = "[자동측정]";
         }*/
-        if ("-".equals(ranking)) {
-            builder.setContentTitle("건강한 습관, 계단왕")
-                    .setContentText("지금 시작하십시오.")
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setLargeIcon(BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.ic_floor))
-                    .setWhen(System.currentTimeMillis())
-                    .setOngoing(true)
-                    //.setColorized(true)
-                    .setColor(ContextCompat.getColor(mActivity, R.color.colorPrimaryDark))
-                    .setContentIntent(contentPendingIntent);
-        } else {
+        if (!"-".equals(ranking)) {
             builder.setContentTitle("[랭킹:" + ranking + "]")
                     .setContentText(floor + "F / " + cal + "kcal / " + sec + "sec")
                     .setSmallIcon(R.mipmap.ic_launcher)
@@ -1316,10 +1307,12 @@ public class MainFragment extends BaseFragment {
                     //.setColorized(true)
                     .setColor(ContextCompat.getColor(mActivity, R.color.colorPrimaryDark))
                     .setContentIntent(contentPendingIntent);
+
+            NotificationManager notificationManager = (NotificationManager) mActivity.getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.notify(AppConst.NOTIFICATION_ID, builder.build());
         }
 
-        NotificationManager notificationManager = (NotificationManager) mActivity.getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(AppConst.NOTIFICATION_ID, builder.build());
+
     }
 
     /*private void updateNotification() {

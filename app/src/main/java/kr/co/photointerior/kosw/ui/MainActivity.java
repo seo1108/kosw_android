@@ -22,6 +22,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.location.Address;
 import android.location.Location;
 import android.media.AudioManager;
@@ -48,6 +49,8 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -134,10 +137,12 @@ import retrofit2.Response;
 public class MainActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks, BLocationManager.DelegateFindLocation {
     private String TAG = LogUtils.makeLogTag(MainActivity.class);
 
-    /** current fragment instance. */
-    private static boolean isTest = false ;
-    private Location mLocation ;
-    private Address mAddr ;
+    /**
+     * current fragment instance.
+     */
+    private static boolean isTest = false;
+    private Location mLocation;
+    private Address mAddr;
     private boolean mStarted;
     private double mAltitude;
     private double mAltitude2;
@@ -146,23 +151,23 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     private double mY;
     private double mZ;
     private double mStep;
-    private int mFloor ;
+    private int mFloor;
 
-    private int mSleepCnt = 0 ;
-    static private  int mMaxSleepCnt = 10 ;
-    static private  String sleepMsg[] = {"걷기중 측정시간(30초)이 지났습니다.","계단이용 측정시간(5분)이 지났습니다."} ;
-    private int sleepMode = 0 ;
+    private int mSleepCnt = 0;
+    static private int mMaxSleepCnt = 10;
+    static private String sleepMsg[] = {"걷기중 측정시간(30초)이 지났습니다.", "계단이용 측정시간(5분)이 지났습니다."};
+    private int sleepMode = 0;
 
 
-    private double mSaveStep = 0 ;
-    private Boolean isSleep = false ;
-    private Boolean isSleepBtn = false ;
+    private double mSaveStep = 0;
+    private Boolean isSleep = false;
+    private Boolean isSleepBtn = false;
 
-    private  Boolean isActivity = false ;
+    private Boolean isActivity = false;
 
-    private long startTime = 0 ;
-    private long endTime = 0 ;
-    private  Boolean isRedDot = false ;
+    private long startTime = 0;
+    private long endTime = 0;
+    private Boolean isRedDot = false;
 
     private BaseFragment mFragmentCurrent;
     private int[] mMenuIds = {
@@ -185,13 +190,22 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     };
     private String mHomeTitle;
 
-    private ImageButton mPauseBtn ;
+    private ImageButton mPauseBtn;
 
     private BroadcastReceiver mExitReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(Env.Action.EXIT_ACTION.isMatch(intent.getAction())){
+            if (Env.Action.EXIT_ACTION.isMatch(intent.getAction())) {
                 callActivity(LoginActivity.class, true);
+            }
+        }
+    };
+
+    protected BroadcastReceiver mIsAppBackgroundReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(Env.Action.APP_IS_BACKGROUND_ACTION.isMatch(intent.getAction())) {
+                //displayFragment(Env.FragmentType.HOME);
             }
         }
     };
@@ -200,38 +214,39 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
     private AltitudeManager mAltiManager;
     private StepManager mStepManager;
-    private DirectionManager mDirectionManager ;
+    private DirectionManager mDirectionManager;
 
-    private  boolean isStart = false ;
-    private  boolean isTurn = false ;
-    private  boolean isContinue = false ;
+    private boolean isStart = false;
+    private boolean isTurn = false;
+    private boolean isContinue = false;
     // Create the Handler
     private Handler handler = new Handler();
-    private ArrayList<MeasureObj> mStartList = new ArrayList<>() ;
-    private ArrayList<MeasureObj> mUpList = new ArrayList<>() ;
-    private int cnt = 0 ;
-    private int checkStartTimeOut = 60 ;
-    private int checkRotationTimeOut = 60 ;
-    private int checkUpTimeOut = 60 ;
-    private Boolean is315 = false ;
-    private  int cnt315 = 0 ;
-    private  Boolean isCount = false ;
+    private ArrayList<MeasureObj> mStartList = new ArrayList<>();
+    private ArrayList<MeasureObj> mUpList = new ArrayList<>();
+    private int cnt = 0;
+    private int checkStartTimeOut = 60;
+    private int checkRotationTimeOut = 60;
+    private int checkUpTimeOut = 60;
+    private Boolean is315 = false;
+    private int cnt315 = 0;
+    private Boolean isCount = false;
 
-    private long goupTime = 0 ;
+    private long goupTime = 0;
 
-    private TextView mTv_log ;
+    private TextView mTv_log;
 
     // 건물 층 카운트
-    private int mBuildCount = 0 ;
-    private int mCurBuildCount = 0 ;
+    private int mBuildCount = 0;
+    private int mCurBuildCount = 0;
 
     // 건물 / 등산 모드
-    private  String mIsBuild = "" ; // Y :건물계단    N : 등산계단
-    private  int mClimbCount = 0 ;  // 등산 카운트 (4미터 체크)
-    private  int mLogicCount = 0 ;  // 로직 카운트 (회전 )
+    private String mIsBuild = ""; // Y :건물계단    N : 등산계단
+    private int mClimbCount = 0;  // 등산 카운트 (4미터 체크)
+    private int mLogicCount = 0;  // 로직 카운트 (회전 )
 
     private RestartService restartService;
 
+    private  ViewGroup mRootView ;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -244,28 +259,32 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mContentRootView = getWindow().getDecorView().findViewById(android.R.id.content) ;
+        mRootView = (ViewGroup) ((ViewGroup) this
+                .findViewById(android.R.id.content)).getChildAt(0);
+
         //chkGpsService();
 
-        AppUserBase user = DataHolder.instance().getAppUserBase() ;
+        AppUserBase user = DataHolder.instance().getAppUserBase();
         if (user != null) {
-            mCurBuildCount = user.getBuild_floor_amt() ;
-            mIsBuild = user.getIsbuild() ;
+            mCurBuildCount = user.getBuild_floor_amt();
+            mIsBuild = user.getIsbuild();
         } else {
             callActivity(SplashActivity.class, false);
-            mFinishFlag = true ;
+            mFinishFlag = true;
             finish();
         }
 
-        if (mIsBuild == null || mIsBuild.equals("") ) { // 초기 셋팅은 등산 모드
-            mIsBuild = "N" ;
+        if (mIsBuild == null || mIsBuild.equals("")) { // 초기 셋팅은 등산 모드
+            mIsBuild = "N";
         }
 
         showStartPopup();
 
-        app.isPop = false ;
-        app.isInit  = false ;
+        app.isPop = false;
+        app.isInit = false;
 
-        mTv_log = getTextView(R.id.txt_log) ;
+        mTv_log = getTextView(R.id.txt_log);
 
         if (!isTest) {
 
@@ -281,7 +300,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
         }
 
-        if(!checkLogin()){
+        if (!checkLogin()) {
             callActivity(LoginActivity.class, true);
             return;
         }
@@ -299,7 +318,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         clearNotificationBadge();
 
         Bundle bundle = getIntent().getExtras();
-        if(bundle != null) {
+        if (bundle != null) {
             mTodayActivity = (BeaconUuid) bundle.getSerializable("_TODAY_ACTIVITY_");
         }
 
@@ -321,6 +340,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         sendFcmToken();
         setInitialData();
         registerReceiver(mExitReceiver, new IntentFilter(Env.Action.EXIT_ACTION.action()));
+        registerReceiver(mIsAppBackgroundReceiver, new IntentFilter(Env.Action.APP_IS_BACKGROUND_ACTION.action()));
+
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(mCharacterChangeReceiver, new IntentFilter(Env.Action.CHARACTER_CHANGED_ACTION.action()));
 
@@ -352,13 +373,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
 
 */
-
-
-
-
-
-
-
 
 
         //getAppKeyHash();
@@ -399,14 +413,14 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
         /*startMeasure(true);
         handler.post(runnable);*/
-        startCalcStairs();
+
+        //startCalcStairs();
 
         String gocafemain = getIntent().getStringExtra("_CAFEMAIN_ACTIVITY_");
 
         if (null != gocafemain && "GOCAFEMAIN".equals(gocafemain)) {
             callActivity(CafeMainActivity.class, false);
         }
-
 
 
         SharedPreferences prefr = getSharedPreferences("userInfo", MODE_PRIVATE);
@@ -422,6 +436,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             editor.putString("build_code", user.getBuildingCode());
             editor.putString("country", user.getCountry());
             editor.putString("city", user.getCity());
+            editor.putInt("curBuildCount", user.getBuild_floor_amt());
             editor.commit();
         } else {
             editor.putString("token", "");
@@ -434,6 +449,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             editor.putString("build_code", "");
             editor.putString("country", "");
             editor.putString("city", "");
+            editor.putInt("curBuildCount", 1000);
             editor.commit();
         }
 
@@ -443,7 +459,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
         IntentFilter intentFilter = new IntentFilter("kr.co.photointerior.kosw.service.noti.NotiService");
         //브로드 캐스트에 등록
-        registerReceiver(restartService,intentFilter);
+        registerReceiver(restartService, intentFilter);
         // 서비스 시작
         startService(intent);
 
@@ -482,75 +498,75 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         }*/
     }
 
-    private  void checkStart() {
-        if (mAltitude == 0 )  {
+    private void checkStart() {
+        if (mAltitude == 0) {
             //return ;
         }
         Log.d("999999999999", cnt + "__");
         // 30초 이상 걷기 없으면 잠금
-        if (cnt >= 30 * 10   )  {
-            if (mSaveStep <=  0 ) { // 걷기중이아니면
+        if (cnt >= 30 * 10) {
+            if (mSaveStep <= 0) { // 걷기중이아니면
                 mSleepCnt = mMaxSleepCnt;
-                sleepMode = 0 ;
+                sleepMode = 0;
                 initMeasure();
                 return;
             } else {  // 120초이상 측정이 없으면 측정 잠금  mSleepCnt >= 4
-                sleepMode = 1 ;
-                mSleepCnt++ ;
+                sleepMode = 1;
+                mSleepCnt++;
                 initMeasure();
                 return;
             }
         }
 
-        mSaveStep = 0 ;
+        mSaveStep = 0;
 
-        MeasureObj obj = mStartList.get(cnt) ;
-        obj.altitude = mAltitude ;
-        obj.orientation = mOrientation ;
-        obj.step = mStep ;
-        obj.x = mX ;
-        obj.y = mY ;
-        obj.z = mZ ;
+        MeasureObj obj = mStartList.get(cnt);
+        obj.altitude = mAltitude;
+        obj.orientation = mOrientation;
+        obj.step = mStep;
+        obj.x = mX;
+        obj.y = mY;
+        obj.z = mZ;
 
-        MeasureObj obj_b = mStartList.get(0) ;
-        obj.altitudeGap =  obj.altitude -  obj_b.altitude ;
-        obj.orientationGap =  Math.abs(obj.orientation -  obj_b.orientation) ;
-        obj.stepGap =  Math.abs(obj.step -  obj_b.step) ;
-        obj.xGap =  Math.abs(obj.x -  obj_b.x) ;
-        obj.yGap =  Math.abs(obj.y -  obj_b.y) ;
-        obj.zGap =  Math.abs(obj.z -  obj_b.z) ;
+        MeasureObj obj_b = mStartList.get(0);
+        obj.altitudeGap = obj.altitude - obj_b.altitude;
+        obj.orientationGap = Math.abs(obj.orientation - obj_b.orientation);
+        obj.stepGap = Math.abs(obj.step - obj_b.step);
+        obj.xGap = Math.abs(obj.x - obj_b.x);
+        obj.yGap = Math.abs(obj.y - obj_b.y);
+        obj.zGap = Math.abs(obj.z - obj_b.z);
 
         // 고도 합계
-        double gapAlitude =   0 ;
-        gapAlitude = obj.altitude - obj_b.altitude ;
+        double gapAlitude = 0;
+        gapAlitude = obj.altitude - obj_b.altitude;
 
         // 스텝 합계
-        double gapStep =   0 ;
-        gapStep = obj.step - obj_b.step ;
+        double gapStep = 0;
+        gapStep = obj.step - obj_b.step;
         if (cnt > 50) {
-            MeasureObj obj_c ;
-            obj_c = mStartList.get(cnt - 50 ) ;
+            MeasureObj obj_c;
+            obj_c = mStartList.get(cnt - 50);
             obj.stepGap = Math.abs(obj.step - obj_c.step);
-            gapStep = obj.step - obj_c.step ;
+            gapStep = obj.step - obj_c.step;
         }
 
-        double step = gapStep ; // 초당 걸음수
-        mSaveStep = step ;
+        double step = gapStep; // 초당 걸음수
+        mSaveStep = step;
 
-        List<Double> list = Arrays.asList(obj.xGap,obj.yGap,obj.zGap ) ;
-        Double mDir =  Collections.max(list) ;
+        List<Double> list = Arrays.asList(obj.xGap, obj.yGap, obj.zGap);
+        Double mDir = Collections.max(list);
 
         //Log.v("kmj",String.format("count %d ,높이 :  %.2f , 걸음수 : %.2f , 방향 : %.2f",cnt,gapAlitude,step,mDir)) ;
         //tvStep.setText(String.format("스텝 : %.2f" ,step));
         //mValue.setText(String.format("높이 : %.2fm \n 방향  %.2f " , gapAlitude ,mDir)  );
         //getTextView(R.id.txt_m).setText("");
-        String m = String.format("높이 : %.2f , 방향 : %.2f , 걷기 : %.2f , 시간 : %d" , gapAlitude, mDir, step, cnt);
+        String m = String.format("높이 : %.2f , 방향 : %.2f , 걷기 : %.2f , 시간 : %d", gapAlitude, mDir, step, cnt);
         if (isTest) {
             // ==========================   test    ==============================
             getTextView(R.id.txt_height).setText(String.format("높이 : %.2f", gapAlitude));
             getTextView(R.id.txt_dir).setText(String.format("방향 : %.2f", mDir));
             getTextView(R.id.txt_step).setText(String.format("걷기 : %.2f", step));
-            getTextView(R.id.txt_time).setText(String.format("시간 : %d (%d)", 300 - cnt,mSleepCnt ));
+            getTextView(R.id.txt_time).setText(String.format("시간 : %d (%d)", 300 - cnt, mSleepCnt));
             getTextView(R.id.txt_count).setText(String.format("%d  (B:%d,M:%d)", mFloor, mLogicCount, mClimbCount));
             if (mAddr != null && mAddr.getAddressLine(0) != null) {
                 getTextView(R.id.txt_addr).setText(String.format("%s", mAddr.getAddressLine(0)));
@@ -561,27 +577,27 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         }
 
         if (!isContinue) {
-            if (mDir > 135 && Math.abs(gapAlitude) > 1.5  ) {
+            if (mDir > 135 && Math.abs(gapAlitude) > 1.5) {
                 // 2초 이내 측정이면  카운트 하지 않음 엘리베이터 사용자 걸름
-                long curTime = System.currentTimeMillis() ;
-                if (cnt < 30  || (curTime - goupTime) < 3000 ) {
-                    mSleepCnt++ ;
+                long curTime = System.currentTimeMillis();
+                if (cnt < 30 || (curTime - goupTime) < 3000) {
+                    mSleepCnt++;
                     initMeasure();
                     return;
                 }
 
                 if (step > 1) { // 걷기중이면
 
-                    AppUserBase user = DataHolder.instance().getAppUserBase() ;
-                    mCurBuildCount = user.getBuild_floor_amt() ;
-                    mIsBuild = user.getIsbuild() ;
+                    AppUserBase user = DataHolder.instance().getAppUserBase();
+                    mCurBuildCount = user.getBuild_floor_amt();
+                    mIsBuild = user.getIsbuild();
 
                     if (gapAlitude > 0) {
                         mFloor++;
-                        mLogicCount++ ;
-                        mClimbCount = 0 ;
+                        mLogicCount++;
+                        mClimbCount = 0;
 
-                        if  (mIsBuild.equals("Y")) {
+                        if (mIsBuild.equals("Y")) {
                             mBuildCount++;
                         } else {
                             // 건물 모드 :건물높이의 1⁄2 이상이면 건물로 전환
@@ -592,122 +608,122 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                         }
 
                         if (mBuildCount == 1) {
-                            startTime = System.currentTimeMillis() ;
+                            startTime = System.currentTimeMillis();
                         }
 
-                        if (mBuildCount == Math.ceil(mCurBuildCount / 2)  && mBuildCount >= 4  ) {
-                            endTime = System.currentTimeMillis() ;
-                            isRedDot = true  ;
+                        if (mBuildCount == Math.ceil(mCurBuildCount / 2) && mBuildCount >= 4) {
+                            endTime = System.currentTimeMillis();
+                            isRedDot = true;
                         } else {
-                            isRedDot = false ;
+                            isRedDot = false;
                         }
-                        isCount = true ;
+                        isCount = true;
                         if (isTest) {
                             getTextView(R.id.txt_m).setText(m);
                         }
 
-                        goupTime = System.currentTimeMillis() ;
+                        goupTime = System.currentTimeMillis();
                         sendDataToServer(1);
                     } else {
-                        mBuildCount = 0 ;
-                        mClimbCount = 0 ;
-                        mLogicCount = 0 ;
+                        mBuildCount = 0;
+                        mClimbCount = 0;
+                        mLogicCount = 0;
 
                         mFloor++;
-                        isCount = true ;
+                        isCount = true;
                         if (isTest) {
                             getTextView(R.id.txt_m).setText(m);
                         }
-                        goupTime = System.currentTimeMillis() ;
+                        goupTime = System.currentTimeMillis();
                         sendDataToServer(1);
                     }
 
                     // 90이상이면 높이는 클리어  방향은 보존
-                    MeasureObj obj_bb =  mStartList.get(0) ;
-                    isContinue = true ;
+                    MeasureObj obj_bb = mStartList.get(0);
+                    isContinue = true;
                     mStartList.clear();
                     for (int i = 0; i < 600; i++) {
                         mStartList.add(new MeasureObj());
                     }
                     cnt = 0;
-                    mStartList.get(0).x = obj_bb.x  ;
-                    mStartList.get(0).y = obj_bb.y  ;
-                    mStartList.get(0).z = obj_bb.z  ;
-                    mStartList.get(0).xGap = obj_bb.xGap ;
-                    mStartList.get(0).yGap = obj_bb.yGap ;
-                    mStartList.get(0).zGap = obj_bb.zGap ;
-                    mStartList.get(0).step = obj_bb.step ;
-                    mStartList.get(0).altitude = mAltitude ;
+                    mStartList.get(0).x = obj_bb.x;
+                    mStartList.get(0).y = obj_bb.y;
+                    mStartList.get(0).z = obj_bb.z;
+                    mStartList.get(0).xGap = obj_bb.xGap;
+                    mStartList.get(0).yGap = obj_bb.yGap;
+                    mStartList.get(0).zGap = obj_bb.zGap;
+                    mStartList.get(0).step = obj_bb.step;
+                    mStartList.get(0).altitude = mAltitude;
 
-                    cnt++ ;
-                    return ;
+                    cnt++;
+                    return;
 
                 }
             }
 
         }
 
-        if (mDir >  315 &&  isContinue   ) {  //
+        if (mDir > 315 && isContinue) {  //
             // 315 이상이면 높이는 클리어  방향은 보존
-            MeasureObj obj_bb =  mStartList.get(0) ;
-            isContinue = false ;
+            MeasureObj obj_bb = mStartList.get(0);
+            isContinue = false;
             for (int i = 0; i < cnt; i++) {
-                mStartList.get(i).x = obj_bb.x  ;
-                mStartList.get(i).y = obj_bb.y  ;
-                mStartList.get(i).z = obj_bb.z  ;
-                mStartList.get(i).xGap = obj_bb.xGap ;
-                mStartList.get(i).yGap = obj_bb.yGap ;
-                mStartList.get(i).zGap = obj_bb.zGap ;
-                mStartList.get(i).step = obj_bb.step ;
-                mStartList.get(i).altitude = mAltitude ;
+                mStartList.get(i).x = obj_bb.x;
+                mStartList.get(i).y = obj_bb.y;
+                mStartList.get(i).z = obj_bb.z;
+                mStartList.get(i).xGap = obj_bb.xGap;
+                mStartList.get(i).yGap = obj_bb.yGap;
+                mStartList.get(i).zGap = obj_bb.zGap;
+                mStartList.get(i).step = obj_bb.step;
+                mStartList.get(i).altitude = mAltitude;
             }
-            mStartList.get(cnt).x = obj_bb.x  ;
-            mStartList.get(cnt).y = obj_bb.y  ;
-            mStartList.get(cnt).z = obj_bb.z  ;
-            mStartList.get(cnt).xGap = obj_bb.xGap ;
-            mStartList.get(cnt).yGap = obj_bb.yGap ;
-            mStartList.get(cnt).zGap = obj_bb.zGap ;
-            mStartList.get(cnt).step = obj_bb.step ;
-            mStartList.get(cnt).altitude = mAltitude ;
+            mStartList.get(cnt).x = obj_bb.x;
+            mStartList.get(cnt).y = obj_bb.y;
+            mStartList.get(cnt).z = obj_bb.z;
+            mStartList.get(cnt).xGap = obj_bb.xGap;
+            mStartList.get(cnt).yGap = obj_bb.yGap;
+            mStartList.get(cnt).zGap = obj_bb.zGap;
+            mStartList.get(cnt).step = obj_bb.step;
+            mStartList.get(cnt).altitude = mAltitude;
 
-            is315 = true ;
-            cnt315 = cnt ;
+            is315 = true;
+            cnt315 = cnt;
 
-            cnt++ ;
-            return ;
+            cnt++;
+            return;
 
         }
 
         // 1초뒤에 방향만 클리어
-        if ( is315 && cnt > (cnt315 + 10)  ) {  //
-            MeasureObj obj_bb =  mStartList.get(0) ;
+        if (is315 && cnt > (cnt315 + 10)) {  //
+            MeasureObj obj_bb = mStartList.get(0);
 
-            for (int i = 0; i < cnt ; i++) {
-                mStartList.get(i).x = mX  ;
-                mStartList.get(i).y = mY  ;
-                mStartList.get(i).z = mZ  ;
-                mStartList.get(i).step = obj_bb.step ;
-                mStartList.get(i).altitude = obj_bb.altitude ;
+            for (int i = 0; i < cnt; i++) {
+                mStartList.get(i).x = mX;
+                mStartList.get(i).y = mY;
+                mStartList.get(i).z = mZ;
+                mStartList.get(i).step = obj_bb.step;
+                mStartList.get(i).altitude = obj_bb.altitude;
             }
-            mStartList.get(cnt).x = mX  ;
-            mStartList.get(cnt).y = mY  ;
-            mStartList.get(cnt).z = mZ  ;
-            mStartList.get(cnt).step = obj_bb.step ;
-            mStartList.get(cnt).altitude = obj_bb.altitude ;
-            is315 = false ;
-            cnt315 = 0 ;
+            mStartList.get(cnt).x = mX;
+            mStartList.get(cnt).y = mY;
+            mStartList.get(cnt).z = mZ;
+            mStartList.get(cnt).step = obj_bb.step;
+            mStartList.get(cnt).altitude = obj_bb.altitude;
+            is315 = false;
+            cnt315 = 0;
 
-            cnt++ ;
-            return ;
+            cnt++;
+            return;
         }
 
         //=================================
         // 회전이 없고 3미터 이상이면 1층 측정
         //=================================
 
-        if (Math.abs(gapAlitude) > 3   ) {
-            long curTime = System.currentTimeMillis() ;
-            if (cnt < 20  || (curTime - goupTime) < 2000 ) {
+        if (Math.abs(gapAlitude) > 3) {
+            long curTime = System.currentTimeMillis();
+            if (cnt < 20 || (curTime - goupTime) < 2000) {
                 //mSleepCnt++;
                 initMeasure();
                 return;
@@ -715,22 +731,22 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 if (step > 1) { // 걷기중이면
                     if (gapAlitude > 0) {
 
-                        AppUserBase user = DataHolder.instance().getAppUserBase() ;
-                        mCurBuildCount = user.getBuild_floor_amt() ;
-                        mIsBuild = user.getIsbuild() ;
+                        AppUserBase user = DataHolder.instance().getAppUserBase();
+                        mCurBuildCount = user.getBuild_floor_amt();
+                        mIsBuild = user.getIsbuild();
                         mClimbCount++;
-                        mLogicCount = 0 ;
+                        mLogicCount = 0;
 
                         if (mIsBuild.equals("Y")) {
-                            if (mClimbCount > mCurBuildCount ) {
-                                mIsBuild = "N" ;
+                            if (mClimbCount > mCurBuildCount) {
+                                mIsBuild = "N";
                                 mFloor++;
-                                mBuildCount = mClimbCount ;
+                                mBuildCount = mClimbCount;
 
                                 if (mBuildCount == 1) {
                                     startTime = System.currentTimeMillis();
                                 }
-                                if (mBuildCount == Math.ceil(mCurBuildCount / 2)  && mBuildCount >= 3 ) {
+                                if (mBuildCount == Math.ceil(mCurBuildCount / 2) && mBuildCount >= 3) {
                                     endTime = System.currentTimeMillis();
                                     isRedDot = true;
                                 } else {
@@ -743,12 +759,12 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                                 sendDataToServer(1);
                             }
                         } else {
-                            mBuildCount++ ;
+                            mBuildCount++;
                             mFloor++;
                             if (mBuildCount == 1) {
                                 startTime = System.currentTimeMillis();
                             }
-                            if (mBuildCount == Math.ceil(mCurBuildCount / 2) && mBuildCount >= 3 ) {
+                            if (mBuildCount == Math.ceil(mCurBuildCount / 2) && mBuildCount >= 3) {
                                 endTime = System.currentTimeMillis();
                                 isRedDot = true;
                             } else {
@@ -761,9 +777,9 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                             sendDataToServer(1);
                         }
                     } else {
-                        mBuildCount = 0 ;
-                        mClimbCount = 0 ;
-                        mLogicCount = 0 ;
+                        mBuildCount = 0;
+                        mClimbCount = 0;
+                        mLogicCount = 0;
                         if (mIsBuild.equals("Y")) {
                             //mClimbCount++;
                         } else {
@@ -776,7 +792,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                         }
                     }
                     initMeasure();
-                    return ;
+                    return;
 
 
                 }
@@ -784,42 +800,42 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
         }
 
-        if ( mDir > 400 ) {
+        if (mDir > 400) {
             initMeasure();
-            return ;
+            return;
         }
 
-        cnt++ ;
+        cnt++;
     }
 
 
-    private  void clearMeasur() {
+    private void clearMeasur() {
 
-        MeasureObj obj_bb =  mStartList.get(cnt) ;
+        MeasureObj obj_bb = mStartList.get(cnt);
 
-        for (int i = 0; i < cnt ; i++) {
-            mStartList.get(i).x = obj_bb.x  ;
-            mStartList.get(i).y = obj_bb.y  ;
-            mStartList.get(i).z = obj_bb.z  ;
-            mStartList.get(i).xGap = obj_bb.xGap ;
-            mStartList.get(i).yGap = obj_bb.yGap ;
-            mStartList.get(i).zGap = obj_bb.zGap ;
-            mStartList.get(i).altitude = obj_bb.altitude ;
-            mStartList.get(i).step = obj_bb.step ;
+        for (int i = 0; i < cnt; i++) {
+            mStartList.get(i).x = obj_bb.x;
+            mStartList.get(i).y = obj_bb.y;
+            mStartList.get(i).z = obj_bb.z;
+            mStartList.get(i).xGap = obj_bb.xGap;
+            mStartList.get(i).yGap = obj_bb.yGap;
+            mStartList.get(i).zGap = obj_bb.zGap;
+            mStartList.get(i).altitude = obj_bb.altitude;
+            mStartList.get(i).step = obj_bb.step;
         }
 
         cnt++;
 
-        isStart = false ;
+        isStart = false;
         //isTurn = false ;
-        isContinue = false ;
-        is315 = false ;
-        cnt315 = 0 ;
+        isContinue = false;
+        is315 = false;
+        cnt315 = 0;
         goupTime = System.currentTimeMillis();
 
     }
 
-    private  void initMeasure() {
+    private void initMeasure() {
 
         /*
         if ( cnt > 0 ) {
@@ -857,22 +873,23 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             }
         }
 
-        cnt = 0 ;
+        cnt = 0;
 
-        isStart = false ;
-        isTurn = false ;
-        isContinue = false ;
-        is315 = false ;
-        cnt315 = 0 ;
+        isStart = false;
+        isTurn = false;
+        isContinue = false;
+        is315 = false;
+        cnt315 = 0;
 
-        isCount = false ;
+        isCount = false;
         goupTime = System.currentTimeMillis();
 
         // 5분 지나면 잠금
-        if (mSleepCnt >= mMaxSleepCnt ) {
-            isSleep = true;;
-            mSleepCnt = 0  ;
-            mStarted = false ;
+        if (mSleepCnt >= mMaxSleepCnt) {
+            isSleep = true;
+            ;
+            mSleepCnt = 0;
+            mStarted = false;
             getTextView(R.id.tvPauseMent).setText(sleepMsg[sleepMode]);
             startMeasure(false);
         }
@@ -885,32 +902,32 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     }
 
     // 측정 시작 ,멈춤
-    public void startMeasure(boolean started){
-       if(!started){
+    public void startMeasure(boolean started) {
+        if (!started) {
 
             saveBuildCount(mBuildCount);
 
 
             goupTime = System.currentTimeMillis();
 
-            mAltitude = 0 ;
-            mOrientation = 0 ;
-            mStep = 0 ;
-            mX = 0 ;
-            mY = 0 ;
-            mZ = 0 ;
+            mAltitude = 0;
+            mOrientation = 0;
+            mStep = 0;
+            mX = 0;
+            mY = 0;
+            mZ = 0;
 
             for (int i = 0; i < 600; i++) {
-                MeasureObj obj = mStartList.get(i) ;
+                MeasureObj obj = mStartList.get(i);
                 obj.altitude = 0.0;
-                obj.orientation = 0.0 ;
-                obj.step = 0.0 ;
-                obj.x = 0.0 ;
-                obj.y = 0.0 ;
+                obj.orientation = 0.0;
+                obj.step = 0.0;
+                obj.x = 0.0;
+                obj.y = 0.0;
                 obj.z = 0.0;
-                obj.xGap = 0.0 ;
-                obj.yGap = 0.0 ;
-                obj.zGap = 0.0 ;
+                obj.xGap = 0.0;
+                obj.yGap = 0.0;
+                obj.zGap = 0.0;
             }
             cnt = 0;
 
@@ -925,10 +942,10 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
            }*/
 
 
-        }else{
+        } else {
 
 
-            AppUserBase user = DataHolder.instance().getAppUserBase() ;
+            AppUserBase user = DataHolder.instance().getAppUserBase();
 
             if (user != null) {
                 mCurBuildCount = user.getBuild_floor_amt(); // 현재 빌딩층수 (높이)
@@ -940,33 +957,33 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
             goupTime = System.currentTimeMillis();
 
-            mAltitude = 0 ;
-            mOrientation = 0 ;
-            mStep = 0 ;
-            mX = 0 ;
-            mY = 0 ;
-            mZ = 0 ;
+            mAltitude = 0;
+            mOrientation = 0;
+            mStep = 0;
+            mX = 0;
+            mY = 0;
+            mZ = 0;
 
             for (int i = 0; i < 600; i++) {
-                MeasureObj obj = mStartList.get(i) ;
+                MeasureObj obj = mStartList.get(i);
                 obj.altitude = 0.0;
-                obj.orientation = 0.0 ;
-                obj.step = 0.0 ;
-                obj.x = 0.0 ;
-                obj.y = 0.0 ;
+                obj.orientation = 0.0;
+                obj.step = 0.0;
+                obj.x = 0.0;
+                obj.y = 0.0;
                 obj.z = 0.0;
-                obj.xGap = 0.0 ;
-                obj.yGap = 0.0 ;
-                obj.zGap = 0.0 ;
+                obj.xGap = 0.0;
+                obj.yGap = 0.0;
+                obj.zGap = 0.0;
 
             }
             cnt = 0;
 
             mAltiManager = new AltitudeManager(this);
-            mStepManager = new StepManager(this) ;
-            mDirectionManager = new DirectionManager(this) ;
+            mStepManager = new StepManager(this);
+            mDirectionManager = new DirectionManager(this);
 
-            isSleep = false  ;
+            isSleep = false;
 
             mAltiManager.startMeasure();
             mDirectionManager.startMeasure();
@@ -979,45 +996,46 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             findViewById(R.id.LayoutPause).setVisibility(View.INVISIBLE);
             //mValue.setText("wait...");
         }
-        mStarted = started ;
+        mStarted = started;
     }
 
-    private void restartMeasure(){
-        if(!mStarted){
+    private void restartMeasure() {
+        if (!mStarted) {
             Toast.makeText(this, "측정이 시작되지 않았습니다.", Toast.LENGTH_SHORT).show();
-        }else{
+        } else {
             mAltiManager.restartMeasure();
             //mValue.setText("wait...");
         }
     }
 
-    public void setCurrentAltitude(double altitude){
+    public void setCurrentAltitude(double altitude) {
         mAltitude = altitude;
         displayAlti();
     }
-    public void setCurrentAltitude2(double altitude){
+
+    public void setCurrentAltitude2(double altitude) {
         mAltitude2 = altitude;
         displayAlti();
     }
 
-    public void setCurrentOrientation(double val  ){
+    public void setCurrentOrientation(double val) {
         mOrientation = val;
         displayAlti();
     }
 
-    public void setCurrentOrientation2(double x ,double y, double z  ){
+    public void setCurrentOrientation2(double x, double y, double z) {
         mX = x;
         mY = y;
         mZ = z;
         //displayAlti();
     }
 
-    public void setCurrentStep(double val  ){
+    public void setCurrentStep(double val) {
         mStep += val;
         displayAlti();
     }
 
-    private void displayAlti(){
+    private void displayAlti() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -1027,14 +1045,30 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     }
 
     private String getDirectionFromDegrees(float degrees) {
-        if(degrees >= -22.5 && degrees < 22.5) { return "N"; }
-        if(degrees >= 22.5 && degrees < 67.5) { return "NE"; }
-        if(degrees >= 67.5 && degrees < 112.5) { return "E"; }
-        if(degrees >= 112.5 && degrees < 157.5) { return "SE"; }
-        if(degrees >= 157.5 || degrees < -157.5) { return "S"; }
-        if(degrees >= -157.5 && degrees < -112.5) { return "SW"; }
-        if(degrees >= -112.5 && degrees < -67.5) { return "W"; }
-        if(degrees >= -67.5 && degrees < -22.5) { return "NW"; }
+        if (degrees >= -22.5 && degrees < 22.5) {
+            return "N";
+        }
+        if (degrees >= 22.5 && degrees < 67.5) {
+            return "NE";
+        }
+        if (degrees >= 67.5 && degrees < 112.5) {
+            return "E";
+        }
+        if (degrees >= 112.5 && degrees < 157.5) {
+            return "SE";
+        }
+        if (degrees >= 157.5 || degrees < -157.5) {
+            return "S";
+        }
+        if (degrees >= -157.5 && degrees < -112.5) {
+            return "SW";
+        }
+        if (degrees >= -112.5 && degrees < -67.5) {
+            return "W";
+        }
+        if (degrees >= -67.5 && degrees < -22.5) {
+            return "NW";
+        }
 
         return null;
     }
@@ -1042,12 +1076,12 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void scheduleJob() {
         JobInfo myJob = new JobInfo.Builder(0, new ComponentName(this, NetworkSchedulerService.class))
-                    .setRequiresCharging(true)
-                    .setMinimumLatency(1000)
-                    .setOverrideDeadline(2000)
-                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                    .setPersisted(true)
-                    .build();
+                .setRequiresCharging(true)
+                .setMinimumLatency(1000)
+                .setOverrideDeadline(2000)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .setPersisted(true)
+                .build();
 
         JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
         jobScheduler.schedule(myJob);
@@ -1058,31 +1092,31 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
      * 계단을 올라간 데이터를 서버로 전송
      */
 
-    private void sendDataToServer(int goupAmt ){
+    private void sendDataToServer(int goupAmt) {
         //Toast.makeText(this, "Send to Server2", Toast.LENGTH_SHORT).show();
-        mSleepCnt = 0 ;
+        mSleepCnt = 0;
         mTv_log.setText("save start");
 
         String token = KUtil.getUserToken();
         String buildCode = KUtil.getBuildingCode();
-        if(StringUtil.isEmptyOrWhiteSpace(token) || StringUtil.isEmptyOrWhiteSpace(buildCode)){
+        if (StringUtil.isEmptyOrWhiteSpace(token) || StringUtil.isEmptyOrWhiteSpace(buildCode)) {
             mTv_log.setText("save fail - none buildcode ");
             return;
         }
 
-        AppUserBase user =  DataHolder.instance().getAppUserBase() ;
+        AppUserBase user = DataHolder.instance().getAppUserBase();
         //return;
         try {
             Map<String, Object> query = new HashMap<>();
-            query.put("token",user.getUserToken()) ;
+            query.put("token", user.getUserToken());
             query.put("beacon_uuid", "");
             query.put("major_value", "");
             query.put("minor_value", "");
             query.put("install_floor", "");
             //map.put("beacon_seq", getBeaconSeq());
-            query.put("beacon_seq",  user.getBeacon_seq());
-            if ( user.getBeacon_seq() == 0 ) {
-                DefaultCode.BEACON_SEQ.getValue() ;
+            query.put("beacon_seq", user.getBeacon_seq());
+            if (user.getBeacon_seq() == 0) {
+                DefaultCode.BEACON_SEQ.getValue();
             }
             query.put("stair_seq", user.getStair_seq());
             query.put("build_seq", user.getBuild_seq());
@@ -1094,11 +1128,11 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             query.put("build_code", user.getBuildingCode());
             query.put("godo", mAltitude);
             query.put("goup_amt", goupAmt);
-            query.put("curBuildCount",mCurBuildCount) ;
-            query.put("buildCount",mBuildCount) ;
-            query.put("isbuild",mIsBuild) ;
-            query.put("country",user.getCountry()) ;
-            query.put("city",user.getCity()) ;
+            query.put("curBuildCount", mCurBuildCount);
+            query.put("buildCount", mBuildCount);
+            query.put("isbuild", mIsBuild);
+            query.put("country", user.getCountry());
+            query.put("city", user.getCity());
 
             if (isRedDot) {
                 query.put("start_time", startTime);
@@ -1106,7 +1140,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             }
 
             final String localTime = DateUtil.currentDate("yyyyMMddHHmmss");
-            if(NetworkConnectivityReceiver.isConnected(getApplicationContext())) {
+            if (NetworkConnectivityReceiver.isConnected(getApplicationContext())) {
                 Call<BeaconUuid> call =
                         new DefaultRestClient<App>(getApplicationContext())
                                 .getClient(App.class).sendStairGoUpAmountToServer(query);
@@ -1130,13 +1164,13 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                                 broadcastServerResult(uuid);
                                 mTv_log.setText("broadcastServer ");
 
-                            }else {
+                            } else {
                                 mTv_log.setText("broadcast fail_data ");
 
                                 saveGoUpDataToLocalDb(query, localTime);
                             }
                             //sendBeaconLog(beaconUuid, floorDiff, "go up ", goupSentTime);//층간이동 전송 성공하면 로그 전송
-                        }else {
+                        } else {
                             mTv_log.setText(" fail_data ");
 
                             saveGoUpDataToLocalDb(query, localTime);
@@ -1156,36 +1190,38 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
                     }
                 });
-            }else{
+            } else {
                 saveGoUpDataToLocalDb(query, localTime);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
 
             mTv_log.setText("logic error ");
             sendServiceLog("goup_err:" + Log.getStackTraceString(e));
         }
     }
 
-    /** 서버로 로그 전송 */
-    public synchronized void sendBeaconLog(BeaconUuid bu, int goupAmt, String desc, String logTime){
-        if(bu == null){
+    /**
+     * 서버로 로그 전송
+     */
+    public synchronized void sendBeaconLog(BeaconUuid bu, int goupAmt, String desc, String logTime) {
+        if (bu == null) {
             return;
         }
         Map<String, Object> query = KUtil.getDefaultQueryMap();
         query.put("alti", mAltitude);
-        query.put("device_model", AUtil.getDeviceModel() +"(" + AUtil.getOsReleaseVersion() +")");
+        query.put("device_model", AUtil.getDeviceModel() + "(" + AUtil.getOsReleaseVersion() + ")");
         query.put("app_ver", AUtil.getVersionCode(this, getPackageName()));
         query.put("app_desc", "(" + bu.getOriginalBeaconSeq() + ") " + desc + " notscancnt=" +
                 " ble=" + KUtil.isBluetoothOn() + " gps=" + AUtil.isLocationEnabled(this) +
                 " app_time=" + (logTime == null ? DateUtil.currentDate("yyyyMMdd HHmmss") : logTime));
-        if(bu != null) {
+        if (bu != null) {
             query.put("beacon_seq", bu.getBeaconSeq());
             query.put("minor_value", bu.getMinorValue());
             query.put("build_seq", bu.getBuildSeq());
             query.put("goup_amt", goupAmt);
             //query.put("godo_list", Arrays.toString(mGodoList.toArray(new String[mGodoList.size()])));
             //query.put("godo_index", mGodoIndex);
-        }else{
+        } else {
             query.put("beacon_seq", "0");
             query.put("minor_value", "0");
             query.put("build_seq", "0");
@@ -1199,7 +1235,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         call.enqueue(new Callback<ResponseBase>() {
             @Override
             public void onResponse(Call<ResponseBase> call, Response<ResponseBase> response) {
-                LogUtils.err(TAG, "service log response:" +response.raw().toString());
+                LogUtils.err(TAG, "service log response:" + response.raw().toString());
             }
 
             @Override
@@ -1209,8 +1245,10 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         });
     }
 
-    /** 서버로 로그 전송 */
-    public void sendServiceLog(String msg){
+    /**
+     * 서버로 로그 전송
+     */
+    public void sendServiceLog(String msg) {
         /*if(!Env.Bool.SERVER_LOG_ENABLE.getValue()){
             return;
         }
@@ -1244,36 +1282,37 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
     /**
      * 올라간 층수 데이터 서버전송 성공시 데이터 전파
+     *
      * @param beaconUuid
      */
-    public static void broadcastServerResult(BeaconUuid beaconUuid){
+    public static void broadcastServerResult(BeaconUuid beaconUuid) {
 
         Pref pref = Pref.instance();
 
         //if (!StringUtil.isEmptyOrWhiteSpace(beaconUuid.getMainCharFilename()) ) {
-            pref.saveStringValue(PrefKey.CHARACTER_MAIN, beaconUuid.getMainCharFilename());
+        pref.saveStringValue(PrefKey.CHARACTER_MAIN, beaconUuid.getMainCharFilename());
         //}
         //if(!StringUtil.isEmptyOrWhiteSpace(beaconUuid.getSubCharFilenane())) {
-            pref.saveStringValue(PrefKey.CHARACTER_SUB, beaconUuid.getSubCharFilenane());
+        pref.saveStringValue(PrefKey.CHARACTER_SUB, beaconUuid.getSubCharFilenane());
         //}
 
         //LogUtils.err(TAG, beaconUuid.string());
         //String prevChar = KUtil.getStringPref(PrefKey.CHARACTER_MAIN, "");
         //boolean isMainChracterChanged = !StringUtil.isEquals(prevChar, beaconUuid.getMainCharFilename());
-        boolean isMainChracterChanged = false ;
+        boolean isMainChracterChanged = false;
 
-        String charImageFile = pref.getStringValue(PrefKey.CHARACTER_MAIN,"") ;
+        String charImageFile = pref.getStringValue(PrefKey.CHARACTER_MAIN, "");
 
         // 기존 이미지와 동일 하면 스킵
-        if ( !charImageFile.equals(beaconUuid.getMainCharFilename()) ) {
-            isMainChracterChanged = true ;
+        if (!charImageFile.equals(beaconUuid.getMainCharFilename())) {
+            isMainChracterChanged = true;
         }
 
-        if(isMainChracterChanged) {
+        if (isMainChracterChanged) {
             KUtil.saveStringPref(PrefKey.CHARACTER_MAIN, beaconUuid.getMainCharFilename());
         }
 
-        if(!StringUtil.isEmptyOrWhiteSpace(beaconUuid.getSubCharFilenane())) {
+        if (!StringUtil.isEmptyOrWhiteSpace(beaconUuid.getSubCharFilenane())) {
             KUtil.saveStringPref(PrefKey.CHARACTER_SUB, beaconUuid.getSubCharFilenane());
         }
 
@@ -1287,11 +1326,12 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
     /**
      * 계단 올라간 데이터 서버전송 실패하면 로컬에 저장 후 네트워크가 안정화 되면 전송
+     *
      * @param goupData
      */
-    private void saveGoUpDataToLocalDb(Map<String, Object> goupData, String localTime){
+    private void saveGoUpDataToLocalDb(Map<String, Object> goupData, String localTime) {
         goupData.put("app_time", localTime);
-        if(KsDbWorker.insertFailData(getApplicationContext(), goupData)){
+        if (KsDbWorker.insertFailData(getApplicationContext(), goupData)) {
             BusProvider.instance().post(
                     new KsEvent<Map<String, Object>>()
                             .setType(KsEvent.Type.UPDATE_FLOOR_AMOUNT_FAIL)
@@ -1323,18 +1363,20 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         super.onStop();
     }
 
-    /** 배터리 최적화 대상 확인 */
-    private void checkBatteryWhiteList(){
+    /**
+     * 배터리 최적화 대상 확인
+     */
+    private void checkBatteryWhiteList() {
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         boolean isWhiteListing = false;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             isWhiteListing = pm.isIgnoringBatteryOptimizations(getPackageName());
             LogUtils.err(TAG, "white list=" + isWhiteListing);
-            if(!isWhiteListing) {
+            if (!isWhiteListing) {
                 //startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS));
 
-                Intent intent  = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                intent.setData(Uri.parse("package:"+ getPackageName()));
+                Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + getPackageName()));
                 startActivity(intent);
             }
 
@@ -1343,17 +1385,18 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
     /**
      * 로그인 상태인가 검사
+     *
      * @return
      */
-    private boolean checkLogin(){
+    private boolean checkLogin() {
         return KUtil.hasUserToken() && KUtil.hasUserId();
     }
 
     /**
      * 블루투스 ON 확인
      */
-    private void checkBluetoothOn(){
-        if(!KUtil.isBluetoothOn()){
+    private void checkBluetoothOn() {
+        if (!KUtil.isBluetoothOn()) {
             Acceptor acceptor = new AbstractAcceptor() {
                 @Override
                 public void accept() {
@@ -1379,7 +1422,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         View.OnClickListener clickListener = new ClickListener(this);
         getView(R.id.btn_navi_close).setOnClickListener(clickListener);
         getView(R.id.btn_setting).setOnClickListener(clickListener);
-        for( int va : mMenuIds ){
+        for (int va : mMenuIds) {
             getView(va).setOnClickListener(clickListener);
         }
 
@@ -1405,7 +1448,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     @Override
     public void performClick(View view) {
         int id = view.getId();
-        switch (id){
+        switch (id) {
             case R.id.btn_navi_close://drawer close
                 onBackPressed();
                 break;
@@ -1465,12 +1508,12 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 //displayFragment(Env.FragmentType.INFO_SETTING);
                 onBackPressed();
 
-                Bundle data = new Bundle() ;
-                data.putBoolean("selectmode",true);
-                callActivity(GPSAcceptActivity.class,data,false);
+                Bundle data = new Bundle();
+                data.putBoolean("selectmode", true);
+                callActivity(GPSAcceptActivity.class, data, false);
                 startMeasure(false);
-                app.push = null ;
-                mFinishFlag = true ;
+                app.push = null;
+                mFinishFlag = true;
                 finish();
                 break;
             case R.id.btn_setting://개인정보 설정
@@ -1542,7 +1585,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         String title = getString(R.string.app_name);
         int code = type.code();
 
-        switch(code){
+        switch (code) {
             case 100://HOME
                 fragment = MainFragment.newInstance(this, mTodayActivity);
                 title = DateUtil.currentDate("yyyy.MM.dd");
@@ -1560,7 +1603,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 title = getString(R.string.txt_ranking_private);
                 break;
             case 601://RANKING_GROUP
-                AppUserBase  user = DataHolder.instance().getAppUserBase() ;
+                AppUserBase user = DataHolder.instance().getAppUserBase();
                 if (!user.getCust_build_seq().equals(user.getBuild_seq())) {
                     showWarnPopup("카페가입후 사용 가능합니다.");
                     break;
@@ -1585,13 +1628,13 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 break;
         }
 
-        if( fragment != null ){
+        if (fragment != null) {
             mFragmentCurrent = fragment;
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             //transaction.setCustomAnimations(R.anim.slide_in_right, 0, 0, R.anim.slide_out_right);
-            if(!isHomeScreen()) {
+            if (!isHomeScreen()) {
                 /*transaction.setCustomAnimations(
                         R.anim.slide_in_right,//enter
                         R.anim.fade_out,//exit
@@ -1603,7 +1646,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                         R.anim.slide_out_left,
                         R.anim.slide_in_left, R.anim.slide_out_right);*/
                 findViewById(R.id.LayoutPause).setVisibility(View.INVISIBLE);
-            }else{
+            } else {
                 /*if (isSleep)
                 findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
 
@@ -1619,9 +1662,9 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             transaction.commit();
 
             setNavigationTitle(title);
-            if(isHomeScreen()){
+            if (isHomeScreen()) {
                 // 백그라운드 색상 변경
-                /*SharedPreferences prefr = getSharedPreferences("backgroundColor", MODE_PRIVATE);
+                SharedPreferences prefr = getSharedPreferences("backgroundColor", MODE_PRIVATE);
                 int initColor = prefr.getInt("backgroundColor", -99);
                 Log.d("DDDDDDDDDDDDD", initColor + "");
                 if (initColor != -99) {
@@ -1632,11 +1675,11 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 } else {
                     mToolBar.setBackgroundColor(getCompanyColor());
                     toggleDrawerIcon(true);
-                }*/
+                }
 
-                mToolBar.setBackgroundColor(getCompanyColor());
-                toggleDrawerIcon(true);
-            }else{
+                /*mToolBar.setBackgroundColor(getCompanyColor());
+                toggleDrawerIcon(true);*/
+            } else {
                 toggleDrawerIcon(false);
                 lockDrawerLayout(true);
             }
@@ -1644,23 +1687,25 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         }
     }
 
-    private boolean isHomeScreen(){
+    private boolean isHomeScreen() {
         return mFragmentCurrent != null &&
                 mFragmentCurrent instanceof MainFragment;
     }
+
     public boolean mFinishFlag;
+
     @Override
     public void onBackPressed() {
-        if( mDrawer.isDrawerOpen(Gravity.START)){
+        if (mDrawer.isDrawerOpen(Gravity.START)) {
             mDrawer.closeDrawer(Gravity.START);
-        }else {
+        } else {
             //Log.d("backstack count=" + getSupportFragmentManager().getBackStackEntryCount());
             int backStackCount = getSupportFragmentManager().getBackStackEntryCount();
             LogUtils.err(TAG, "back stack count=" + backStackCount);
-            if( isHomeScreen() || backStackCount == 1 ){
-                if(mFinishFlag) {
+            if (isHomeScreen() || backStackCount == 1) {
+                if (mFinishFlag) {
                     finish();
-                }else{
+                } else {
                     //toast("한번 더 누르시면 종료됩니다.");
                     mFinishFlag = true;
                     new Handler().postDelayed(new Runnable() {
@@ -1670,9 +1715,9 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                         }
                     }, 3000);
                 }
-            }else {
+            } else {
                 FragmentManager.BackStackEntry
-                        entry = getSupportFragmentManager().getBackStackEntryAt(backStackCount-1);
+                        entry = getSupportFragmentManager().getBackStackEntryAt(backStackCount - 1);
                 String title = entry.getName().split("-")[0];
                 setNavigationTitle(title);
                 toggleDrawerIcon(true);
@@ -1681,7 +1726,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 getSupportFragmentManager().popBackStackImmediate();
 
                 //if (isSleep)
-                 //   findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
+                //   findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
 
                 /*if(isMyServiceRunning(StepCounterService.class)) {
                     // 자동측정중이면
@@ -1690,7 +1735,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 }*/
 
                 LogUtils.err(TAG, entry.getName());
-                if(backStackCount <= 2 ){
+                if (backStackCount <= 2) {
                     setNavigationTitle(DateUtil.currentDate("yyyy.MM.dd"));
                     toggleActionBarResources(true);
                     //fireMainRefreshEvent();
@@ -1705,48 +1750,34 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     }
 
 
-    private void fireMainRefreshEvent(){
-        new Handler().postDelayed(()->{
+    private void fireMainRefreshEvent() {
+        new Handler().postDelayed(() -> {
             BusProvider.instance().post(new KsEvent<>().setType(KsEvent.Type.MAIN_REFRESH));
         }, 100);
     }
 
 
-
     @Override
     protected void onDestroy() {
-//        if (!isMyServiceRunning(StepCounterService.class)) {
-//            LogUtils.err(TAG, "MainActivity#onDestroy()");
-//            stopService(new Intent(getBaseContext(), BeaconRagingInRegionService.class));
-//            stopService(new Intent(getBaseContext(), StepSensorService.class));
-//            mStepManager.stopMeasure();
-//            //unregisterReceiver(mExitReceiver);
-//            LocalBroadcastManager.getInstance(this).unregisterReceiver(mCharacterChangeReceiver);
-//            /*try {
-//                BusProvider.instance().unregister(this);
-//            }catch(IllegalArgumentException e){}*/
-//
-//        }
         LogUtils.err(TAG, "MainActivity#onDestroy()");
-        stopService(new Intent(getBaseContext(), BeaconRagingInRegionService.class));
-        stopService(new Intent(getBaseContext(), StepSensorService.class));
+//        stopService(new Intent(getBaseContext(), BeaconRagingInRegionService.class));
+//        stopService(new Intent(getBaseContext(), StepSensorService.class));
         unregisterReceiver(mExitReceiver);
+        unregisterReceiver(mIsAppBackgroundReceiver);
         unregisterReceiver(restartService);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mCharacterChangeReceiver);
 
-        mStarted = false;
+ /*       mStarted = false;
         startMeasure(mStarted);
-        handler.removeCallbacks(runnable);
+        handler.removeCallbacks(runnable);*/
 
         super.onDestroy();
-
-        //unregisterReceiver(restartService);
     }
 
     @Override
     protected void onPause() {
         LogUtils.err(TAG, "MainActivity#onPause()");
-        isActivity = false ;
+        isActivity = false;
 
         stopService(new Intent(getBaseContext(), BeaconRagingInRegionService.class));
         stopService(new Intent(getBaseContext(), StepSensorService.class));
@@ -1757,31 +1788,52 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         super.onPause();
     }
 
+    private void selectBgColor(int n) {
+        int bglist[] = DataHolder.instance().getBgColors() ;
+        for(int i=0 ; i< 10 ;i++ ) {
+            Button tv = (Button) mRootView.findViewWithTag("21" + String.format("%02d",i+1) )  ;
+            if (tv == null ) {
+                continue;
+            }
+            if ( i == n) {
+                GradientDrawable gd = new GradientDrawable();
+                gd.setColor(getResources().getColor(bglist[i]));
+                gd.setCornerRadius(0);
+                gd.setStroke(8, 0xFF28B8F5);
+                tv.setBackground(gd);
+
+            } else {
+                tv.setBackgroundColor(getResources().getColor(bglist[i]));
+            }
+        }
+
+    }
 
     @Override
     protected void onResume() {
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(mCharacterChangeReceiver, new IntentFilter(Env.Action.CHARACTER_CHANGED_ACTION.action()));
 
-        isActivity = true ;
+        isActivity = true;
         //BusProvider.instance().register(this);
         LogUtils.err(TAG, "MainActivity#onResume()");
         //startService(new Intent(getBaseContext(), BeaconRagingInRegionService.class));
 
 
-        /*SharedPreferences prefr = getSharedPreferences("backgroundColor", MODE_PRIVATE);
+        SharedPreferences prefr = getSharedPreferences("backgroundColor", MODE_PRIVATE);
         int initColor = prefr.getInt("backgroundColor", -99);
-        Log.d("DDDDDDDDDDDDD22", initColor + "");
+
         if (initColor != -99) {
             int bglist[] = DataHolder.instance().getBgColors() ;
-            changeColorsBySharedPreferences(getResources().getColor(bglist[initColor]));
-            mToolBar.setBackgroundColor(getResources().getColor(bglist[initColor]));
+            Pref.instance().saveIntValue (PrefKey.COMPANY_COLOR_NUM,initColor);
+            selectBgColor(initColor);
+            changeColors();
         } else {
             changeColors();
             mToolBar.setBackgroundColor(getCompanyColor());
-        }*/
-        changeColors();
-        mToolBar.setBackgroundColor(getCompanyColor());
+        }
+        /*changeColors();
+        mToolBar.setBackgroundColor(getCompanyColor());*/
 
 
         updateCharacter();
@@ -1793,9 +1845,9 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         }
 
         if (app.isInit) {  // 다시 화면 빠졌다 들어오면 락 클리어
-            app.isInit = false ;
+            app.isInit = false;
             app.getmBLocationManager().registerLocationUpdates();
-            app.getmBLocationManager().mDelegateFindLocation = this ;
+            app.getmBLocationManager().mDelegateFindLocation = this;
         } else {
             /*if(!isMyServiceRunning(StepCounterService.class)) {
                 startMeasure(true);
@@ -1808,10 +1860,10 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
         if (app.push != null) {
 
-            String pushtype =  app.push.getStringData("push_type") ;
+            String pushtype = app.push.getStringData("push_type");
             if (pushtype == null) {
-                app.push = null ;
-                return ;
+                app.push = null;
+                return;
             }
 
             Thread thread = new Thread() {
@@ -1825,12 +1877,12 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            app.push = null ;
+                            app.push = null;
                             if (pushtype.equals("JERSEY_GOLD") || pushtype.equals("JERSEY_GREEN")
-                                    || pushtype.equals("JERSEY_REDDOT")  || pushtype.equals("FIRST_CHALLENGE")   ) {
+                                    || pushtype.equals("JERSEY_REDDOT") || pushtype.equals("FIRST_CHALLENGE")) {
                                 callActivity(NoticeRankingActivity.class, false);
                             } else {
-                                callActivity(NoticeEventActivity.class,  false);
+                                callActivity(NoticeEventActivity.class, false);
 
                             }
                         }
@@ -1838,21 +1890,21 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 }
             };
             thread.start();
-            app.push = null ;
+            app.push = null;
         }
 
         measureStart();
     }
 
-    private void setBeaconManagerMode(boolean mode){
+    private void setBeaconManagerMode(boolean mode) {
         /*KoswApp app = (KoswApp)getApplication();
         if(app.isBeaconManagerBound()){
             app.setModeBackground(mode);
         }*/
     }
 
-    private void sendFcmToken(){
-        if(KUtil.isFcmTokenRefreshed()){
+    private void sendFcmToken() {
+        if (KUtil.isFcmTokenRefreshed()) {
             Map<String, Object> query = KUtil.getDefaultQueryMap();
             query.put("fcmToken", KUtil.getStringPref(PrefKey.FCM_TOKEN, ""));
             Call<ResponseBase> call =
@@ -1862,13 +1914,14 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 @Override
                 public void onResponse(Call<ResponseBase> call, Response<ResponseBase> response) {
                     LogUtils.err(TAG, response.raw().toString());
-                    if(response.isSuccessful() && response.body().isSuccess()) {
+                    if (response.isSuccessful() && response.body().isSuccess()) {
                         Pref.instance().saveBooleanValue(PrefKey.FCM_TOKEN_REFRESHED, false);
                     }
                 }
 
                 @Override
-                public void onFailure(Call<ResponseBase> call, Throwable t) {}
+                public void onFailure(Call<ResponseBase> call, Throwable t) {
+                }
             });
         }
     }
@@ -1878,12 +1931,12 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         /* 닉네임, 아이디 노출 */
         TextView nick = getView(R.id.txt_name);
 
-        Profile pf =  DataHolder.instance().getProfile();
-        AppUserBase user =  DataHolder.instance().getAppUserBase() ;
+        Profile pf = DataHolder.instance().getProfile();
+        AppUserBase user = DataHolder.instance().getAppUserBase();
 
         nick.setText(KUtil.getStringPref(PrefKey.USER_NICK, "계단왕"));
 
-        if  (pf != null ) {
+        if (pf != null) {
             nick.setText(pf.getNickName());
         }
 
@@ -1902,29 +1955,29 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         Glide.with(this)
                 .applyDefaultRequestOptions(KUtil.getGlideCacheOption())
                 .load(imgUrl).thumbnail(.5f).into(cv);
-                //KUtil.getMyCharacterUrl(false)).thumbnail(.5f).into(cv);
+        //KUtil.getMyCharacterUrl(false)).thumbnail(.5f).into(cv);
     }
 
     /**
      * 선택된 회사의 색상과, 현재 상태의 회원 메인화면 캐릭터 변경
+     *
      * @param event
      */
     @Subscribe
-    public void acceptEvent(KsEvent event){
-        if(KsEvent.Type.CHANGE_COLOR == event.getType()){//선택된 회사 색상으로 변경
+    public void acceptEvent(KsEvent event) {
+        if (KsEvent.Type.CHANGE_COLOR == event.getType()) {//선택된 회사 색상으로 변경
             changeColors();//status bar, action bar, content area background color 변경
-        }else if(KsEvent.Type.CHANGE_CHARACTER == event.getType()){//현재 상태의 메인 캐릭터 변경
+        } else if (KsEvent.Type.CHANGE_CHARACTER == event.getType()) {//현재 상태의 메인 캐릭터 변경
             updateCharacter();
-        }else if(KsEvent.Type.MAIN_PUSH == event.getType()){
-            Push push = (Push)event.getValue();
+        } else if (KsEvent.Type.MAIN_PUSH == event.getType()) {
+            Push push = (Push) event.getValue();
             LogUtils.err(TAG, "push on main : " + push.string());
         }
     }
 
 
-
     @Override
-    public void clearNotificationBadge(){
+    public void clearNotificationBadge() {
         ShortcutBadger.removeCount(MainActivity.this);
         Pref.instance().saveIntValue(PrefKey.FCM_BADGE_COUNT, 0);
     }
@@ -1943,14 +1996,14 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         //Gps start
 
         app.getmBLocationManager().registerLocationUpdates();
-        app.getmBLocationManager().mDelegateFindLocation = this ;
+        app.getmBLocationManager().mDelegateFindLocation = this;
 
-        LogUtils.d(TAG,"onPermissionsGranted:" + requestCode + ":" + perms.size());
+        LogUtils.d(TAG, "onPermissionsGranted:" + requestCode + ":" + perms.size());
     }
 
     @Override
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-        LogUtils.d(TAG,"onPermissionsDenied:" + requestCode + ":" + perms.size());
+        LogUtils.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
         toast(R.string.permission_denied);
         finish();
         /*// (Optional) Check whether the user denied any permissions and checked "NEVER ASK AGAIN."
@@ -1961,11 +2014,11 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     }
 
     @Override
-    public void findLocation(Location loc, Address addr ) {
+    public void findLocation(Location loc, Address addr) {
 
 
-        mLocation = loc ;
-        mAddr = addr ;
+        mLocation = loc;
+        mAddr = addr;
 
         if (isTest) {
             if (mAddr != null && mAddr.getAddressLine(0) != null) {
@@ -1983,7 +2036,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
         //android.util.Log.v("kmj",s_addr ) ;
 
-        if ( StringUtil.isEmptyOrWhiteSpace(s_lat) || StringUtil.isEmptyOrWhiteSpace(s_lng)  || s_lat.equals("null")  || s_lng.equals("null")  ) {
+        if (StringUtil.isEmptyOrWhiteSpace(s_lat) || StringUtil.isEmptyOrWhiteSpace(s_lng) || s_lat.equals("null") || s_lng.equals("null")) {
 
         } else {
             Location s_loc = new Location("dbplace");
@@ -2000,7 +2053,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         }
 
         app.getmBLocationManager().registerLocationUpdates();
-        app.getmBLocationManager().mDelegateFindLocation = this ;
+        app.getmBLocationManager().mDelegateFindLocation = this;
 
     }
 
@@ -2059,10 +2112,12 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         final String packageName = getPackageName();
         for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
             if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
-                && appProcess.processName.equals(packageName)) {
+                    && appProcess.processName.equals(packageName)) {
                 return true;
             }
         }
         return false;
     }
+
+
 }

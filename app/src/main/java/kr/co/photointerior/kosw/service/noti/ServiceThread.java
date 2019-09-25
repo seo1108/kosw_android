@@ -97,36 +97,23 @@ public class ServiceThread extends Thread {
                 Log.d("DDDDDDDDDDDDDDDDD", "isFore : " + isback);
 
 
-
-
-
                 SharedPreferences pref = mContext.getSharedPreferences("background", MODE_PRIVATE);
                 String background = pref.getString("background", "auto");
 
+                if (!isMyServiceRunning(StepCounterService.class)) {
+                    Intent startintent = new Intent(mContext, StepCounterService.class);
+                    mContext.startService(startintent);
+                }
+
                 // 앱이 백그라운드 실행중이고, 측정서비스가 미구동시 서비스 실행
-                if (!isAppOnForeground()) {
+                /*if (!isAppOnForeground()) {
                     if (!isMyServiceRunning(StepCounterService.class)) {
-                  /*      Intent startintent = new Intent(mContext, StepCounterService.class);
-                        mContext.stopService(startintent);
-                        Thread.sleep(1000);
-                        mContext.startService(startintent);*/
                         Intent startintent = new Intent(mContext, StepCounterService.class);
                         mContext.startService(startintent);
                     }
-
-                    // 서비스 실행 후, 30분이 지나면, 서비스 재시작
-                    /*if (mServiceCnt > 30) {
-                        Intent startintent = new Intent(mContext, StepCounterService.class);
-                        mContext.stopService(startintent);
-                        Thread.sleep(5000);
-                        mContext.startService(startintent);
-
-                        mServiceCnt = 0;
-                    }*/
-                    //LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Env.Action.APP_IS_BACKGROUND_ACTION.action()));
                 } else {
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Env.Action.APP_IS_BACKGROUND_ACTION.action()));
-                }
+                }*/
 
                 // 1시간에 한번씩 전송체크
                 if (mWalkinfInfoCnt > 60) {
@@ -333,7 +320,7 @@ public class ServiceThread extends Thread {
                 dumpDataSet(dataSet);
             }
         } else {
-            updateNotification();
+            //updateNotification();
         }
         // [END parse_read_data_result]
     }

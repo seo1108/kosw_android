@@ -58,12 +58,17 @@ public class NotiService extends Service {
         SharedPreferences prefr = getSharedPreferences("background", MODE_PRIVATE);
         String background = prefr.getString("background", "auto");
 
-        if ("auto".equals(background)) {
+        Intent startintent = new Intent(this, StepCounterService.class);
+        startService(startintent);
+
+        //Toast.makeText(mContext, "측정 서비스 재시작 byNotiService", Toast.LENGTH_SHORT).show();
+
+        /*if ("auto".equals(background)) {
             Intent startintent = new Intent(this, StepCounterService.class);
             startService(startintent);
 
             Toast.makeText(mContext, "측정 서비스 재시작 byNotiService", Toast.LENGTH_SHORT).show();
-        }
+        }*/
 
         buildNotification();
         return Service.START_STICKY;
@@ -168,7 +173,8 @@ public class NotiService extends Service {
         notificationChannelSupport.createNotificationChannel(getApplicationContext(), AppConst.NOTIFICATION_CHANNEL_ID);
 
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         PendingIntent contentPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 

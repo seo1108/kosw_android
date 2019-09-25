@@ -13,6 +13,7 @@ import android.location.Address;
 import android.location.Location;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
@@ -54,6 +55,7 @@ import kr.co.photointerior.kosw.service.net.NetworkConnectivityReceiver;
 import kr.co.photointerior.kosw.ui.LoginActivity;
 import kr.co.photointerior.kosw.ui.MainActivity;
 import kr.co.photointerior.kosw.ui.fragment.BaseFragment;
+import kr.co.photointerior.kosw.ui.fragment.MainFragment;
 import kr.co.photointerior.kosw.utils.DateUtil;
 import kr.co.photointerior.kosw.utils.KUtil;
 import kr.co.photointerior.kosw.utils.LogUtils;
@@ -65,8 +67,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.Context.ACTIVITY_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
 import static android.content.Context.NOTIFICATION_SERVICE;
+import static android.content.Context.POWER_SERVICE;
 
 public class StepThread extends Thread {
     private String TAG = LogUtils.makeLogTag(StepThread.class);
@@ -236,10 +240,11 @@ public class StepThread extends Thread {
 
         //if (0 == cnt%15)  mMeasureStep = 0;
 
-        // 30초 이상 걷기 없으면 잠금
-        if (cnt >= 10 * 30 )  {
+        // 25초 이상 걷기 없으면 잠금
+        if (cnt >= 10 * 25 )  {
             if (mSaveStep <=  0 ) { // 걷기중이아니면
-                //Toast.makeText(mContext, "걷기중이아니면", Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(mContext, "25초 초기화", Toast.LENGTH_SHORT).show();
                 // 원본소스
                 mSleepCnt = mMaxSleepCnt;
                 sleepMode = 0 ;
@@ -255,7 +260,6 @@ public class StepThread extends Thread {
             }
 
            else {  // 120초이상 측정이 없으면 측정 잠금  mSleepCnt >= 4
-                Toast.makeText(mContext, "걷기 중 초기화", Toast.LENGTH_SHORT).show();
                 sleepMode = 1 ;
                 mSleepCnt++ ;
                 initMeasure();
@@ -311,6 +315,7 @@ public class StepThread extends Thread {
                 // 수동측정은 2초
                 long curTime = System.currentTimeMillis();
                 if (cnt < 30 || (curTime - goupTime) < 6000) {
+                    Toast.makeText(mContext, "엘리베이터 5초", Toast.LENGTH_SHORT).show();
                     mSleepCnt++ ;
                     initMeasure();
                     return;
@@ -319,8 +324,23 @@ public class StepThread extends Thread {
                 if (step > 1) { // 걷기중이면
 
                     AppUserBase user = DataHolder.instance().getAppUserBase() ;
-                    mCurBuildCount = user.getBuild_floor_amt() ;
-                    mIsBuild = user.getIsbuild() ;
+                    SharedPreferences prefr = mContext.getSharedPreferences("userInfo", MODE_PRIVATE);
+
+                    try {
+                        mCurBuildCount = user.getBuild_floor_amt();
+                    } catch (Exception ex) {
+                        if (null == prefr) {
+                            mCurBuildCount = 1000;
+                        } else {
+                            mCurBuildCount = prefr.getInt("curBuildCount", 1000);
+                        }
+                    }
+
+                    try {
+                        mIsBuild = user.getIsbuild() ;
+                    } catch (Exception ex) {
+                        mIsBuild = "Y";
+                    }
 
                     if (gapAlitude > 0) {
                         mFloor++;
@@ -353,7 +373,7 @@ public class StepThread extends Thread {
                         }
 
                         goupTime = System.currentTimeMillis() ;
-                        sendDataToServer(1);
+                        sendDataToServer(1, "building");
                     } else {
                         mBuildCount = 0 ;
                         mClimbCount = 0 ;
@@ -365,7 +385,7 @@ public class StepThread extends Thread {
                             //getTextView(R.id.txt_m).setText(m);
                         }
                         goupTime = System.currentTimeMillis() ;
-                        sendDataToServer(1);
+                        sendDataToServer(1, "building");
                     }
 
                     // 90이상이면 높이는 클리어  방향은 보존
@@ -462,8 +482,24 @@ public class StepThread extends Thread {
                     if (gapAlitude > 0) {
 
                         AppUserBase user = DataHolder.instance().getAppUserBase() ;
-                        mCurBuildCount = user.getBuild_floor_amt() ;
-                        mIsBuild = user.getIsbuild() ;
+                        SharedPreferences prefr = mContext.getSharedPreferences("userInfo", MODE_PRIVATE);
+
+                        try {
+                            mCurBuildCount = user.getBuild_floor_amt();
+                        } catch (Exception ex) {
+                            if (null == prefr) {
+                                mCurBuildCount = 1000;
+                            } else {
+                                mCurBuildCount = prefr.getInt("curBuildCount", 1000);
+                            }
+                        }
+
+                        try {
+                            mIsBuild = user.getIsbuild() ;
+                        } catch (Exception ex) {
+                            mIsBuild = "Y";
+                        }
+
                         mClimbCount++;
                         mLogicCount = 0 ;
 
@@ -484,7 +520,7 @@ public class StepThread extends Thread {
                                 }
 
                                 goupTime = System.currentTimeMillis();
-                                sendDataToServer(1);
+                                sendDataToServer(1, "notbuilding");
                             }
                         } else {
                             mBuildCount++ ;
@@ -502,7 +538,7 @@ public class StepThread extends Thread {
                                 //getTextView(R.id.txt_m).setText(m);
                             }
                             goupTime = System.currentTimeMillis();
-                            sendDataToServer(1);
+                            sendDataToServer(1, "notbuilding");
                         }
                     } else {
                         mBuildCount = 0 ;
@@ -516,7 +552,7 @@ public class StepThread extends Thread {
                                 //getTextView(R.id.txt_m).setText(m);
                             }
                             goupTime = System.currentTimeMillis();
-                            sendDataToServer(1);
+                            sendDataToServer(1, "notbuilding");
                         }
                     }
                     initMeasure();
@@ -564,7 +600,6 @@ public class StepThread extends Thread {
         // 5분 지나면 잠금
         if (mSleepCnt >= mMaxSleepCnt ) {
             mMeasureStep = 0;
-            Toast.makeText(mContext, "초기화", Toast.LENGTH_SHORT).show();
             isSleep = true;;
             mSleepCnt = 0  ;
             mStarted = false ;
@@ -620,6 +655,14 @@ public class StepThread extends Thread {
 
             if (user != null) {
                 mCurBuildCount = user.getBuild_floor_amt(); // 현재 빌딩층수 (높이)
+            } else {
+                SharedPreferences prefr = mContext.getSharedPreferences("userInfo", MODE_PRIVATE);
+
+                if (null == prefr) {
+                    mCurBuildCount = 1000;
+                } else {
+                    mCurBuildCount = prefr.getInt("curBuildCount", 1000);
+                }
             }
 
             if (!isSleep) {
@@ -680,72 +723,6 @@ public class StepThread extends Thread {
         mAltitude = altitude;
     }
 
-    public void setCurrentStep(double val  ){
-        mStep += val;
-        mTrashStep += val;
-        mMeasureStep++;
-        Log.d("999999999999777771", "[stepsensor]" + mMeasureStep + " " + mStarted);
-        if (!mStarted && mMeasureStep > 20) {
-            Toast.makeText(mContext, "측정서비스재시작 " + mMeasureStep, Toast.LENGTH_SHORT).show();
-            mMeasureStep = 0;
-            restartTracking();
-        }
-    }
-
-    private void restartTracking() {
-
-        Log.d("999999999999777771", "[stepsensor] 측정시작 " + mMeasureStep + " " + mStarted);
-        startMeasure(false);
-
-        Intent startintent = new Intent(mContext, StepCounterService.class);
-        mContext.stopService(startintent);
-
-        /*try {
-            Toast.makeText(mContext, "자동 측정재시작", Toast.LENGTH_SHORT);
-            Thread.sleep(2000);
-            mContext.stopService(startintent);
-        } catch (Exception e) { }*/
-
-        try {
-            Thread.sleep(2000);
-            mContext.startService(startintent);
-        } catch (Exception e) { }
-
-
-
-        /*try {
-            Log.d("stepsensor", "STOP_RE");
-            mStepManager.stopMeasure();
-            mStepManager = null;
-        } catch (Exception ex) {
-            Log.d("stepsensor", ex.toString());
-        }
-
-        try { Thread.sleep(1000); } catch (Exception e) { }
-
-        startMeasure(false);
-        mStarted = true;
-
-        cnt = 0;
-        mMeasureStep = 0;
-
-        startMeasure(true);
-        mStartList.clear();
-        for (int i = 0; i < 600; i++) {
-            mStartList.add(new MeasureObj());
-        }
-
-
-*/
-    }
-
-    public void setCurrentOrientation2(double x ,double y, double z  ){
-        mX = x;
-        mY = y;
-        mZ = z;
-        //displayAlti();
-    }
-
     public void setCurrentAltitude2(double altitude){
         mAltitude2 = altitude;
     }
@@ -755,21 +732,70 @@ public class StepThread extends Thread {
         mOrientation = val;
     }
 
+    public void setCurrentOrientation2(double x ,double y, double z  ){
+        mX = x;
+        mY = y;
+        mZ = z;
+        //displayAlti();
+    }
 
+    public void setCurrentStep(double val  ){
+        mStep += val;
+        mTrashStep += val;
+        mMeasureStep++;
+        Log.d("999999999999777771", "[stepsensor]" + mMeasureStep + " " + mStarted);
+        /*if (!mStarted && mMeasureStep > 20) {
+            Toast.makeText(mContext, "측정서비스재시작 " + mMeasureStep, Toast.LENGTH_SHORT).show();
+            mMeasureStep = 0;
+            restartTracking();
+        }*/
+        if (!mStarted) {
+            restartTracking();
+        }
+    }
+
+    private void restartTracking() {
+        Toast.makeText(mContext, "[stepsensor] restartTracking", Toast.LENGTH_SHORT);
+        Log.d("999999999999777771", "[stepsensor] restartTracking " + mMeasureStep + " " + mStarted);
+        startMeasure(false);
+
+        Intent startintent = new Intent(mContext, StepCounterService.class);
+        mContext.stopService(startintent);
+
+        stopForever();
+
+        /*try {
+            Toast.makeText(mContext, "자동 측정재시작", Toast.LENGTH_SHORT);
+            Thread.sleep(2000);
+            mContext.stopService(startintent);
+        } catch (Exception e) { }*/
+
+        try {
+            Thread.sleep(1000);
+            mContext.startService(startintent);
+        } catch (Exception e) { }
+
+    }
+
+    private void sendScreenRefresh() {
+        Log.d("DDDDDDDDDDDDDDDDDD", "stairUp-SEND");
+
+        mContext.sendBroadcast(new Intent(Env.Action.APP_IS_BACKGROUND_ACTION.action()));
+    }
 
     /**
      * 계단을 올라간 데이터를 서버로 전송
      */
 
-    private void sendDataToServer(int goupAmt ){
+    private void sendDataToServer(int goupAmt, String type) {
         // 5걸음 이상 걷지 않았을 경우, 계단수에서 빼도록 처리
         /*if (mTrashStep < 10) {
             return;
         }*/
 
-        if (mSaveStep <=  10 ) {
+       /* if (mSaveStep <=  10 ) {
             return;
-        }
+        }*/
 
 
 
@@ -790,13 +816,21 @@ public class StepThread extends Thread {
         String userToken = prefr.getString("token", "");
         if ("".equals(userToken)) return;
 
-
         MediaPlayer mMediaPlayer = new MediaPlayer();
-        Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.alert);
+
         try {
-            mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
-            mMediaPlayer.prepare();
-            mMediaPlayer.start();
+            if ("building".equals(type)) {
+                Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.alert);
+                mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+                mMediaPlayer.prepare();
+                mMediaPlayer.start();
+            } else {
+                Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.alert2);
+                mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+                mMediaPlayer.prepare();
+                mMediaPlayer.start();
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -811,8 +845,12 @@ public class StepThread extends Thread {
             query.put("install_floor", "");
             //map.put("beacon_seq", getBeaconSeq());
             query.put("beacon_seq", prefr.getInt("beacon_seq", 0));
-            if ( user.getBeacon_seq() == 0 ) {
-                DefaultCode.BEACON_SEQ.getValue() ;
+            try {
+                if (user.getBeacon_seq() == 0) {
+                    DefaultCode.BEACON_SEQ.getValue();
+                }
+            } catch (Exception e) {
+                DefaultCode.BEACON_SEQ.getValue();
             }
             query.put("stair_seq", prefr.getInt("stair_seq", 0));
             query.put("build_seq", prefr.getString("build_seq", "")) ;
@@ -827,8 +865,8 @@ public class StepThread extends Thread {
             query.put("curBuildCount",mCurBuildCount) ;
             query.put("buildCount",mBuildCount) ;
             query.put("isbuild",mIsBuild) ;
-            query.put("country",user.getCountry()) ;
-            query.put("city",user.getCity()) ;
+            query.put("country", prefr.getString("country", "대한민국")) ;
+            query.put("city", prefr.getString("city", "서울특별시")) ;
 
             if (isRedDot) {
                 query.put("start_time", startTime);
@@ -864,10 +902,11 @@ public class StepThread extends Thread {
                             }
                             //sendBeaconLog(beaconUuid, floorDiff, "go up ", goupSentTime);//층간이동 전송 성공하면 로그 전송
 
+
                             // 노티피케이션 업데이트
                             requestgetActivityRecords();
-
-
+                            // 메인 화면 업데이트
+                            sendScreenRefresh();
 
 
                         }else {
@@ -893,13 +932,17 @@ public class StepThread extends Thread {
      * @param goupData
      */
     private void saveGoUpDataToLocalDb(Map<String, Object> goupData, String localTime){
-        goupData.put("app_time", localTime);
-        if(KsDbWorker.insertFailData(mContext, goupData)){
-            BusProvider.instance().post(
-                    new KsEvent<Map<String, Object>>()
-                            .setType(KsEvent.Type.UPDATE_FLOOR_AMOUNT_FAIL)
-                            .setValue(goupData)
-                            .setMainCharacterChanged(false));
+        try {
+            goupData.put("app_time", localTime);
+            if (KsDbWorker.insertFailData(mContext, goupData)) {
+                BusProvider.instance().post(
+                        new KsEvent<Map<String, Object>>()
+                                .setType(KsEvent.Type.UPDATE_FLOOR_AMOUNT_FAIL)
+                                .setValue(goupData)
+                                .setMainCharacterChanged(false));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
     /**
@@ -991,21 +1034,12 @@ public class StepThread extends Thread {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext, AppConst.NOTIFICATION_CHANNEL_ID);
 
         Intent intent = new Intent(mContext, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         PendingIntent contentPendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        if ("-".equals(ranking)) {
-            builder.setContentTitle("건강한 습관, 계단왕")
-                    .setContentText("지금 시작하십시오.")
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_floor))
-                    .setWhen(System.currentTimeMillis())
-                    .setOngoing(true)
-                    //.setColorized(true)
-                    .setColor(ContextCompat.getColor(mContext, R.color.colorPrimaryDark))
-                    .setContentIntent(contentPendingIntent);
-        } else {
+        if (!"-".equals(ranking)) {
             builder.setContentTitle("[랭킹:" + ranking + "]")
                     .setContentText(floor + "F / " + cal + "kcal / " + sec + "sec")
                     .setSmallIcon(R.mipmap.ic_launcher)
@@ -1015,16 +1049,34 @@ public class StepThread extends Thread {
                     //.setColorized(true)
                     .setColor(ContextCompat.getColor(mContext, R.color.colorPrimaryDark))
                     .setContentIntent(contentPendingIntent);
+
+            NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.notify(AppConst.NOTIFICATION_ID, builder.build());
         }
 
-        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(AppConst.NOTIFICATION_ID, builder.build());
+
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isAppOnForeground() {
+        ActivityManager activityManager = (ActivityManager) mContext.getSystemService(ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+        if (appProcesses == null) {
+            return false;
+        }
+        final String packageName = mContext.getPackageName();
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+                    && appProcess.processName.equals(packageName)) {
                 return true;
             }
         }

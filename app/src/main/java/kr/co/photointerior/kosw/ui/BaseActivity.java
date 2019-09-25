@@ -19,7 +19,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.provider.ContactsContract;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.LocalBroadcastManager;
@@ -144,6 +146,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         app = (KoswApp) getApplication() ;
+        checkBatteryWhiteList();
 
         //LocalBroadcastManager.getInstance(this)
         //        .registerReceiver(mMeasureStairActionDetectReceiver, new IntentFilter(Env.Action.APP_IS_BACKGROUND_ACTION.action()));
@@ -827,6 +830,23 @@ public abstract class BaseActivity extends AppCompatActivity {
         Activity currActivity = KoswApp.getCurrentActivity();
         if (currActivity != null && currActivity.equals(this)) {
             KoswApp.setCurrentActivity(null);
+        }
+    }
+
+    private void checkBatteryWhiteList() {
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        boolean isWhiteListing = false;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            isWhiteListing = pm.isIgnoringBatteryOptimizations(getPackageName());
+            LogUtils.err(TAG, "white list=" + isWhiteListing);
+            if (!isWhiteListing) {
+                //startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS));
+
+                Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + getPackageName()));
+                startActivity(intent);
+            }
+
         }
     }
 
