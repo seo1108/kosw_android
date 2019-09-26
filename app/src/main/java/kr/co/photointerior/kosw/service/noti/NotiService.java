@@ -58,8 +58,10 @@ public class NotiService extends Service {
         SharedPreferences prefr = getSharedPreferences("background", MODE_PRIVATE);
         String background = prefr.getString("background", "auto");
 
-        Intent startintent = new Intent(this, StepCounterService.class);
-        startService(startintent);
+        /*if (!isMyServiceRunning(StepCounterService.class)) {
+            Intent startintent = new Intent(this, StepCounterService.class);
+            startService(startintent);
+        }*/
 
         //Toast.makeText(mContext, "측정 서비스 재시작 byNotiService", Toast.LENGTH_SHORT).show();
 

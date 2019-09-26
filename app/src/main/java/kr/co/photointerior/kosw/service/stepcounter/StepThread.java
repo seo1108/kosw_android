@@ -205,7 +205,7 @@ public class StepThread extends Thread {
         mMeasureStep = 0;
         startMeasure(true);
         handler.post(runnable) ;
-
+        AppConst.IS_STEP_SENSOR_LOADED = false;
         /*mTask = new TimerTask() {
             @Override
             public void run() {
@@ -632,7 +632,7 @@ public class StepThread extends Thread {
 
         isCount = false ;
         goupTime = System.currentTimeMillis();
-
+        mMeasureStep = 0;
 
         // 5분 지나면 잠금
         if (mSleepCnt >= mMaxSleepCnt ) {
@@ -784,7 +784,7 @@ public class StepThread extends Thread {
     public void setCurrentStep(double val  ){
         mStep += val;
         mTrashStep += val;
-        mMeasureStep++;
+        mMeasureStep += val;
         Log.d("999999999999777771", "[stepsensor] " + mMeasureStep + " " + mStarted + " " + mStep);
         /*if (!mStarted && mMeasureStep > 20) {
             Toast.makeText(mContext, "측정서비스재시작 " + mMeasureStep, Toast.LENGTH_SHORT).show();
@@ -792,15 +792,15 @@ public class StepThread extends Thread {
             restartTracking();
         }*/
 
-        if (!mStarted && isSleep && !isRestarting && mStep == 2) {
-            isRestarting = true;
+        if (!mStarted && isSleep && !AppConst.IS_STEP_SENSOR_LOADED && mStep == 1.0) {
+            AppConst.IS_STEP_SENSOR_LOADED = true;
             restartTracking();
         }
     }
 
     private void restartTracking() {
         Toast.makeText(mContext, "[stepsensor] restartTracking", Toast.LENGTH_SHORT);
-        Log.d("999999999999777771", "[stepsensor] restartTracking " + mMeasureStep + " " + mStarted + " " + isRestarting);
+        Log.d("999999999999777771", "[stepsensor] restartTracking " + mMeasureStep + " " + mStarted + " " + AppConst.IS_STEP_SENSOR_LOADED);
         startMeasure(false);
 
         Intent startintent = new Intent(mContext, StepCounterService.class);
@@ -817,7 +817,8 @@ public class StepThread extends Thread {
             mContext.startService(startintent);
         } catch (Exception e) { }
 
-        isRestarting = false;
+
+        //isRestarting = false;
         mMeasureStep = 0;
     }
 
