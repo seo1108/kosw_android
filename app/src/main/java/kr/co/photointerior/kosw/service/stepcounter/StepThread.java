@@ -118,7 +118,7 @@ public class StepThread extends Thread {
     private static Boolean isRedDot = false ;
 
     private AltitudeManager mAltiManager;
-    private StepManager mStepManager;
+    private StepManager mStepManagerForService;
     private DirectionManager mDirectionManager ;
 
     private  boolean isStart = false ;
@@ -188,15 +188,16 @@ public class StepThread extends Thread {
         mMeasureStep = 0;
         handler.removeCallbacks(runnable);
         try {
-            mStepManager.stopMeasure();
+            mStepManagerForService.stopMeasure();
         } catch (Exception e) {
-            Log.d("999999999999777771", "[stepsensor] unregist failed");
+            Log.d("999999999999777771", "[stepsensor] unregist failed : " + e.toString());
         }
 
         try {
             if (mAltiManager != null) mAltiManager.stopMeasure();
             if (mDirectionManager != null) mDirectionManager.stopMeasure();
         } catch (Exception ex) {
+            Log.d("999999999999777771", "[stepsensor] unregist other sensor failed : " + ex.toString());
         }
     }
 
@@ -732,7 +733,7 @@ public class StepThread extends Thread {
                 }
                 cnt = 0;
 
-                mStepManager = new StepManager(mContext);
+                mStepManagerForService = new StepManager(mContext);
                 mAltiManager = new AltitudeManager(mContext);
                 mDirectionManager = new DirectionManager(mContext);
 
@@ -741,7 +742,7 @@ public class StepThread extends Thread {
                 mAltiManager.startMeasure();
                 mDirectionManager.startMeasure();
                 Log.d("stepsensor", "START");
-                mStepManager.startMeasure();
+                mStepManagerForService.startMeasure();
     /*
                 if (!isFirstRunned) {
                     Log.d("999999999999777771", "[stepsensor] start");
@@ -795,12 +796,20 @@ public class StepThread extends Thread {
         if (!mStarted && isSleep && !AppConst.IS_STEP_SENSOR_LOADED && mStep == 1.0) {
             AppConst.IS_STEP_SENSOR_LOADED = true;
             restartTracking();
+
         }
     }
 
     private void restartTracking() {
         Toast.makeText(mContext, "[stepsensor] restartTracking", Toast.LENGTH_SHORT);
         Log.d("999999999999777771", "[stepsensor] restartTracking " + mMeasureStep + " " + mStarted + " " + AppConst.IS_STEP_SENSOR_LOADED);
+        try {
+            mStepManagerForService.stopMeasure();
+            Thread.sleep(500);
+        } catch (Exception e) {
+            Log.d("999999999999777771", "[stepsensor] unregist failed on RestartTracking : " + e.toString());
+        }
+
         startMeasure(false);
 
         Intent startintent = new Intent(mContext, StepCounterService.class);
