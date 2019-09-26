@@ -11,4 +11,5 @@ public class AppConst {
 
     public static boolean IS_BACKGROUND = false;
     public static boolean IS_MAIN_RUNNED = false;
+    public static boolean IS_STEP_SENSOR_LOADED = false;
 }

@@ -30,6 +30,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import kr.co.photointerior.kosw.R;
 import kr.co.photointerior.kosw.conf.AppConst;
@@ -75,6 +77,8 @@ import static android.content.Context.POWER_SERVICE;
 public class StepThread extends Thread {
     private String TAG = LogUtils.makeLogTag(StepThread.class);
 
+
+
     boolean isRun = true;
     private static Context mContext = null;
 
@@ -90,6 +94,7 @@ public class StepThread extends Thread {
     private static double mZ;
     private static double mStep;
     private int mFloor ;
+    private boolean isRestarting = false;
 
     private int mSleepCnt = 0 ;
     private int mMeasureStep = 0;
@@ -152,6 +157,9 @@ public class StepThread extends Thread {
     private String tot_cal = "";
     private String tot_sec = "";
 
+    // create Timer
+    private TimerTask mTask;
+    private Timer mTimer;
 
 
     public StepThread(Context context){
@@ -161,7 +169,8 @@ public class StepThread extends Thread {
     }
 
     public void stopForever(){
-        synchronized (this) {
+        /*synchronized (this) {
+            Log.d("999999999999777771", "STOP FOREVER");
             mStarted = false;
             this.isRun = false;
             mMeasureStep = 0;
@@ -172,24 +181,44 @@ public class StepThread extends Thread {
                 if (mStepManager != null) mStepManager.stopMeasure();
             } catch (Exception ex) {
             }
+        }*/
+        Log.d("999999999999777771", "STOP FOREVER");
+        mStarted = false;
+        this.isRun = false;
+        mMeasureStep = 0;
+        handler.removeCallbacks(runnable);
+        try {
+            mStepManager.stopMeasure();
+        } catch (Exception e) {
+            Log.d("999999999999777771", "[stepsensor] unregist failed");
+        }
+
+        try {
+            if (mAltiManager != null) mAltiManager.stopMeasure();
+            if (mDirectionManager != null) mDirectionManager.stopMeasure();
+        } catch (Exception ex) {
         }
     }
 
     public void run(){
+        isRestarting = false;
         mMeasureStep = 0;
         startMeasure(true);
         handler.post(runnable) ;
-        /*while(isRun){
 
-            try{
-                if (isStart)  {
+        /*mTask = new TimerTask() {
+            @Override
+            public void run() {
+                if (mStarted)  {
                     checkFloor() ;
+                    //isTest = true;
                 }
-                //Thread.sleep(10000); //10분에 한번 조회
-                //Thread.sleep(100); //10분에 한번 조회
+            }
+        };
 
-            }catch (Exception e) {}
-        }*/
+        mTimer = new Timer();
+
+        mTimer.schedule(mTask, 0,100);*/
     }
 
     private Runnable runnable = new Runnable() {
@@ -202,9 +231,17 @@ public class StepThread extends Thread {
             }
 
             // Repeat every 2 seconds
-            handler.postDelayed(runnable, 100);
+            //handler.postDelayed(runnable, 100);
+            handler.postDelayed(runnable, 1);
+            // postDelayed 대기 시간이 점점 짧아지는 케이스가 있어서 Thread sleep 으로 일단 처리
+            try { Thread.sleep(100); } catch (Exception e) {}
         }
     };
+
+
+
+
+
 
     /*private Runnable runnable = new Runnable() {
         @Override
@@ -236,7 +273,7 @@ public class StepThread extends Thread {
             //return ;
         }
 
-        Log.d("999999999999777771", String.valueOf(mStarted) + mMeasureStep + "_______" + cnt + "___" + mSaveStep + "______" + mStep);
+        Log.d("999999999999777771", String.valueOf(mStarted) + "__" + mSleepCnt + "_______" + cnt + "___" + mSaveStep + "______" + mStep);
 
         //if (0 == cnt%15)  mMeasureStep = 0;
 
@@ -599,6 +636,8 @@ public class StepThread extends Thread {
 
         // 5분 지나면 잠금
         if (mSleepCnt >= mMaxSleepCnt ) {
+            Log.d("999999999999777771", "[stepsensor] is-sleep");
+
             mMeasureStep = 0;
             isSleep = true;;
             mSleepCnt = 0  ;
@@ -615,108 +654,111 @@ public class StepThread extends Thread {
 
     // 측정 시작 ,멈춤
     public void startMeasure(boolean started){
+        try {
+            if (!started) {
 
-        if(!started){
-
-            saveBuildCount(mBuildCount);
+                saveBuildCount(mBuildCount);
 
 
-            goupTime = System.currentTimeMillis();
+                goupTime = System.currentTimeMillis();
 
-            mAltitude = 0 ;
-            mOrientation = 0 ;
-            mStep = 0 ;
-            mX = 0 ;
-            mY = 0 ;
-            mZ = 0 ;
+                mAltitude = 0;
+                mOrientation = 0;
+                mStep = 0;
+                mX = 0;
+                mY = 0;
+                mZ = 0;
 
-            for (int i = 0; i < 600; i++) {
-                MeasureObj obj = mStartList.get(i) ;
-                obj.altitude = 0.0;
-                obj.orientation = 0.0 ;
-                obj.step = 0.0 ;
-                obj.x = 0.0 ;
-                obj.y = 0.0 ;
-                obj.z = 0.0;
-                obj.xGap = 0.0 ;
-                obj.yGap = 0.0 ;
-                obj.zGap = 0.0 ;
-            }
-            cnt = 0;
-
-            if (mAltiManager != null) mAltiManager.stopMeasure();
-            if (mDirectionManager != null) mDirectionManager.stopMeasure();
-            //if (mStepManager != null) mStepManager.stopMeasure();
-            //mStepManager.stopMeasure();
-            //findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
-
-        }else{
-            AppUserBase user = DataHolder.instance().getAppUserBase() ;
-
-            if (user != null) {
-                mCurBuildCount = user.getBuild_floor_amt(); // 현재 빌딩층수 (높이)
-            } else {
-                SharedPreferences prefr = mContext.getSharedPreferences("userInfo", MODE_PRIVATE);
-
-                if (null == prefr) {
-                    mCurBuildCount = 1000;
-                } else {
-                    mCurBuildCount = prefr.getInt("curBuildCount", 1000);
+                for (int i = 0; i < 600; i++) {
+                    MeasureObj obj = mStartList.get(i);
+                    obj.altitude = 0.0;
+                    obj.orientation = 0.0;
+                    obj.step = 0.0;
+                    obj.x = 0.0;
+                    obj.y = 0.0;
+                    obj.z = 0.0;
+                    obj.xGap = 0.0;
+                    obj.yGap = 0.0;
+                    obj.zGap = 0.0;
                 }
+                cnt = 0;
+
+                if (mAltiManager != null) mAltiManager.stopMeasure();
+                if (mDirectionManager != null) mDirectionManager.stopMeasure();
+                //if (mStepManager != null) mStepManager.stopMeasure();
+                //mStepManager.stopMeasure();
+                //findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
+
+            } else {
+                AppUserBase user = DataHolder.instance().getAppUserBase();
+
+                if (user != null) {
+                    mCurBuildCount = user.getBuild_floor_amt(); // 현재 빌딩층수 (높이)
+                } else {
+                    SharedPreferences prefr = mContext.getSharedPreferences("userInfo", MODE_PRIVATE);
+
+                    if (null == prefr) {
+                        mCurBuildCount = 1000;
+                    } else {
+                        mCurBuildCount = prefr.getInt("curBuildCount", 1000);
+                    }
+                }
+
+                if (!isSleep) {
+                    initMeasure();
+                }
+
+                goupTime = System.currentTimeMillis();
+
+                mAltitude = 0;
+                mOrientation = 0;
+                mStep = 0;
+                mX = 0;
+                mY = 0;
+                mZ = 0;
+
+                for (int i = 0; i < 600; i++) {
+                    MeasureObj obj = mStartList.get(i);
+                    obj.altitude = 0.0;
+                    obj.orientation = 0.0;
+                    obj.step = 0.0;
+                    obj.x = 0.0;
+                    obj.y = 0.0;
+                    obj.z = 0.0;
+                    obj.xGap = 0.0;
+                    obj.yGap = 0.0;
+                    obj.zGap = 0.0;
+
+                }
+                cnt = 0;
+
+                mStepManager = new StepManager(mContext);
+                mAltiManager = new AltitudeManager(mContext);
+                mDirectionManager = new DirectionManager(mContext);
+
+                isSleep = false;
+
+                mAltiManager.startMeasure();
+                mDirectionManager.startMeasure();
+                Log.d("stepsensor", "START");
+                mStepManager.startMeasure();
+    /*
+                if (!isFirstRunned) {
+                    Log.d("999999999999777771", "[stepsensor] start");
+                    if (null != mStepManager) mStepManager.stopMeasure();
+                    mStepManager.restartMeasure();
+                }
+
+                isFirstRunned = true;
+    */
+
+                //findViewById(R.id.LayoutPause).setVisibility(View.INVISIBLE);
+                //mValue.setText("wait...");
             }
-
-            if (!isSleep) {
-                initMeasure();
-            }
-
-            goupTime = System.currentTimeMillis();
-
-            mAltitude = 0 ;
-            mOrientation = 0 ;
-            mStep = 0 ;
-            mX = 0 ;
-            mY = 0 ;
-            mZ = 0 ;
-
-            for (int i = 0; i < 600; i++) {
-                MeasureObj obj = mStartList.get(i) ;
-                obj.altitude = 0.0;
-                obj.orientation = 0.0 ;
-                obj.step = 0.0 ;
-                obj.x = 0.0 ;
-                obj.y = 0.0 ;
-                obj.z = 0.0;
-                obj.xGap = 0.0 ;
-                obj.yGap = 0.0 ;
-                obj.zGap = 0.0 ;
-
-            }
-            cnt = 0;
-
-            mStepManager = new StepManager(mContext) ;
-            mAltiManager = new AltitudeManager(mContext);
-            mDirectionManager = new DirectionManager(mContext) ;
-
-            isSleep = false  ;
-
-            mAltiManager.startMeasure();
-            mDirectionManager.startMeasure();
-            Log.d("stepsensor", "START");
-            mStepManager.startMeasure();
-/*
-            if (!isFirstRunned) {
-                Log.d("999999999999777771", "[stepsensor] start");
-                if (null != mStepManager) mStepManager.stopMeasure();
-                mStepManager.restartMeasure();
-            }
-
-            isFirstRunned = true;
-*/
-
-            //findViewById(R.id.LayoutPause).setVisibility(View.INVISIBLE);
-            //mValue.setText("wait...");
+            mStarted = started;
+        } catch (Exception ex) {
+            mStarted = started;
         }
-        mStarted = started ;
     }
 
     public void setCurrentAltitude(double altitude){
@@ -743,26 +785,26 @@ public class StepThread extends Thread {
         mStep += val;
         mTrashStep += val;
         mMeasureStep++;
-        Log.d("999999999999777771", "[stepsensor]" + mMeasureStep + " " + mStarted);
+        Log.d("999999999999777771", "[stepsensor] " + mMeasureStep + " " + mStarted + " " + mStep);
         /*if (!mStarted && mMeasureStep > 20) {
             Toast.makeText(mContext, "측정서비스재시작 " + mMeasureStep, Toast.LENGTH_SHORT).show();
             mMeasureStep = 0;
             restartTracking();
         }*/
-        if (!mStarted) {
+
+        if (!mStarted && isSleep && !isRestarting && mStep == 2) {
+            isRestarting = true;
             restartTracking();
         }
     }
 
     private void restartTracking() {
         Toast.makeText(mContext, "[stepsensor] restartTracking", Toast.LENGTH_SHORT);
-        Log.d("999999999999777771", "[stepsensor] restartTracking " + mMeasureStep + " " + mStarted);
+        Log.d("999999999999777771", "[stepsensor] restartTracking " + mMeasureStep + " " + mStarted + " " + isRestarting);
         startMeasure(false);
 
         Intent startintent = new Intent(mContext, StepCounterService.class);
         mContext.stopService(startintent);
-
-        stopForever();
 
         /*try {
             Toast.makeText(mContext, "자동 측정재시작", Toast.LENGTH_SHORT);
@@ -775,6 +817,8 @@ public class StepThread extends Thread {
             mContext.startService(startintent);
         } catch (Exception e) { }
 
+        isRestarting = false;
+        mMeasureStep = 0;
     }
 
     private void sendScreenRefresh() {

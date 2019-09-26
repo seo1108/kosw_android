@@ -8,6 +8,7 @@ import android.hardware.SensorManager;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import kr.co.photointerior.kosw.conf.AppConst;
 import kr.co.photointerior.kosw.global.Env;
 import kr.co.photointerior.kosw.utils.LogUtils;
 
@@ -51,6 +52,9 @@ public class StepSensorService extends BaseService implements SensorEventListene
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        //AppConst.IS_STEP_SENSOR_LOADED = false;
+
         LogUtils.err(TAG, TAG + "#onDestroy()");
         if (mSensorManager != null) {
             mSensorManager.unregisterListener(this);

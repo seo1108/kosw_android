@@ -8,6 +8,7 @@ import android.hardware.SensorManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import kr.co.photointerior.kosw.conf.AppConst;
 import kr.co.photointerior.kosw.service.stepcounter.StepThread;
 import kr.co.photointerior.kosw.ui.MainActivity;
 
@@ -56,17 +57,21 @@ public class StepManager {
     }
 
     public StepManager(Context context){
-        mSensorManager = (SensorManager) context.getApplicationContext().getSystemService(Context.SENSOR_SERVICE);
-        if(mSensorManager != null) {
-            mAccelerometerSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            mHasSensor = true;
-        }else{
-            mHasSensor = false;
-        }
+        //if (!AppConst.IS_STEP_SENSOR_LOADED) {
+            mSensorManager = (SensorManager) context.getApplicationContext().getSystemService(Context.SENSOR_SERVICE);
+            if (mSensorManager != null) {
+                mAccelerometerSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+                mHasSensor = true;
+            } else {
+                mHasSensor = false;
+            }
 
-        mIsService = true;
-        sThread = new StepThread(context);
-        this.serviceContext = context;
+            mIsService = true;
+            sThread = new StepThread(context);
+            this.serviceContext = context;
+
+            //AppConst.IS_STEP_SENSOR_LOADED = true;
+        //}
     }
 
     private class PresureListener implements SensorEventListener {
