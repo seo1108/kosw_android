@@ -183,23 +183,25 @@ public class StepThread extends Thread {
             } catch (Exception ex) {
             }
         }*/
-        Log.d("999999999999777771", "STOP FOREVER");
-        mStarted = false;
-        this.isRun = false;
-        mMeasureStep = 0;
-        handler.removeCallbacks(runnable);
-        try {
-            mStepManager.stopMeasure();
-            //mStepManagerForService.stopMeasure();
-        } catch (Exception e) {
-            Log.d("999999999999777771", "[stepsensor] unregist failed : " + e.toString());
-        }
+        synchronized (this) {
+            Log.d("999999999999777771", "STOP FOREVER");
+            mStarted = false;
+            this.isRun = false;
+            mMeasureStep = 0;
+            handler.removeCallbacks(runnable);
+            try {
+                mStepManager.stopMeasure();
+                //mStepManagerForService.stopMeasure();
+            } catch (Exception e) {
+                Log.d("999999999999777771", "[stepsensor] unregist failed : " + e.toString());
+            }
 
-        try {
-            if (mAltiManager != null) mAltiManager.stopMeasure();
-            if (mDirectionManager != null) mDirectionManager.stopMeasure();
-        } catch (Exception ex) {
-            Log.d("999999999999777771", "[stepsensor] unregist other sensor failed : " + ex.toString());
+            try {
+                if (mAltiManager != null) mAltiManager.stopMeasure();
+                if (mDirectionManager != null) mDirectionManager.stopMeasure();
+            } catch (Exception ex) {
+                Log.d("999999999999777771", "[stepsensor] unregist other sensor failed : " + ex.toString());
+            }
         }
     }
 
