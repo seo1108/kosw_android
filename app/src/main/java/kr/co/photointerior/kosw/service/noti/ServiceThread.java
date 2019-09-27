@@ -116,7 +116,7 @@ public class ServiceThread extends Thread {
                 }*/
 
                 // 1시간에 한번씩 전송체크
-                if (mWalkinfInfoCnt > 60) {
+                if (mWalkinfInfoCnt > 6) {
                     //requestToServer();
                     // 어제걸음수 전송된 데이터가 없다면 전송
                     DateFormat d_dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -141,7 +141,7 @@ public class ServiceThread extends Thread {
             }finally {
                 try {
                     //Thread.sleep(30*60*1000); //30분에 한번씩 조회 및 자동측정 재시작
-                    Thread.sleep(1*60*1000); //1분에 한번씩 조회 및 자동측정 재시작
+                    Thread.sleep(10*60*1000); //10분에 한번씩 조회 및 자동측정 재시작
                 } catch (Exception ex) {    }
             }
 

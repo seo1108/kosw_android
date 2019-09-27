@@ -934,7 +934,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             mAltiManager.stopMeasure();
             mDirectionManager.stopMeasure();
             mStepManager.stopMeasure();
-            findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
+            findViewById(R.id.LayoutPause).setVisibility(View.INVISIBLE);
            /*if(isMyServiceRunning(StepCounterService.class)) {
                // 자동측정중이면
                TextView tv =  findViewById(R.id.tvPauseMent);

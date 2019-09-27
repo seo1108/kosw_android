@@ -1387,7 +1387,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 mDirectionManager.stopMeasure();
                 mStepManager.stopMeasure();
                 try {
-                    findViewById(R.id.LayoutPause).setVisibility(View.VISIBLE);
+                    findViewById(R.id.LayoutPause).setVisibility(View.INVISIBLE);
                 } catch (Exception e) {
                 }
 
