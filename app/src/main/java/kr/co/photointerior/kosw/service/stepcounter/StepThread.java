@@ -291,11 +291,12 @@ public class StepThread extends Thread {
         Log.d("999999999999777771", String.valueOf(mStarted) + "__" + mSleepCnt + "_______" + cnt + "___" + mSaveStep + "______" + mStep);
 
         //if (0 == cnt%15)  mMeasureStep = 0;
-
+        //if (cnt % 10 == 0) sendDataToServer(1, "building" );
         // 25초 이상 걷기 없으면 잠금
         if (cnt >= 10 * 25 )  {
-            if (mSaveStep <=  0 ) { // 걷기중이아니면
 
+            if (mSaveStep <=  0 ) { // 걷기중이아니면
+                //sendDataToServer(1, "building" );
                 Toast.makeText(mContext, "25초 초기화", Toast.LENGTH_SHORT).show();
                 // 원본소스
                 mSleepCnt = mMaxSleepCnt;
@@ -874,7 +875,7 @@ public class StepThread extends Thread {
     }
 
     private void sendScreenRefresh() {
-        Log.d("DDDDDDDDDDDDDDDDDD", "stairUp-SEND");
+        Log.d("999999999999777771", "stairUp-SEND");
 
         mContext.sendBroadcast(new Intent(Env.Action.APP_IS_BACKGROUND_ACTION.action()));
     }
@@ -901,7 +902,15 @@ public class StepThread extends Thread {
 
         String token = KUtil.getUserToken();
         String buildCode = KUtil.getBuildingCode();
+        /*if (null == buildCode || "".equals(buildCode)) {
+            Pref pref = Pref.instance();
+            pref.saveStringValue(PrefKey.BUILDING_CODE, "100001");
+        }*/
+
+        Log.d("999999999999777771", token + "___" + buildCode);
+        Toast.makeText(mContext, "계단서버전송", Toast.LENGTH_SHORT).show();
         if(StringUtil.isEmptyOrWhiteSpace(token) || StringUtil.isEmptyOrWhiteSpace(buildCode)){
+            Toast.makeText(mContext, "계단서버전송실패1", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -910,7 +919,10 @@ public class StepThread extends Thread {
         SharedPreferences prefr = mContext.getSharedPreferences("userInfo", MODE_PRIVATE);
         if (null == prefr) return;
         String userToken = prefr.getString("token", "");
-        if ("".equals(userToken)) return;
+        if ("".equals(userToken)) {
+            Toast.makeText(mContext, "계단서버전송실패2", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         MediaPlayer mMediaPlayer = new MediaPlayer();
 
@@ -991,7 +1003,8 @@ public class StepThread extends Thread {
 
                             BeaconUuid uuid = response.body();
                             if (uuid != null && uuid.isSuccess()) {
-                                broadcastServerResult(uuid);
+                                //broadcastServerResult(uuid);
+                                updateFloorCount(uuid);
 
                             }else {
                                 saveGoUpDataToLocalDb(query, localTime);
@@ -1000,9 +1013,9 @@ public class StepThread extends Thread {
 
 
                             // 노티피케이션 업데이트
-                            requestgetActivityRecords();
+                            //requestgetActivityRecords();
                             // 메인 화면 업데이트
-                            sendScreenRefresh();
+                            //sendScreenRefresh();
 
 
                         }else {
@@ -1019,7 +1032,7 @@ public class StepThread extends Thread {
                 saveGoUpDataToLocalDb(query, localTime);
             }
         }catch (Exception e){
-
+            Toast.makeText(mContext, e.toString(), Toast.LENGTH_SHORT);
         }
     }
 
@@ -1045,7 +1058,7 @@ public class StepThread extends Thread {
      * 올라간 층수 데이터 서버전송 성공시 데이터 전파
      * @param beaconUuid
      */
-    public static void broadcastServerResult(BeaconUuid beaconUuid){
+    public void broadcastServerResult(BeaconUuid beaconUuid){
 
         Pref pref = Pref.instance();
 
@@ -1055,7 +1068,6 @@ public class StepThread extends Thread {
         //if(!StringUtil.isEmptyOrWhiteSpace(beaconUuid.getSubCharFilenane())) {
         pref.saveStringValue(PrefKey.CHARACTER_SUB, beaconUuid.getSubCharFilenane());
         //}
-
         //LogUtils.err(TAG, beaconUuid.string());
         //String prevChar = KUtil.getStringPref(PrefKey.CHARACTER_MAIN, "");
         //boolean isMainChracterChanged = !StringUtil.isEquals(prevChar, beaconUuid.getMainCharFilename());
@@ -1082,6 +1094,21 @@ public class StepThread extends Thread {
                         .setValue(beaconUuid)
                         .setMainCharacterChanged(isMainChracterChanged)
         );
+
+        Log.d("999999999999777771", "stairUp-broadcastServerResult");
+    }
+
+    public void updateFloorCount(BeaconUuid beaconUuid){
+
+
+        BusProvider.instance().post(
+                new KsEvent<BeaconUuid>()
+                        .setType(KsEvent.Type.UPDATE_FLOOR_AMOUNT)
+                        .setValue(beaconUuid)
+                        .setMainCharacterChanged(false)
+        );
+
+        Log.d("999999999999777771", "stairUp-broadcastServerResult");
     }
 
     public void requestgetActivityRecords() {
@@ -1127,15 +1154,17 @@ public class StepThread extends Thread {
 
 
     private static void updateNotification(String ranking, String floor, String cal, String sec) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext, AppConst.NOTIFICATION_CHANNEL_ID);
 
-        Intent intent = new Intent(mContext, MainActivity.class);
-        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        PendingIntent contentPendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         if (!"-".equals(ranking)) {
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext, AppConst.NOTIFICATION_CHANNEL_ID);
+
+            Intent intent = new Intent(mContext, MainActivity.class);
+            //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            PendingIntent contentPendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
             builder.setContentTitle("[랭킹:" + ranking + "]")
                     .setContentText(floor + "F / " + cal + "kcal / " + sec + "sec")
                     .setSmallIcon(R.mipmap.ic_launcher)
@@ -1148,6 +1177,10 @@ public class StepThread extends Thread {
 
             NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
             notificationManager.notify(AppConst.NOTIFICATION_ID, builder.build());
+
+            Toast.makeText(mContext, "상태바1", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(mContext, "상태바2", Toast.LENGTH_SHORT).show();
         }
 
 

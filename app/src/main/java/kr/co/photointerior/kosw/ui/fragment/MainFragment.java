@@ -191,6 +191,16 @@ public class MainFragment extends BaseFragment {
         }
     };
 
+/*    private BroadcastReceiver mIsAppBackgroundReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(Env.Action.APP_IS_BACKGROUND_ACTION.isMatch(intent.getAction())) {
+                Log.d("999999999999777771", "stairUp-RECEIVE");
+                displayFragment(Env.FragmentType.HOME);
+            }
+        }
+    };*/
+
     public static BaseFragment newInstance(BaseActivity activity, BeaconUuid todayInfo) {
         MainFragment frag = new MainFragment();
         frag.mActivity = activity;
@@ -311,6 +321,7 @@ public class MainFragment extends BaseFragment {
         LogUtils.err(TAG, "character url on main=" + charUrl);
         String storedUrl = KUtil.getStringPref(PrefKey.CHARACTER_MAIN_URL, "");
         KUtil.saveStringPref(PrefKey.CHARACTER_MAIN_URL, charUrl);
+
         Glide.with(this)
                 .applyDefaultRequestOptions(KUtil.getGlideCacheOptionMainCharacter())
                 .load(charUrl).thumbnail(.5f).into(iv);
@@ -853,15 +864,16 @@ public class MainFragment extends BaseFragment {
                 if (response.isSuccessful()) {
                     MainData data = response.body();
                     LogUtils.err(TAG, "main data : " + data.string());
+                    Log.d("DDDDDDDDDDDDDD", data.string());
                     if (data.isSuccess()) {
                         Pref pref = Pref.instance();
 
                         String charImageFile = pref.getStringValue(PrefKey.CHARACTER_MAIN, "");
+                        if (null != data.getMainCharImageFile()) pref.saveStringValue(PrefKey.CHARACTER_MAIN, data.getMainCharImageFile());
+                        if (null != data.getSubCharImageFile()) pref.saveStringValue(PrefKey.CHARACTER_SUB, data.getSubCharImageFile());
 
-                        pref.saveStringValue(PrefKey.CHARACTER_MAIN, data.getMainCharImageFile());
-                        pref.saveStringValue(PrefKey.CHARACTER_SUB, data.getSubCharImageFile());
                         // 기존 이미지와 동일 하면 스킵
-                        if (!charImageFile.equals(data.getMainCharImageFile())) {
+                        if (null != data.getMainCharImageFile() || !charImageFile.equals(data.getMainCharImageFile())) {
                             setMainScreenCharacter();
                         }
                         refreshMainNotiTexts(null, data);
@@ -1222,9 +1234,12 @@ public class MainFragment extends BaseFragment {
         if (data.getTodayRecord() != null) {
 
             int remain = (int) data.getTodayRecord().getAmountToFloat();
-            int ranking = Integer.valueOf(data.getTodayRecord().getTodayRanking());
+            int ranking = 0;
+            if (null != data.getTodayRecord().getTodayRanking()) {
+                ranking = Integer.valueOf(data.getTodayRecord().getTodayRanking());
+            }
 
-            rank = StringUtil.format(Integer.valueOf(data.getTodayRecord().getTodayRanking()), "#,##0");
+            rank = StringUtil.format(ranking, "#,##0");
 
             if (remain >= 10) {
                 tv_userType.setText(user.getNickName() + "(" + data.getUserLevel() + " / " + String.valueOf(data.getBotyType()) + "단계 랭킹 " + String.valueOf(ranking) + "위) \n오늘미션성공, 조금더욕심내 볼까요?");

@@ -260,31 +260,23 @@
                 android:layout_toLeftOf="@+id/box_tree_text"
                 android:scaleType="center"
                 android:src="@drawable/ic_tree"
-                app:srcCompat="@drawable/ic_tree"/>
+                app:srcCompat="@drawable/ic_tree" />
 
             <LinearLayout
                 android:id="@+id/box_noti_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="@dimen/dp_14"
                 android:layout_marginTop="@dimen/dp_56"
+                android:layout_marginEnd="@dimen/dp_14"
                 android:gravity="right"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/txt_noti_one"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:includeFontPadding="false"
-                    android:lines="1"
-                    android:maxLength="24"
-                    android:maxLines="1"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sp_11"
-                    android:textStyle="bold"
-                    tools:text="계단왕 시스템 점검"/>
+               <!-- <ImageView
+                android:id="@+id/img_character"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/img_runc_place_holder_1" />-->
 
                 <!--<TextView
                     android:id="@+id/txt_noti_two"
@@ -305,14 +297,14 @@
                     android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
+                    android:gravity="right"
                     android:includeFontPadding="false"
-                    android:maxWidth="500dp"
                     android:lines="3"
+                    android:maxWidth="500dp"
+                    android:maxLength="50"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/sp_11"
                     android:textStyle="bold"
-                    android:gravity="right"
-                    android:maxLength="50"
                     tools:text="디자인팀 이벤트 진행예정" />
 
                 <TextView
@@ -327,8 +319,8 @@
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/sp_11"
                     android:textStyle="bold"
-                    tools:text="감자님이 레드저지를 획득"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible"
+                    tools:text="감자님이 레드저지를 획득" />
 
                 <TextView
                     android:id="@+id/txt_noti_four"
@@ -342,8 +334,22 @@
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/sp_11"
                     android:textStyle="bold"
-                    tools:text="하록선장님이 레드닷 저지를 획득"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible"
+                    tools:text="하록선장님이 레드닷 저지를 획득" />
+
+                <TextView
+                    android:id="@+id/txt_noti_one"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    android:lines="1"
+                    android:maxLength="24"
+                    android:maxLines="1"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/sp_11"
+                    android:textStyle="bold"
+                    tools:text="계단왕 시스템 점검" />
 
                 <TextView
                     android:id="@+id/txt_noti_five"
@@ -357,8 +363,8 @@
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/sp_11"
                     android:textStyle="bold"
-                    tools:text="하록선장님이 레드닷 저지를 획득"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible"
+                    tools:text="하록선장님이 레드닷 저지를 획득" />
 
             </LinearLayout>
 

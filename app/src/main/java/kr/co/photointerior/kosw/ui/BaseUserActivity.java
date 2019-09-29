@@ -123,6 +123,7 @@ public class BaseUserActivity extends BaseActivity {
                     base.setUserId(email);
                     //base.setUserId("k"+openid);
                     LogUtils.err(TAG, "login data :" + base.string());
+
                     if( base.isSuccess() ){
                         //storeUserTokenAndMovesToGps(base);
                         storeUserValueDefault(base);
@@ -265,6 +266,7 @@ public class BaseUserActivity extends BaseActivity {
         queryMap.put("id", email);
         queryMap.put("build_seq", "118");
         LogUtils.log(queryMap);
+
         Call<AppUserBase> call =
                 new DefaultRestClient<UserService>(getBaseContext())
                         .getClient(UserService.class).tryLoginByTokenAndIdBuild(queryMap);
@@ -273,6 +275,7 @@ public class BaseUserActivity extends BaseActivity {
             public void onResponse(Call<AppUserBase> call, Response<AppUserBase> response) {
                 LogUtils.e(TAG, response.raw().toString());
                 AppUserBase user;
+
                 if(response.isSuccessful()){
                     closeSpinner();
 

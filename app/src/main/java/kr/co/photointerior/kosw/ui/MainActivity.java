@@ -204,8 +204,10 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     protected BroadcastReceiver mIsAppBackgroundReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(Env.Action.APP_IS_BACKGROUND_ACTION.isMatch(intent.getAction())) {
-                //displayFragment(Env.FragmentType.HOME);
+            if (isActivity) {
+                if (Env.Action.APP_IS_BACKGROUND_ACTION.isMatch(intent.getAction())) {
+                    displayFragment(Env.FragmentType.HOME);
+                }
             }
         }
     };
@@ -1668,13 +1670,14 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 int initColor = prefr.getInt("backgroundColor", -99);
                 Log.d("DDDDDDDDDDDDD", initColor + "");
                 if (initColor != -99) {
-                    Log.d("DDDDDDDDDDDDD11", initColor + "");
-                    mToolBar.setBackgroundColor(initColor);
-                    toggleDrawerIcon(true);
-
-                } else {
+                    int bglist[] = DataHolder.instance().getBgColors() ;
+                    Pref.instance().saveIntValue (PrefKey.COMPANY_COLOR_NUM,initColor);
+                    selectBgColor(initColor);
+                    changeColors();
                     mToolBar.setBackgroundColor(getCompanyColor());
-                    toggleDrawerIcon(true);
+                } else {
+                    changeColors();
+                    mToolBar.setBackgroundColor(getCompanyColor());
                 }
 
                 /*mToolBar.setBackgroundColor(getCompanyColor());
@@ -1828,11 +1831,22 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             Pref.instance().saveIntValue (PrefKey.COMPANY_COLOR_NUM,initColor);
             selectBgColor(initColor);
             changeColors();
+            mToolBar.setBackgroundColor(getCompanyColor());
         } else {
             changeColors();
             mToolBar.setBackgroundColor(getCompanyColor());
         }
-        /*changeColors();
+
+        /*if (initColor != -99) {
+            Log.d("DDDDDDDDDDDDD11", initColor + "");
+            mToolBar.setBackgroundColor(initColor);
+            toggleDrawerIcon(true);
+
+        } else {
+            mToolBar.setBackgroundColor(getCompanyColor());
+            toggleDrawerIcon(true);
+        }
+        changeColors();
         mToolBar.setBackgroundColor(getCompanyColor());*/
 
 
@@ -1848,13 +1862,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             app.isInit = false;
             app.getmBLocationManager().registerLocationUpdates();
             app.getmBLocationManager().mDelegateFindLocation = this;
-        } else {
-            /*if(!isMyServiceRunning(StepCounterService.class)) {
-                startMeasure(true);
-                handler.post(runnable);
-            } else {
-
-            }*/
         }
         super.onResume();
 
@@ -1892,8 +1899,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             thread.start();
             app.push = null;
         }
-
-        measureStart();
     }
 
     private void setBeaconManagerMode(boolean mode) {
