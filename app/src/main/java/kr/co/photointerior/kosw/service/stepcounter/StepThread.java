@@ -307,7 +307,7 @@ public class StepThread extends Thread {
 
 
         // 5초마다 소리
-        /*if (cnt % 50 == 0 && cnt < 10 * 25 ) {
+        if (cnt % 50 == 0 && cnt < 10 * 25 ) {
             MediaPlayer mMediaPlayer = new MediaPlayer();
             try {
                 Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init25);
@@ -317,14 +317,15 @@ public class StepThread extends Thread {
             } catch (Exception e) {
 
             }
-        }*/
+        }
 
         if (cnt >= 10 * 25 )  {
             Toast.makeText(mContext, "25초 초기화", Toast.LENGTH_SHORT).show();
 
             MediaPlayer mMediaPlayer = new MediaPlayer();
             try {
-                Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all);
+                Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all_loud);
+                //Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all_more_silence);
                 mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
                 mMediaPlayer.prepare();
                 mMediaPlayer.start();
