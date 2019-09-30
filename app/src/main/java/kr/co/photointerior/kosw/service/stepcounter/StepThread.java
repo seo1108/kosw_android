@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -164,6 +165,7 @@ public class StepThread extends Thread {
     private TimerTask mTask;
     private Timer mTimer;
 
+    PowerManager.WakeLock wakeLock;
 
     public StepThread(Context context){
         mContext = context;
@@ -202,6 +204,12 @@ public class StepThread extends Thread {
             } catch (Exception ex) {
                 Log.d("999999999999777771", "[stepsensor] unregist other sensor failed : " + ex.toString());
             }
+
+            try {
+                if (!wakeLock.isHeld()) wakeLock.acquire();
+            } catch (Exception ex) {
+
+            }
         }
     }
 
@@ -221,6 +229,8 @@ public class StepThread extends Thread {
         mStepManager.startMeasure();
         mAltiManager.startMeasure();
         mDirectionManager.startMeasure();
+
+        acquireCPUWakelock();
         /*mTask = new TimerTask() {
             @Override
             public void run() {
@@ -287,17 +297,45 @@ public class StepThread extends Thread {
         if (mAltitude == 0 )  {
             //return ;
         }
+        AppUserBase user1 = DataHolder.instance().getAppUserBase() ;
 
-        Log.d("999999999999777771", String.valueOf(mStarted) + "__" + mSleepCnt + "_______" + cnt + "___" + mSaveStep + "______" + mStep);
+        Log.d("999999999999777771", user1.getIsbuild() + "__" + user1.getBuild_floor_amt() + "__" + String.valueOf(mStarted) + "__" + mSleepCnt + "_______" + cnt + "___" + mSaveStep + "______" + mStep);
 
         //if (0 == cnt%15)  mMeasureStep = 0;
         //if (cnt % 10 == 0) sendDataToServer(1, "building" );
         // 25초 이상 걷기 없으면 잠금
+
+
+        // 5초마다 소리
+        /*if (cnt % 50 == 0 && cnt < 10 * 25 ) {
+            MediaPlayer mMediaPlayer = new MediaPlayer();
+            try {
+                Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init25);
+                mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+                mMediaPlayer.prepare();
+                mMediaPlayer.start();
+            } catch (Exception e) {
+
+            }
+        }*/
+
         if (cnt >= 10 * 25 )  {
+            Toast.makeText(mContext, "25초 초기화", Toast.LENGTH_SHORT).show();
+
+            MediaPlayer mMediaPlayer = new MediaPlayer();
+            try {
+                Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all);
+                mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+                mMediaPlayer.prepare();
+                mMediaPlayer.start();
+            } catch (Exception e) {
+
+            }
+
 
             if (mSaveStep <=  0 ) { // 걷기중이아니면
                 //sendDataToServer(1, "building" );
-                Toast.makeText(mContext, "25초 초기화", Toast.LENGTH_SHORT).show();
+
                 // 원본소스
                 mSleepCnt = mMaxSleepCnt;
                 sleepMode = 0 ;
@@ -362,13 +400,33 @@ public class StepThread extends Thread {
 
         String m = String.format("높이 : %.2f , 방향 : %.2f , 걷기 : %.2f , 시간 : %d" , gapAlitude, mDir, step, cnt);
 
+        //Log.d("999999999999777771", m);
+
+        if (cnt > 0 && cnt % 50 == 0) {
+            Toast.makeText(mContext, m, Toast.LENGTH_SHORT).show();
+        }
+
         if (!isContinue) {
             if (mDir > 135 && Math.abs(gapAlitude) > 1.5  ) {
                 // 자동측정일 경우, 5초 이내 측정이면  카운트 하지 않음 엘리베이터 사용자 걸름
                 // 수동측정은 2초
                 long curTime = System.currentTimeMillis();
                 if (cnt < 30 || (curTime - goupTime) < 6000) {
-                    Toast.makeText(mContext, "엘리베이터 5초", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "엘리베이터 5초 진입", Toast.LENGTH_SHORT).show();
+                    if (cnt > 50) {
+                        Toast.makeText(mContext, "엘리베이터 5초 알림", Toast.LENGTH_SHORT).show();
+
+                        MediaPlayer mMediaPlayer = new MediaPlayer();
+                        try {
+                            Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.elevator);
+                            mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+                            mMediaPlayer.prepare();
+                            mMediaPlayer.start();
+                        } catch (Exception e) {
+
+                        }
+                    }
+
                     mSleepCnt++ ;
                     initMeasure();
                     return;
@@ -383,9 +441,9 @@ public class StepThread extends Thread {
                         mCurBuildCount = user.getBuild_floor_amt();
                     } catch (Exception ex) {
                         if (null == prefr) {
-                            mCurBuildCount = 1000;
+                            mCurBuildCount = 10;
                         } else {
-                            mCurBuildCount = prefr.getInt("curBuildCount", 1000);
+                            mCurBuildCount = prefr.getInt("curBuildCount", 10);
                         }
                     }
 
@@ -524,9 +582,14 @@ public class StepThread extends Thread {
         // 회전이 없고 3미터 이상이면 1층 측정
         //=================================
 
-        if (Math.abs(gapAlitude) > 3   ) {
+
+
+        if (Math.abs(gapAlitude) > 3.5) {
             long curTime = System.currentTimeMillis() ;
-            if (cnt < 20  || (curTime - goupTime) < 2000 ) {
+            // 2초갭에서 4초로 변경해봄
+            //if (cnt < 20  || (curTime - goupTime) < 2000 ) {
+            if (cnt < 20  || (curTime - goupTime) < 4000 ) {
+                Toast.makeText(mContext, "등산모드 허수측정", Toast.LENGTH_SHORT);
                 //mSleepCnt++;
                 initMeasure();
                 return;
@@ -541,9 +604,9 @@ public class StepThread extends Thread {
                             mCurBuildCount = user.getBuild_floor_amt();
                         } catch (Exception ex) {
                             if (null == prefr) {
-                                mCurBuildCount = 1000;
+                                mCurBuildCount = 10;
                             } else {
-                                mCurBuildCount = prefr.getInt("curBuildCount", 1000);
+                                mCurBuildCount = prefr.getInt("curBuildCount", 10);
                             }
                         }
 
@@ -574,6 +637,52 @@ public class StepThread extends Thread {
 
                                 goupTime = System.currentTimeMillis();
                                 sendDataToServer(1, "notbuilding");
+                            } else {
+
+                                /**
+                                 *
+                                 *
+                                 *
+                                 *
+                                 *
+                                 *
+                                 *
+                                 *
+                                 *
+                                 *
+                                 *
+                                 * 이 부분에 대한 로직 추가 필요
+                                 * 도원빌딩으로 강제 매핑했기 때문에,
+                                 * 현재 오른 층수가 도원빌딩보다 높다고 해서, 빌딩이 아닌건 아님
+                                 * 일단 계단을 올랐다는 로직 추가
+                                 *
+                                 *
+                                 *
+                                 *
+                                 *
+                                 *
+                                 *
+                                 *
+                                 *
+                                 * */
+
+
+                                mBuildCount++ ;
+                                mFloor++;
+                                if (mBuildCount == 1) {
+                                    startTime = System.currentTimeMillis();
+                                }
+                                if (mBuildCount == Math.ceil(mCurBuildCount / 2) && mBuildCount >= 3 ) {
+                                    endTime = System.currentTimeMillis();
+                                    isRedDot = true;
+                                } else {
+                                    isRedDot = false;
+                                }
+                                if (isTest) {
+                                    //getTextView(R.id.txt_m).setText(m);
+                                }
+                                goupTime = System.currentTimeMillis();
+                                sendDataToServer(1, "notbuilding");
                             }
                         } else {
                             mBuildCount++ ;
@@ -599,6 +708,40 @@ public class StepThread extends Thread {
                         mLogicCount = 0 ;
                         if (mIsBuild.equals("Y")) {
                             //mClimbCount++;
+
+                            /**
+                             *
+                             *
+                             *
+                             *
+                             *
+                             *
+                             *
+                             *
+                             *
+                             *
+                             *
+                             * 이 부분에 대한 로직 추가 필요
+                             * 도원빌딩으로 강제 매핑했기 때문에,
+                             * 현재 오른 층수가 도원빌딩보다 높다고 해서, 빌딩이 아닌건 아님
+                             * 일단 계단을 올랐다는 로직 추가
+                             *
+                             *
+                             *
+                             *
+                             *
+                             *
+                             *
+                             *
+                             *
+                             * */
+
+                            mFloor++;
+                            if (isTest) {
+                                //getTextView(R.id.txt_m).setText(m);
+                            }
+                            goupTime = System.currentTimeMillis();
+                            sendDataToServer(1, "notbuilding");
                         } else {
                             mFloor++;
                             if (isTest) {
@@ -908,7 +1051,7 @@ public class StepThread extends Thread {
         }*/
 
         Log.d("999999999999777771", token + "___" + buildCode);
-        Toast.makeText(mContext, "계단서버전송", Toast.LENGTH_SHORT).show();
+
         if(StringUtil.isEmptyOrWhiteSpace(token) || StringUtil.isEmptyOrWhiteSpace(buildCode)){
             Toast.makeText(mContext, "계단서버전송실패1", Toast.LENGTH_SHORT).show();
             return;
@@ -980,6 +1123,8 @@ public class StepThread extends Thread {
                 query.put("start_time", startTime);
                 query.put("end_time", endTime);
             }
+
+            Log.d("999999999999777771", mCurBuildCount + " ");
 
             final String localTime = DateUtil.currentDate("yyyyMMddHHmmss");
 
@@ -1210,5 +1355,12 @@ public class StepThread extends Thread {
             }
         }
         return false;
+    }
+
+    public void acquireCPUWakelock() {
+        PowerManager powerManager = (PowerManager) mContext.getSystemService(POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                "MyApp::MyWakelockTag");
+        if (!wakeLock.isHeld()) wakeLock.acquire();
     }
 }

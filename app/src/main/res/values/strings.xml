@@ -119,7 +119,7 @@
     <string name="txt_find_pass_fail">계정을 찾을 수 없습니다.\n이메일을 확인해주세요.</string>
     <string name="txt_find_pass_result">입력하신 메일주소 [{0}](으)로 임시 비밀번호가 발송 되었습니다.\n이메일을 확인해주세요.</string>
 
-    <string name="cafe_list_desc1">가입한 카페를 선택하고 전환 버튼을 탭하면</string>
+    <string name="cafe_list_desc1">가입한 카페를 선택하고\n전환 버튼을 탭하면</string>
     <string name="cafe_list_desc2">관련 정보로 전환됩니다.</string>
 
     <string name="cafe_create_success">카페가 개설되었습니다.</string>

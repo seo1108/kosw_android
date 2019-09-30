@@ -50,7 +50,7 @@
                 <TextView
                     android:id="@+id/desc_1"
                     android:layout_width="match_parent"
-                    android:layout_height="25dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:layout_weight="1.0"
                     android:gravity="center"
@@ -65,14 +65,13 @@
                 <TextView
                     android:id="@+id/desc_2"
                     android:layout_width="match_parent"
-                    android:layout_height="25dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1.0"
                     android:gravity="center"
                     android:text="@string/cafe_list_desc2"
                     android:textAlignment="center"
                     android:textColor="@color/color_ed4524"
                     android:textSize="18sp"
-                    android:layout_marginTop="5dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/desc_1"/>
