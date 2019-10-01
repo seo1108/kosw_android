@@ -402,8 +402,9 @@ public class StepThread extends Thread {
 
         //Log.d("999999999999777771", m);
 
-        if (cnt > 0 && cnt % 50 == 0) {
-            Toast.makeText(mContext, m, Toast.LENGTH_SHORT).show();
+        if (cnt > 0 && cnt % 40 == 0) {
+            long curTime1 = System.currentTimeMillis();
+            Toast.makeText(mContext, "[gap : " + (curTime1 - goupTime)  +"] "  + m, Toast.LENGTH_SHORT).show();
         }
 
         if (!isContinue) {
@@ -597,9 +598,9 @@ public class StepThread extends Thread {
 
         if (Math.abs(gapAlitude) > 3.5) {
             long curTime = System.currentTimeMillis() ;
-            // 2초갭에서 7초로 변경해봄
+            // 2초갭에서 7초까지로 변경해봄
             //if (cnt < 20  || (curTime - goupTime) < 2000 ) {
-            if (cnt < 20  || (curTime - goupTime) < 7000 ) {
+            if (cnt < 70  || (curTime - goupTime) < 8000 ) {
                 Toast.makeText(mContext, "등산모드 허수측정", Toast.LENGTH_SHORT);
                 //mSleepCnt++;
                 initMeasure();
