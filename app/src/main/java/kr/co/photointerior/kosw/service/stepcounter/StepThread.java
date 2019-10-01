@@ -306,7 +306,7 @@ public class StepThread extends Thread {
 
 
         // 5초마다 소리
-        /*if (cnt % 50 == 0 && cnt < 10 * 25 ) {
+        if (cnt % 50 == 0 && cnt < 10 * 24 && cnt > 0 ) {
             MediaPlayer mMediaPlayer = new MediaPlayer();
             try {
                 Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init25);
@@ -316,15 +316,15 @@ public class StepThread extends Thread {
             } catch (Exception e) {
 
             }
-        }*/
+        }
 
-        if (cnt >= 10 * 25 )  {
-            Toast.makeText(mContext, "25초 초기화", Toast.LENGTH_SHORT).show();
+        if (cnt >= 10 * 24 )  {
+            Toast.makeText(mContext, "24초 초기화", Toast.LENGTH_SHORT).show();
 
             MediaPlayer mMediaPlayer = new MediaPlayer();
             try {
-                //Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all_loud);
-                Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all_more_silence);
+                Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all_loud);
+                //Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all_more_silence);
                 mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
                 mMediaPlayer.prepare();
                 mMediaPlayer.start();
@@ -408,12 +408,23 @@ public class StepThread extends Thread {
 
         if (!isContinue) {
             if (mDir > 135 && Math.abs(gapAlitude) > 1.5  ) {
-                // 자동측정일 경우, 5초 이내 측정이면  카운트 하지 않음 엘리베이터 사용자 걸름
+                // 자동측정일 경우, 7초 이내 측정이면  카운트 하지 않음 엘리베이터 사용자 걸름
                 // 수동측정은 2초
                 long curTime = System.currentTimeMillis();
-                if (cnt < 30 || (curTime - goupTime) < 6000) {
-                    Toast.makeText(mContext, "엘리베이터 5초 진입", Toast.LENGTH_SHORT).show();
-                    if (cnt > 50) {
+                if (cnt < 30 || (curTime - goupTime) < 7000) {
+                    //Toast.makeText(mContext, "엘리베이터 5초 진입", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(mContext, "엘리베이터 5초 알림", Toast.LENGTH_SHORT).show();
+
+                    MediaPlayer mMediaPlayer = new MediaPlayer();
+                    try {
+                        Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.elevator);
+                        mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+                        mMediaPlayer.prepare();
+                        mMediaPlayer.start();
+                    } catch (Exception e) {
+
+                    }
+                    /*if (cnt > 50) {
                         Toast.makeText(mContext, "엘리베이터 5초 알림", Toast.LENGTH_SHORT).show();
 
                         MediaPlayer mMediaPlayer = new MediaPlayer();
@@ -425,7 +436,7 @@ public class StepThread extends Thread {
                         } catch (Exception e) {
 
                         }
-                    }
+                    }*/
 
                     mSleepCnt++ ;
                     initMeasure();
@@ -586,9 +597,9 @@ public class StepThread extends Thread {
 
         if (Math.abs(gapAlitude) > 3.5) {
             long curTime = System.currentTimeMillis() ;
-            // 2초갭에서 4초로 변경해봄
+            // 2초갭에서 7초로 변경해봄
             //if (cnt < 20  || (curTime - goupTime) < 2000 ) {
-            if (cnt < 20  || (curTime - goupTime) < 4000 ) {
+            if (cnt < 20  || (curTime - goupTime) < 7000 ) {
                 Toast.makeText(mContext, "등산모드 허수측정", Toast.LENGTH_SHORT);
                 //mSleepCnt++;
                 initMeasure();
@@ -857,9 +868,9 @@ public class StepThread extends Thread {
                     SharedPreferences prefr = mContext.getSharedPreferences("userInfo", MODE_PRIVATE);
 
                     if (null == prefr) {
-                        mCurBuildCount = 1000;
+                        mCurBuildCount = 10;
                     } else {
-                        mCurBuildCount = prefr.getInt("curBuildCount", 1000);
+                        mCurBuildCount = prefr.getInt("curBuildCount", 10);
                     }
                 }
 
