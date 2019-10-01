@@ -297,9 +297,8 @@ public class StepThread extends Thread {
         if (mAltitude == 0 )  {
             //return ;
         }
-        AppUserBase user1 = DataHolder.instance().getAppUserBase() ;
 
-        Log.d("999999999999777771", user1.getIsbuild() + "__" + user1.getBuild_floor_amt() + "__" + String.valueOf(mStarted) + "__" + mSleepCnt + "_______" + cnt + "___" + mSaveStep + "______" + mStep);
+        Log.d("999999999999777771", String.valueOf(mStarted) + "__" + mSleepCnt + "_______" + cnt + "___" + mSaveStep + "______" + mStep);
 
         //if (0 == cnt%15)  mMeasureStep = 0;
         //if (cnt % 10 == 0) sendDataToServer(1, "building" );
@@ -307,7 +306,7 @@ public class StepThread extends Thread {
 
 
         // 5초마다 소리
-        if (cnt % 50 == 0 && cnt < 10 * 25 ) {
+        /*if (cnt % 50 == 0 && cnt < 10 * 25 ) {
             MediaPlayer mMediaPlayer = new MediaPlayer();
             try {
                 Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init25);
@@ -317,15 +316,15 @@ public class StepThread extends Thread {
             } catch (Exception e) {
 
             }
-        }
+        }*/
 
         if (cnt >= 10 * 25 )  {
             Toast.makeText(mContext, "25초 초기화", Toast.LENGTH_SHORT).show();
 
             MediaPlayer mMediaPlayer = new MediaPlayer();
             try {
-                Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all_loud);
-                //Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all_more_silence);
+                //Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all_loud);
+                Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all_more_silence);
                 mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
                 mMediaPlayer.prepare();
                 mMediaPlayer.start();
