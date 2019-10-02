@@ -402,7 +402,7 @@ public class StepThread extends Thread {
 
         Log.d("EEEEEEEEEEEEEEEEEEE", mDir + "");
 
-        if (cnt > 0 && cnt % 40 == 0) {
+        if (cnt > 0 && cnt % 20 == 0) {
             long curTime1 = System.currentTimeMillis();
             Toast.makeText(mContext, "[gap : " + (curTime1 - goupTime)  +"] "  + m, Toast.LENGTH_SHORT).show();
         }
@@ -414,7 +414,7 @@ public class StepThread extends Thread {
                 // 자동측정일 경우, 7초 이내 측정이면  카운트 하지 않음 엘리베이터 사용자 걸름
                 // 수동측정은 2초
                 long curTime = System.currentTimeMillis();
-                if (cnt < 30 || (curTime - goupTime) < 6000) {
+                if (cnt < 30 || (curTime - goupTime) < 5000) {
                     //Toast.makeText(mContext, "엘리베이터 5초 진입", Toast.LENGTH_SHORT).show();
                     //Toast.makeText(mContext, "엘리베이터 5초 알림", Toast.LENGTH_SHORT).show();
 
