@@ -308,20 +308,20 @@ public class StepThread extends Thread {
         // 5초마다 소리
         if (cnt % 50 == 0 && cnt < 10 * 24 && cnt > 0 ) {
             MediaPlayer mMediaPlayer = new MediaPlayer();
-            try {
+            /*try {
                 Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init25);
                 mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
                 mMediaPlayer.prepare();
                 mMediaPlayer.start();
             } catch (Exception e) {
 
-            }
+            }*/
         }
 
         if (cnt >= 10 * 24 )  {
             Toast.makeText(mContext, "24초 초기화", Toast.LENGTH_SHORT).show();
 
-            MediaPlayer mMediaPlayer = new MediaPlayer();
+            /*MediaPlayer mMediaPlayer = new MediaPlayer();
             try {
                 Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all_loud);
                 //Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all_more_silence);
@@ -330,7 +330,7 @@ public class StepThread extends Thread {
                 mMediaPlayer.start();
             } catch (Exception e) {
 
-            }
+            }*/
 
 
             if (mSaveStep <=  0 ) { // 걷기중이아니면
@@ -596,11 +596,11 @@ public class StepThread extends Thread {
 
 
 
-        if (Math.abs(gapAlitude) > 3.5) {
+        if (Math.abs(gapAlitude) > 4) {
             long curTime = System.currentTimeMillis() ;
             // 2초갭에서 7초까지로 변경해봄
             //if (cnt < 20  || (curTime - goupTime) < 2000 ) {
-            if (cnt < 70  || (curTime - goupTime) < 8000 ) {
+            if (cnt < 70  || (curTime - goupTime) < 7000 ) {
                 Toast.makeText(mContext, "등산모드 허수측정", Toast.LENGTH_SHORT);
                 //mSleepCnt++;
                 initMeasure();
