@@ -410,11 +410,11 @@ public class StepThread extends Thread {
         if (!isContinue) {
             // 90도에서 180도로 변경
             //if (mDir > 135 && Math.abs(gapAlitude) > 1.5  ) {
-            if (mDir > 270 && Math.abs(gapAlitude) > 1.5  ) {
+            if (mDir > 200 && Math.abs(gapAlitude) > 1.5  ) {
                 // 자동측정일 경우, 7초 이내 측정이면  카운트 하지 않음 엘리베이터 사용자 걸름
                 // 수동측정은 2초
                 long curTime = System.currentTimeMillis();
-                if (cnt < 30 || (curTime - goupTime) < 5000) {
+                if (cnt < 30 || (curTime - goupTime) < 6000) {
                     //Toast.makeText(mContext, "엘리베이터 5초 진입", Toast.LENGTH_SHORT).show();
                     //Toast.makeText(mContext, "엘리베이터 5초 알림", Toast.LENGTH_SHORT).show();
 
