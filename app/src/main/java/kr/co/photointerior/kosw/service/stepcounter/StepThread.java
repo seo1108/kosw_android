@@ -400,7 +400,7 @@ public class StepThread extends Thread {
 
         String m = String.format("높이 : %.2f , 방향 : %.2f , 걷기 : %.2f , 시간 : %d" , gapAlitude, mDir, step, cnt);
 
-        //Log.d("999999999999777771", m);
+        Log.d("EEEEEEEEEEEEEEEEEEE", mDir + "");
 
         if (cnt > 0 && cnt % 40 == 0) {
             long curTime1 = System.currentTimeMillis();
@@ -408,11 +408,13 @@ public class StepThread extends Thread {
         }
 
         if (!isContinue) {
-            if (mDir > 135 && Math.abs(gapAlitude) > 1.5  ) {
+            // 90도에서 180도로 변경
+            //if (mDir > 135 && Math.abs(gapAlitude) > 1.5  ) {
+            if (mDir > 270 && Math.abs(gapAlitude) > 1.5  ) {
                 // 자동측정일 경우, 7초 이내 측정이면  카운트 하지 않음 엘리베이터 사용자 걸름
                 // 수동측정은 2초
                 long curTime = System.currentTimeMillis();
-                if (cnt < 30 || (curTime - goupTime) < 7000) {
+                if (cnt < 30 || (curTime - goupTime) < 5000) {
                     //Toast.makeText(mContext, "엘리베이터 5초 진입", Toast.LENGTH_SHORT).show();
                     //Toast.makeText(mContext, "엘리베이터 5초 알림", Toast.LENGTH_SHORT).show();
 
@@ -528,6 +530,8 @@ public class StepThread extends Thread {
                     mStartList.get(0).step = obj_bb.step ;
                     mStartList.get(0).altitude = mAltitude ;
 
+
+
                     cnt++ ;
                     return ;
 
@@ -591,7 +595,7 @@ public class StepThread extends Thread {
         }
 
         //=================================
-        // 회전이 없고 3미터 이상이면 1층 측정
+        // 회전이 없고 4미터 이상이면 1층 측정
         //=================================
 
 
