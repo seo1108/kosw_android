@@ -307,21 +307,22 @@ public class StepThread extends Thread {
 
         // 5초마다 소리
         if (cnt % 50 == 0 && cnt < 10 * 24 && cnt > 0 ) {
+
             MediaPlayer mMediaPlayer = new MediaPlayer();
-            /*try {
+            try {
                 Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init25);
                 mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
                 mMediaPlayer.prepare();
                 mMediaPlayer.start();
             } catch (Exception e) {
 
-            }*/
+            }
         }
 
         if (cnt >= 10 * 24 )  {
             Toast.makeText(mContext, "24초 초기화", Toast.LENGTH_SHORT).show();
 
-            /*MediaPlayer mMediaPlayer = new MediaPlayer();
+            MediaPlayer mMediaPlayer = new MediaPlayer();
             try {
                 Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all_loud);
                 //Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all_more_silence);
@@ -330,7 +331,7 @@ public class StepThread extends Thread {
                 mMediaPlayer.start();
             } catch (Exception e) {
 
-            }*/
+            }
 
 
             if (mSaveStep <=  0 ) { // 걷기중이아니면
@@ -402,22 +403,27 @@ public class StepThread extends Thread {
 
         Log.d("EEEEEEEEEEEEEEEEEEE", mDir + "");
 
-        if (cnt > 0 && cnt % 20 == 0) {
+        if (cnt > 0 && cnt % 50 == 0) {
             long curTime1 = System.currentTimeMillis();
             Toast.makeText(mContext, "[gap : " + (curTime1 - goupTime)  +"] "  + m, Toast.LENGTH_SHORT).show();
+
+            // 5초 이내에 30센치 높이 이동이 없으면 다시 초기화
+            if (Math.abs(gapAlitude) <= 0.3)
+            {
+                mSleepCnt++ ;
+                initMeasure();
+                return ;
+            }
         }
 
         if (!isContinue) {
-            // 90도에서 180도로 변경
+            // 90도(135?) 에서 180도(190으로 버퍼를 둠)로 변경
             //if (mDir > 135 && Math.abs(gapAlitude) > 1.5  ) {
-            if (mDir > 200 && Math.abs(gapAlitude) > 1.5  ) {
+            if (mDir > 190 && Math.abs(gapAlitude) > 1.5  ) {
                 // 자동측정일 경우, 7초 이내 측정이면  카운트 하지 않음 엘리베이터 사용자 걸름
                 // 수동측정은 2초
                 long curTime = System.currentTimeMillis();
                 if (cnt < 30 || (curTime - goupTime) < 5000) {
-                    //Toast.makeText(mContext, "엘리베이터 5초 진입", Toast.LENGTH_SHORT).show();
-                    //Toast.makeText(mContext, "엘리베이터 5초 알림", Toast.LENGTH_SHORT).show();
-
                     MediaPlayer mMediaPlayer = new MediaPlayer();
                     try {
                         Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.elevator);
@@ -497,6 +503,7 @@ public class StepThread extends Thread {
                             //getTextView(R.id.txt_m).setText(m);
                         }
 
+                        if (step <= 5) return;
                         goupTime = System.currentTimeMillis() ;
                         sendDataToServer(1, "building");
                     } else {
@@ -509,6 +516,8 @@ public class StepThread extends Thread {
                         if (isTest) {
                             //getTextView(R.id.txt_m).setText(m);
                         }
+
+                        if (step <= 5) return;
                         goupTime = System.currentTimeMillis() ;
                         sendDataToServer(1, "building");
                     }
@@ -651,6 +660,7 @@ public class StepThread extends Thread {
                                     isRedDot = false;
                                 }
 
+                                if (step <= 5) return;
                                 goupTime = System.currentTimeMillis();
                                 sendDataToServer(1, "notbuilding");
                             } else {
@@ -697,6 +707,8 @@ public class StepThread extends Thread {
                                 if (isTest) {
                                     //getTextView(R.id.txt_m).setText(m);
                                 }
+
+                                if (step <= 5) return;
                                 goupTime = System.currentTimeMillis();
                                 sendDataToServer(1, "notbuilding");
                             }
@@ -715,6 +727,8 @@ public class StepThread extends Thread {
                             if (isTest) {
                                 //getTextView(R.id.txt_m).setText(m);
                             }
+
+                            if (step <= 5) return;
                             goupTime = System.currentTimeMillis();
                             sendDataToServer(1, "notbuilding");
                         }
@@ -756,6 +770,8 @@ public class StepThread extends Thread {
                             if (isTest) {
                                 //getTextView(R.id.txt_m).setText(m);
                             }
+
+                            if (step <= 5) return;
                             goupTime = System.currentTimeMillis();
                             sendDataToServer(1, "notbuilding");
                         } else {
@@ -763,6 +779,8 @@ public class StepThread extends Thread {
                             if (isTest) {
                                 //getTextView(R.id.txt_m).setText(m);
                             }
+
+                            if (step <= 5) return;
                             goupTime = System.currentTimeMillis();
                             sendDataToServer(1, "notbuilding");
                         }
