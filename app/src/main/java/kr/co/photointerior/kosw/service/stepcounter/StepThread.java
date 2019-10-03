@@ -306,32 +306,32 @@ public class StepThread extends Thread {
 
 
         // 5초마다 소리
-        if (cnt % 50 == 0 && cnt < 10 * 24 && cnt > 0 ) {
-
-            MediaPlayer mMediaPlayer = new MediaPlayer();
-            try {
-                Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init25);
-                mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
-                mMediaPlayer.prepare();
-                mMediaPlayer.start();
-            } catch (Exception e) {
-
-            }
-        }
+//        if (cnt % 50 == 0 && cnt < 10 * 24 && cnt > 0 ) {
+//
+//            MediaPlayer mMediaPlayer = new MediaPlayer();
+//            try {
+//                Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init25);
+//                mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+//                mMediaPlayer.prepare();
+//                mMediaPlayer.start();
+//            } catch (Exception e) {
+//
+//            }
+//        }
 
         if (cnt >= 10 * 24 )  {
             Toast.makeText(mContext, "24초 초기화", Toast.LENGTH_SHORT).show();
 
-            MediaPlayer mMediaPlayer = new MediaPlayer();
-            try {
-                Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all_loud);
-                //Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all_more_silence);
-                mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
-                mMediaPlayer.prepare();
-                mMediaPlayer.start();
-            } catch (Exception e) {
-
-            }
+//            MediaPlayer mMediaPlayer = new MediaPlayer();
+//            try {
+//                Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all_loud);
+//                //Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all_more_silence);
+//                mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+//                mMediaPlayer.prepare();
+//                mMediaPlayer.start();
+//            } catch (Exception e) {
+//
+//            }
 
 
             if (mSaveStep <=  0 ) { // 걷기중이아니면
