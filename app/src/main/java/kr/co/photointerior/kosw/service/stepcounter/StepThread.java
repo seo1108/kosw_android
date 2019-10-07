@@ -167,6 +167,8 @@ public class StepThread extends Thread {
 
     PowerManager.WakeLock wakeLock;
 
+    private boolean mDebugMode = true;
+
     public StepThread(Context context){
         mContext = context;
     }
@@ -186,7 +188,6 @@ public class StepThread extends Thread {
             }
         }*/
         synchronized (this) {
-            Log.d("999999999999777771", "STOP FOREVER");
             mStarted = false;
             this.isRun = false;
             mMeasureStep = 0;
@@ -195,14 +196,12 @@ public class StepThread extends Thread {
                 mStepManager.stopMeasure();
                 //mStepManagerForService.stopMeasure();
             } catch (Exception e) {
-                Log.d("999999999999777771", "[stepsensor] unregist failed : " + e.toString());
             }
 
             try {
                 if (mAltiManager != null) mAltiManager.stopMeasure();
                 if (mDirectionManager != null) mDirectionManager.stopMeasure();
             } catch (Exception ex) {
-                Log.d("999999999999777771", "[stepsensor] unregist other sensor failed : " + ex.toString());
             }
 
             try {
@@ -301,27 +300,34 @@ public class StepThread extends Thread {
 
         Log.d("999999999999777771", String.valueOf(mStarted) + "__" + mSleepCnt + "_______" + cnt + "___" + mSaveStep + "______" + mStep);
 
-        // 5초마다 소리
-//        if (cnt % 50 == 0 && cnt < 10 * 24 && cnt > 0 ) {
-//            MediaPlayer mMediaPlayer = new MediaPlayer();
-//            try {
-//                Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init25);
-//                mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
-//                mMediaPlayer.prepare();
-//                mMediaPlayer.start();
-//            } catch (Exception e) { }
-//        }
+        if (mDebugMode)
+        {
+            // 5초마다 소리
+            if (cnt % 50 == 0 && cnt < 10 * 24 && cnt > 0) {
+                MediaPlayer mMediaPlayer = new MediaPlayer();
+                try {
+                    Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init25);
+                    mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+                    mMediaPlayer.prepare();
+                    mMediaPlayer.start();
+                } catch (Exception e) {
+                }
+            }
+        }
 
         if (cnt >= 10 * 24 )  {
-            Toast.makeText(mContext, "24초 초기화", Toast.LENGTH_SHORT).show();
-
-//            MediaPlayer mMediaPlayer = new MediaPlayer();
-//            try {
-//                Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all_loud);
-//                mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
-//                mMediaPlayer.prepare();
-//                mMediaPlayer.start();
-//            } catch (Exception e) { }
+            if (mDebugMode)
+            {
+                Toast.makeText(mContext, "24초 초기화", Toast.LENGTH_SHORT).show();
+                MediaPlayer mMediaPlayer = new MediaPlayer();
+                try {
+                    Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all_loud);
+                    mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+                    mMediaPlayer.prepare();
+                    mMediaPlayer.start();
+                } catch (Exception e) {
+                }
+            }
 
             if (mSaveStep <=  0 ) { // 걷기중이아니면
                 // 원본소스
@@ -379,8 +385,11 @@ public class StepThread extends Thread {
         String m = String.format("높이 : %.2f , 방향 : %.2f , 걷기 : %.2f , 시간 : %d" , gapAlitude, mDir, step, cnt);
 
         if (cnt > 0 && cnt % 50 == 0) {
-//            long curTime1 = System.currentTimeMillis();
-//            Toast.makeText(mContext, m, Toast.LENGTH_SHORT).show();
+            if (mDebugMode)
+            {
+                long curTime1 = System.currentTimeMillis();
+                Toast.makeText(mContext, m, Toast.LENGTH_SHORT).show();
+            }
 
             if (Math.abs(gapAlitude) <= 0.3)
             {
@@ -398,13 +407,17 @@ public class StepThread extends Thread {
                 // 수동측정은 2초
                 long curTime = System.currentTimeMillis();
                 if (cnt < 70 || (curTime - goupTime) < 7000) {
-                    MediaPlayer mMediaPlayer = new MediaPlayer();
-//                    try {
-//                        Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.elevator);
-//                        mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
-//                        mMediaPlayer.prepare();
-//                        mMediaPlayer.start();
-//                    } catch (Exception e) { }
+                    if (mDebugMode)
+                    {
+                        MediaPlayer mMediaPlayer = new MediaPlayer();
+                        try {
+                            Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.elevator);
+                            mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+                            mMediaPlayer.prepare();
+                            mMediaPlayer.start();
+                        } catch (Exception e) {
+                        }
+                    }
 
                     mSleepCnt++ ;
                     initMeasure();
@@ -1852,15 +1865,7 @@ public class StepThread extends Thread {
                 //mDirectionManager.startMeasure();
                 Log.d("stepsensor", "START");
                 //mStepManager.startMeasure();
-    /*
-                if (!isFirstRunned) {
-                    Log.d("999999999999777771", "[stepsensor] start");
-                    if (null != mStepManager) mStepManager.stopMeasure();
-                    mStepManager.restartMeasure();
-                }
 
-                isFirstRunned = true;
-    */
 
                 //findViewById(R.id.LayoutPause).setVisibility(View.INVISIBLE);
                 //mValue.setText("wait...");
@@ -1988,9 +1993,12 @@ public class StepThread extends Thread {
             return;
         }*/
 
+ //       if (mDebugMode)
+ //       {
+            Toast.makeText(mContext, "[계단 오르기] " + measure, Toast.LENGTH_SHORT).show();
+ //       }
 
 
-        Toast.makeText(mContext, "[계단 오르기] " + measure, Toast.LENGTH_SHORT).show();
         mSleepCnt = 0 ;
         mTrashStep = 0 ;
 
@@ -2001,10 +2009,7 @@ public class StepThread extends Thread {
             pref.saveStringValue(PrefKey.BUILDING_CODE, "100001");
         }*/
 
-        Log.d("999999999999777771", token + "___" + buildCode);
-
         if(StringUtil.isEmptyOrWhiteSpace(token) || StringUtil.isEmptyOrWhiteSpace(buildCode)){
-            Toast.makeText(mContext, "계단서버전송실패1", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -2014,28 +2019,30 @@ public class StepThread extends Thread {
         if (null == prefr) return;
         String userToken = prefr.getString("token", "");
         if ("".equals(userToken)) {
-            Toast.makeText(mContext, "계단서버전송실패2", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        MediaPlayer mMediaPlayer = new MediaPlayer();
+//        if (mDebugMode)
+//        {
+            MediaPlayer mMediaPlayer = new MediaPlayer();
 
-        try {
-            if ("building".equals(type)) {
-                Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.alert);
-                mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
-                mMediaPlayer.prepare();
-                mMediaPlayer.start();
-            } else {
-                Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.alert2);
-                mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
-                mMediaPlayer.prepare();
-                mMediaPlayer.start();
+            try {
+                if ("building".equals(type)) {
+                    Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.alert);
+                    mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+                    mMediaPlayer.prepare();
+                    mMediaPlayer.start();
+                } else {
+                    Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.alert2);
+                    mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+                    mMediaPlayer.prepare();
+                    mMediaPlayer.start();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        }
 
         //return;
         try {
