@@ -330,7 +330,6 @@ public class StepThread extends Thread {
             }
 
             if (mSaveStep <=  0 ) { // 걷기중이아니면
-                // 원본소스
                 mSleepCnt = mMaxSleepCnt;
                 sleepMode = 0 ;
                 initMeasure();
@@ -391,9 +390,9 @@ public class StepThread extends Thread {
                 Toast.makeText(mContext, m, Toast.LENGTH_SHORT).show();
             }
 
-            if (Math.abs(gapAlitude) <= 0.3)
+            if (Math.abs(gapAlitude) <= 0.3 || mSaveStep <= 0)
             {
-                mSleepCnt++ ;
+                mSleepCnt = mMaxSleepCnt;
                 initMeasure();
                 return ;
             }
@@ -419,7 +418,8 @@ public class StepThread extends Thread {
                         }
                     }
 
-                    mSleepCnt++ ;
+                    //mSleepCnt++ ;
+                    mSleepCnt = mMaxSleepCnt;
                     initMeasure();
                     return;
                 }
@@ -570,14 +570,15 @@ public class StepThread extends Thread {
         }
 
         //=================================
-        // 회전이 없고 4미터 이상이면 1층 측정
+        // 회전이 없고 3미터 이상이면 1층 측정
         //=================================
-        if (Math.abs(gapAlitude) > 4) {
+        if (Math.abs(gapAlitude) > 3) {
             long curTime = System.currentTimeMillis() ;
             // 2초갭에서 7초까지로 변경해봄
             //if (cnt < 20  || (curTime - goupTime) < 2000 ) {
             if (cnt < 70  || (curTime - goupTime) < 7000 ) {
                 //mSleepCnt++;
+                mSleepCnt = mMaxSleepCnt;
                 initMeasure();
                 return;
             } else {
@@ -622,7 +623,12 @@ public class StepThread extends Thread {
                                     isRedDot = false;
                                 }
 
-                                if (mSaveStep <= 5) return;
+                                if ((mSaveStep <= 4 && mSaveStep >= 24)
+                                    || Math.abs(gapAlitude) > 4) {
+                                    mSleepCnt = mMaxSleepCnt;
+                                    initMeasure();
+                                    return;
+                                }
                                 goupTime = System.currentTimeMillis();
                                 sendDataToServer(1, "notbuilding", m);
                             } else {
@@ -670,7 +676,12 @@ public class StepThread extends Thread {
                                     //getTextView(R.id.txt_m).setText(m);
                                 }
 
-                                if (mSaveStep <= 5) return;
+                                if ((mSaveStep <= 4 && mSaveStep >= 24)
+                                        || Math.abs(gapAlitude) > 4) {
+                                    mSleepCnt = mMaxSleepCnt;
+                                    initMeasure();
+                                    return;
+                                }
                                 goupTime = System.currentTimeMillis();
                                 sendDataToServer(1, "notbuilding", m);
                             }
@@ -690,7 +701,12 @@ public class StepThread extends Thread {
                                 //getTextView(R.id.txt_m).setText(m);
                             }
 
-                            if (mSaveStep <= 5) return;
+                            if ((mSaveStep <= 4 && mSaveStep >= 24)
+                                    || Math.abs(gapAlitude) > 4) {
+                                mSleepCnt = mMaxSleepCnt;
+                                initMeasure();
+                                return;
+                            }
                             goupTime = System.currentTimeMillis();
                             sendDataToServer(1, "notbuilding", m);
                         }
@@ -733,7 +749,12 @@ public class StepThread extends Thread {
                                 //getTextView(R.id.txt_m).setText(m);
                             }
 
-                            if (mSaveStep <= 5) return;
+                            if ((mSaveStep <= 4 && mSaveStep >= 24)
+                                    || Math.abs(gapAlitude) > 4) {
+                                mSleepCnt = mMaxSleepCnt;
+                                initMeasure();
+                                return;
+                            }
                             goupTime = System.currentTimeMillis();
                             sendDataToServer(1, "notbuilding", m);
                         } else {
@@ -742,7 +763,12 @@ public class StepThread extends Thread {
                                 //getTextView(R.id.txt_m).setText(m);
                             }
 
-                            if (mSaveStep <= 5) return;
+                            if ((mSaveStep <= 4 && mSaveStep >= 24)
+                                    || Math.abs(gapAlitude) > 4) {
+                                mSleepCnt = mMaxSleepCnt;
+                                initMeasure();
+                                return;
+                            }
                             goupTime = System.currentTimeMillis();
                             sendDataToServer(1, "notbuilding", m);
                         }
