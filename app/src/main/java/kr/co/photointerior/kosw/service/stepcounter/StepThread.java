@@ -303,7 +303,7 @@ public class StepThread extends Thread {
         if (mDebugMode)
         {
             // 5초마다 소리
-            if (cnt % 50 == 0 && cnt < 10 * 24 && cnt > 0) {
+            if (cnt % 50 == 0 && cnt < 10 * 30 && cnt > 0) {
                 MediaPlayer mMediaPlayer = new MediaPlayer();
                 try {
                     Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init25);
@@ -315,10 +315,10 @@ public class StepThread extends Thread {
             }
         }
 
-        if (cnt >= 10 * 24 )  {
+        if (cnt >= 10 * 30 )  {
             if (mDebugMode)
             {
-                Toast.makeText(mContext, "24초 초기화", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "30초 초기화", Toast.LENGTH_SHORT).show();
                 MediaPlayer mMediaPlayer = new MediaPlayer();
                 try {
                     Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all_loud);
@@ -401,28 +401,34 @@ public class StepThread extends Thread {
         if (!isContinue) {
             // 90도(135?) 에서 180도(190으로 버퍼를 둠)로 변경
             //if (mDir > 135 && Math.abs(gapAlitude) > 1.5  ) {
-            if (mDir > 190 && Math.abs(gapAlitude) > 1.5  ) {
-                // 자동측정일 경우, 7초 이내 측정이면  카운트 하지 않음 엘리베이터 사용자 걸름
+            if (mDir > 190 && Math.abs(gapAlitude) > 1.5) {
+                // 자동측정일 경우, 7초 이내 측정이면  카운트 하지 않음 엘리베이터 사용자 걸음
                 // 수동측정은 2초
                 long curTime = System.currentTimeMillis();
-                if (cnt < 70 || (curTime - goupTime) < 7000) {
-                    if (mDebugMode)
-                    {
-                        MediaPlayer mMediaPlayer = new MediaPlayer();
-                        try {
-                            Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.elevator);
-                            mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
-                            mMediaPlayer.prepare();
-                            mMediaPlayer.start();
-                        } catch (Exception e) {
-                        }
-                    }
-
-                    //mSleepCnt++ ;
-                    mSleepCnt = mMaxSleepCnt;
+                if (cnt < 20 || (curTime - goupTime) < 2000) {
+                    mSleepCnt++ ;
                     initMeasure();
                     return;
                 }
+//                    /*if (mDebugMode)
+//                    {
+//                        MediaPlayer mMediaPlayer = new MediaPlayer();
+//                        try {
+//                            Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.elevator);
+//                            mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+//                            mMediaPlayer.prepare();
+//                            mMediaPlayer.start();
+//
+//                            Toast.makeText(mContext, "[엘레베이터]" + m, Toast.LENGTH_SHORT).show();
+//                        } catch (Exception e) {
+//                        }
+//                    }*/
+//
+//                    //mSleepCnt++ ;
+//                    mSleepCnt = mMaxSleepCnt;
+//                    initMeasure();
+//                    return;
+//                }
 
                 if (step > 1) { // 걷기중이면
                     AppUserBase user = DataHolder.instance().getAppUserBase() ;
@@ -474,7 +480,32 @@ public class StepThread extends Thread {
                             //getTextView(R.id.txt_m).setText(m);
                         }
 
-                        if (step <= 5) return;
+                        if ((mSaveStep <= 5)
+                                || (System.currentTimeMillis() - goupTime) < 5000) {
+
+                            if (mDebugMode)
+                            {
+                                MediaPlayer mMediaPlayer = new MediaPlayer();
+                                try {
+                                    Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.elevator);
+                                    mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+                                    mMediaPlayer.prepare();
+                                    mMediaPlayer.start();
+
+                                    if (mSaveStep <= 5) {
+                                        Toast.makeText(mContext, "[부정측정] 걸음수 미달 : " + mSaveStep + "걸음", Toast.LENGTH_LONG).show();
+                                    } else if ((System.currentTimeMillis() - goupTime) < 5000) {
+                                        Toast.makeText(mContext, "[부정측정] 5초이내 측정시도 : " + (System.currentTimeMillis() - goupTime) + "초", Toast.LENGTH_LONG).show();
+                                    }
+                                } catch (Exception e) {
+                                }
+                            }
+
+                            //mSleepCnt++ ;
+                            mSleepCnt = mMaxSleepCnt;
+                            initMeasure();
+                            return;
+                        }
                         goupTime = System.currentTimeMillis() ;
                         sendDataToServer(1, "building", m);
                     } else {
@@ -488,7 +519,32 @@ public class StepThread extends Thread {
                             //getTextView(R.id.txt_m).setText(m);
                         }
 
-                        if (step <= 5) return;
+                        if ((mSaveStep <= 5)
+                                || (System.currentTimeMillis() - goupTime) < 5000) {
+
+                            if (mDebugMode)
+                            {
+                                MediaPlayer mMediaPlayer = new MediaPlayer();
+                                try {
+                                    Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.elevator);
+                                    mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+                                    mMediaPlayer.prepare();
+                                    mMediaPlayer.start();
+
+                                    if (mSaveStep <= 5) {
+                                        Toast.makeText(mContext, "[부정측정] 걸음수 미달 : " + mSaveStep + "걸음", Toast.LENGTH_LONG).show();
+                                    } else if ((System.currentTimeMillis() - goupTime) < 5000) {
+                                        Toast.makeText(mContext, "[부정측정] 5초이내 측정시도 : " + (System.currentTimeMillis() - goupTime) + "초", Toast.LENGTH_LONG).show();
+                                    }
+                                } catch (Exception e) {
+                                }
+                            }
+
+                            //mSleepCnt++ ;
+                            mSleepCnt = mMaxSleepCnt;
+                            initMeasure();
+                            return;
+                        }
                         goupTime = System.currentTimeMillis() ;
                         sendDataToServer(1, "building", m);
                     }
@@ -576,7 +632,7 @@ public class StepThread extends Thread {
             long curTime = System.currentTimeMillis() ;
             // 2초갭에서 7초까지로 변경해봄
             //if (cnt < 20  || (curTime - goupTime) < 2000 ) {
-            if (cnt < 70  || (curTime - goupTime) < 7000 ) {
+            if (cnt < 60  || (curTime - goupTime) < 5000 ) {
                 //mSleepCnt++;
                 mSleepCnt = mMaxSleepCnt;
                 initMeasure();
@@ -623,8 +679,30 @@ public class StepThread extends Thread {
                                     isRedDot = false;
                                 }
 
-                                if ((mSaveStep <= 4 && mSaveStep >= 24)
-                                    || Math.abs(gapAlitude) > 4) {
+                                if ((mSaveStep <= 5)
+                                    || Math.abs(gapAlitude) > 4
+                                    || (System.currentTimeMillis() - goupTime) < 5000) {
+
+                                    if (mDebugMode)
+                                    {
+                                        MediaPlayer mMediaPlayer = new MediaPlayer();
+                                        try {
+                                            Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.elevator);
+                                            mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+                                            mMediaPlayer.prepare();
+                                            mMediaPlayer.start();
+
+                                            if (mSaveStep <= 5) {
+                                                Toast.makeText(mContext, "[부정측정] 걸음수 미달 : " + mSaveStep + "걸음", Toast.LENGTH_LONG).show();
+                                            } else if ((System.currentTimeMillis() - goupTime) < 5000) {
+                                                Toast.makeText(mContext, "[부정측정] 5초이내 측정시도 : " + (System.currentTimeMillis() - goupTime) + "초", Toast.LENGTH_LONG).show();
+                                            } else if (Math.abs(gapAlitude) > 4) {
+                                                Toast.makeText(mContext, "[부정측정] 4m 이상 높이 : " + Math.abs(gapAlitude) + "m", Toast.LENGTH_LONG).show();
+                                            }
+                                        } catch (Exception e) {
+                                        }
+                                    }
+
                                     mSleepCnt = mMaxSleepCnt;
                                     initMeasure();
                                     return;
@@ -676,8 +754,30 @@ public class StepThread extends Thread {
                                     //getTextView(R.id.txt_m).setText(m);
                                 }
 
-                                if ((mSaveStep <= 4 && mSaveStep >= 24)
-                                        || Math.abs(gapAlitude) > 4) {
+                                if ((mSaveStep <= 5)
+                                        || Math.abs(gapAlitude) > 4
+                                        || (System.currentTimeMillis() - goupTime) < 5000) {
+
+                                    if (mDebugMode)
+                                    {
+                                        MediaPlayer mMediaPlayer = new MediaPlayer();
+                                        try {
+                                            Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.elevator);
+                                            mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+                                            mMediaPlayer.prepare();
+                                            mMediaPlayer.start();
+
+                                            if (mSaveStep <= 5) {
+                                                Toast.makeText(mContext, "[부정측정] 걸음수 미달 : " + mSaveStep + "걸음", Toast.LENGTH_LONG).show();
+                                            } else if ((System.currentTimeMillis() - goupTime) < 5000) {
+                                                Toast.makeText(mContext, "[부정측정] 5초이내 측정시도 : " + (System.currentTimeMillis() - goupTime) + "초", Toast.LENGTH_LONG).show();
+                                            } else if (Math.abs(gapAlitude) > 4) {
+                                                Toast.makeText(mContext, "[부정측정] 4m 이상 높이 : " + Math.abs(gapAlitude) + "m", Toast.LENGTH_LONG).show();
+                                            }
+                                        } catch (Exception e) {
+                                        }
+                                    }
+
                                     mSleepCnt = mMaxSleepCnt;
                                     initMeasure();
                                     return;
@@ -701,8 +801,30 @@ public class StepThread extends Thread {
                                 //getTextView(R.id.txt_m).setText(m);
                             }
 
-                            if ((mSaveStep <= 4 && mSaveStep >= 24)
-                                    || Math.abs(gapAlitude) > 4) {
+                            if ((mSaveStep <= 5)
+                                    || Math.abs(gapAlitude) > 4
+                                    || (System.currentTimeMillis() - goupTime) < 5000) {
+
+                                if (mDebugMode)
+                                {
+                                    MediaPlayer mMediaPlayer = new MediaPlayer();
+                                    try {
+                                        Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.elevator);
+                                        mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+                                        mMediaPlayer.prepare();
+                                        mMediaPlayer.start();
+
+                                        if (mSaveStep <= 5) {
+                                            Toast.makeText(mContext, "[부정측정] 걸음수 미달 : " + mSaveStep + "걸음", Toast.LENGTH_LONG).show();
+                                        } else if ((System.currentTimeMillis() - goupTime) < 5000) {
+                                            Toast.makeText(mContext, "[부정측정] 5초이내 측정시도 : " + (System.currentTimeMillis() - goupTime) + "초", Toast.LENGTH_LONG).show();
+                                        } else if (Math.abs(gapAlitude) > 4) {
+                                            Toast.makeText(mContext, "[부정측정] 4m 이상 높이 : " + Math.abs(gapAlitude) + "m", Toast.LENGTH_LONG).show();
+                                        }
+                                    } catch (Exception e) {
+                                    }
+                                }
+
                                 mSleepCnt = mMaxSleepCnt;
                                 initMeasure();
                                 return;
@@ -749,8 +871,24 @@ public class StepThread extends Thread {
                                 //getTextView(R.id.txt_m).setText(m);
                             }
 
-                            if ((mSaveStep <= 4 && mSaveStep >= 24)
-                                    || Math.abs(gapAlitude) > 4) {
+                            if ((mSaveStep <= 7)
+                                    || Math.abs(gapAlitude) > 4
+                                    || (System.currentTimeMillis() - goupTime) < 5000) {
+
+//                                if (mDebugMode)
+////                                {
+////                                    MediaPlayer mMediaPlayer = new MediaPlayer();
+////                                    try {
+////                                        Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.elevator);
+////                                        mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+////                                        mMediaPlayer.prepare();
+////                                        mMediaPlayer.start();
+////
+////                                        Toast.makeText(mContext, "[부정측정]" + "timegap : " + (System.currentTimeMillis() - goupTime) + " " + m, Toast.LENGTH_SHORT).show();
+////                                    } catch (Exception e) {
+////                                    }
+////                                }
+
                                 mSleepCnt = mMaxSleepCnt;
                                 initMeasure();
                                 return;
@@ -763,8 +901,30 @@ public class StepThread extends Thread {
                                 //getTextView(R.id.txt_m).setText(m);
                             }
 
-                            if ((mSaveStep <= 4 && mSaveStep >= 24)
-                                    || Math.abs(gapAlitude) > 4) {
+                            if ((mSaveStep <= 7)
+                                    || Math.abs(gapAlitude) > 4
+                                    || (System.currentTimeMillis() - goupTime) < 5000) {
+
+                                if (mDebugMode)
+                                {
+                                    MediaPlayer mMediaPlayer = new MediaPlayer();
+                                    try {
+                                        Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.elevator);
+                                        mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+                                        mMediaPlayer.prepare();
+                                        mMediaPlayer.start();
+
+                                        if (mSaveStep <= 5) {
+                                            Toast.makeText(mContext, "[부정측정] 걸음수 미달 : " + mSaveStep + "걸음", Toast.LENGTH_LONG).show();
+                                        } else if ((System.currentTimeMillis() - goupTime) < 5000) {
+                                            Toast.makeText(mContext, "[부정측정] 5초이내 측정시도 : " + (System.currentTimeMillis() - goupTime) + "초", Toast.LENGTH_LONG).show();
+                                        } else if (Math.abs(gapAlitude) > 4) {
+                                            Toast.makeText(mContext, "[부정측정] 4m 이상 높이 : " + Math.abs(gapAlitude) + "m", Toast.LENGTH_LONG).show();
+                                        }
+                                    } catch (Exception e) {
+                                    }
+                                }
+
                                 mSleepCnt = mMaxSleepCnt;
                                 initMeasure();
                                 return;
@@ -789,975 +949,6 @@ public class StepThread extends Thread {
 
         cnt++ ;
     }
-
-    // 0.2 초 단위 체크시
-//    private  void checkStart() {
-//        if (mAltitude == 0 )  {
-//            //return ;
-//        }
-//
-//        Log.d("999999999999777771", String.valueOf(mStarted) + "__" + mSleepCnt + "_______" + cnt + "___" + mSaveStep + "______" + mStep);
-//
-//        // 5초마다 소리
-////        if (cnt % 25 == 0 && cnt < 5 * 24 && cnt > 0 ) {
-////            MediaPlayer mMediaPlayer = new MediaPlayer();
-////            try {
-////                Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init25);
-////                mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
-////                mMediaPlayer.prepare();
-////                mMediaPlayer.start();
-////            } catch (Exception e) {
-////
-////            }
-////        }
-//
-//        if (cnt >= 5 * 24 )  {
-//            Toast.makeText(mContext, "24초 초기화", Toast.LENGTH_SHORT).show();
-//
-////            MediaPlayer mMediaPlayer = new MediaPlayer();
-////            try {
-////                Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all_loud);
-////                mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
-////                mMediaPlayer.prepare();
-////                mMediaPlayer.start();
-////            } catch (Exception e) { }
-//
-//            if (mSaveStep <=  0 ) { // 걷기중이아니면
-//                mSleepCnt = mMaxSleepCnt;
-//                sleepMode = 0 ;
-//                initMeasure();
-//                return;
-//            }
-//           else {  // 120초이상 측정이 없으면 측정 잠금
-//                sleepMode = 1 ;
-//                mSleepCnt++ ;
-//                initMeasure();
-//                return;
-//            }
-//        }
-//        mSaveStep = 0 ;
-//
-//        MeasureObj obj = mStartList.get(cnt) ;
-//        obj.altitude = mAltitude ;
-//        obj.orientation = mOrientation ;
-//        obj.step = mStep ;
-//        obj.x = mX ;
-//        obj.y = mY ;
-//        obj.z = mZ ;
-//
-//        MeasureObj obj_b = mStartList.get(0) ;
-//        obj.altitudeGap =  obj.altitude -  obj_b.altitude ;
-//        obj.orientationGap =  Math.abs(obj.orientation -  obj_b.orientation) ;
-//        obj.stepGap =  Math.abs(obj.step -  obj_b.step) ;
-//        obj.xGap =  Math.abs(obj.x -  obj_b.x) ;
-//        obj.yGap =  Math.abs(obj.y -  obj_b.y) ;
-//        obj.zGap =  Math.abs(obj.z -  obj_b.z) ;
-//
-//        // 고도 합계
-//        double gapAlitude =   0 ;
-//        gapAlitude = obj.altitude - obj_b.altitude ;
-//
-//        // 스텝 합계
-//        double gapStep =   0 ;
-//        gapStep = obj.step - obj_b.step ;
-//
-//        if (cnt > 25) {
-//            MeasureObj obj_c ;
-//            obj_c = mStartList.get(cnt - 25 ) ;
-//            obj.stepGap = Math.abs(obj.step - obj_c.step);
-//            gapStep = obj.step - obj_c.step ;
-//        }
-//
-//        double step = gapStep ; // 초당 걸음수
-//        mSaveStep = step ;
-//
-//        List<Double> list = Arrays.asList(obj.xGap,obj.yGap,obj.zGap ) ;
-//        Double mDir =  Collections.max(list) ;
-//
-//        String m = String.format("높이 : %.2f , 방향 : %.2f , 걷기 : %.2f , 시간 : %d" , gapAlitude, mDir, step, cnt);
-//
-//        if (cnt > 0 && cnt % 25 == 0) {
-////            long curTime1 = System.currentTimeMillis();
-////            Toast.makeText(mContext, m, Toast.LENGTH_SHORT).show();
-//
-//            // 5초 이내에 30센치 높이 이동이 없으면 다시 초기화
-//            if (Math.abs(gapAlitude) <= 0.3)
-//            {
-//                mSleepCnt++ ;
-//                initMeasure();
-//                return ;
-//            }
-//        }
-//
-//        if (!isContinue) {
-//            // 90도(135?) 에서 180도(190으로 버퍼를 둠)로 변경
-//            //if (mDir > 135 && Math.abs(gapAlitude) > 1.5  ) {
-//            if (mDir > 190 && Math.abs(gapAlitude) > 1.5  ) {
-//                // 자동측정일 경우, 7초 이내 측정이면  카운트 하지 않음 엘리베이터 사용자 걸름
-//                // 수동측정은 2초
-//                long curTime = System.currentTimeMillis();
-//                if (cnt < 35 || (curTime - goupTime) < 7000) {
-////                    MediaPlayer mMediaPlayer = new MediaPlayer();
-////                    try {
-////                        Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.elevator);
-////                        mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
-////                        mMediaPlayer.prepare();
-////                        mMediaPlayer.start();
-////                    } catch (Exception e) {
-////
-////                    }
-//                    mSleepCnt++ ;
-//                    initMeasure();
-//                    return;
-//                }
-//
-//                if (step > 1) { // 걷기중이면
-//                    AppUserBase user = DataHolder.instance().getAppUserBase() ;
-//                    SharedPreferences prefr = mContext.getSharedPreferences("userInfo", MODE_PRIVATE);
-//
-//                    try {
-//                        mCurBuildCount = user.getBuild_floor_amt();
-//                    } catch (Exception ex) {
-//                        if (null == prefr) {
-//                            mCurBuildCount = 10;
-//                        } else {
-//                            mCurBuildCount = prefr.getInt("curBuildCount", 10);
-//                        }
-//                    }
-//
-//                    try {
-//                        mIsBuild = user.getIsbuild() ;
-//                    } catch (Exception ex) {
-//                        mIsBuild = "Y";
-//                    }
-//
-//                    if (gapAlitude > 0) {
-//                        mFloor++;
-//                        mLogicCount++ ;
-//                        mClimbCount = 0 ;
-//
-//                        if  (mIsBuild.equals("Y")) {
-//                            mBuildCount++;
-//                        } else {
-//                            // 건물 모드 :건물높이의 1⁄2 이상이면 건물로 전환
-//                            if (mLogicCount >= Math.ceil(mCurBuildCount / 2)) {
-//                                mIsBuild = "Y";
-//                                mBuildCount = mLogicCount;
-//                            }
-//                        }
-//
-//                        if (mBuildCount == 1) {
-//                            startTime = System.currentTimeMillis() ;
-//                        }
-//
-//                        if (mBuildCount == Math.ceil(mCurBuildCount / 2)  && mBuildCount >= 4  ) {
-//                            endTime = System.currentTimeMillis() ;
-//                            isRedDot = true  ;
-//                        } else {
-//                            isRedDot = false ;
-//                        }
-//                        isCount = true ;
-//                        if (isTest) {
-//                            //getTextView(R.id.txt_m).setText(m);
-//                        }
-//
-//                        if (step <= 5) return;
-//                        goupTime = System.currentTimeMillis() ;
-//                        sendDataToServer(1, "building", m);
-//                    } else {
-//                        mBuildCount = 0 ;
-//                        mClimbCount = 0 ;
-//                        mLogicCount = 0 ;
-//
-//                        mFloor++;
-//                        isCount = true ;
-//                        if (isTest) {
-//                            //getTextView(R.id.txt_m).setText(m);
-//                        }
-//
-//                        if (step <= 5) return;
-//                        goupTime = System.currentTimeMillis() ;
-//                        sendDataToServer(1, "building", m);
-//                    }
-//
-//                    // 90이상이면 높이는 클리어  방향은 보존
-//                    MeasureObj obj_bb =  mStartList.get(0) ;
-//                    isContinue = true ;
-//                    mStartList.clear();
-//                    for (int i = 0; i < 600; i++) {
-//                        mStartList.add(new MeasureObj());
-//                    }
-//                    cnt = 0;
-//                    mStartList.get(0).x = obj_bb.x  ;
-//                    mStartList.get(0).y = obj_bb.y  ;
-//                    mStartList.get(0).z = obj_bb.z  ;
-//                    mStartList.get(0).xGap = obj_bb.xGap ;
-//                    mStartList.get(0).yGap = obj_bb.yGap ;
-//                    mStartList.get(0).zGap = obj_bb.zGap ;
-//                    mStartList.get(0).step = obj_bb.step ;
-//                    mStartList.get(0).altitude = mAltitude ;
-//
-//                    cnt++ ;
-//                    return ;
-//                }
-//            }
-//        }
-//
-//        if (mDir >  315 &&  isContinue   ) {
-//            // 315 이상이면 높이는 클리어  방향은 보존
-//            MeasureObj obj_bb =  mStartList.get(0) ;
-//            isContinue = false ;
-//            for (int i = 0; i < cnt; i++) {
-//                mStartList.get(i).x = obj_bb.x  ;
-//                mStartList.get(i).y = obj_bb.y  ;
-//                mStartList.get(i).z = obj_bb.z  ;
-//                mStartList.get(i).xGap = obj_bb.xGap ;
-//                mStartList.get(i).yGap = obj_bb.yGap ;
-//                mStartList.get(i).zGap = obj_bb.zGap ;
-//                mStartList.get(i).step = obj_bb.step ;
-//                mStartList.get(i).altitude = mAltitude ;
-//            }
-//            mStartList.get(cnt).x = obj_bb.x  ;
-//            mStartList.get(cnt).y = obj_bb.y  ;
-//            mStartList.get(cnt).z = obj_bb.z  ;
-//            mStartList.get(cnt).xGap = obj_bb.xGap ;
-//            mStartList.get(cnt).yGap = obj_bb.yGap ;
-//            mStartList.get(cnt).zGap = obj_bb.zGap ;
-//            mStartList.get(cnt).step = obj_bb.step ;
-//            mStartList.get(cnt).altitude = mAltitude ;
-//
-//            is315 = true ;
-//            cnt315 = cnt ;
-//
-//            cnt++ ;
-//            return ;
-//       }
-//
-//        // 1초뒤에 방향만 클리어
-//        if ( is315 && cnt > (cnt315 + 10)  ) {
-//            MeasureObj obj_bb =  mStartList.get(0) ;
-//
-//            for (int i = 0; i < cnt ; i++) {
-//                mStartList.get(i).x = mX  ;
-//                mStartList.get(i).y = mY  ;
-//                mStartList.get(i).z = mZ  ;
-//                mStartList.get(i).step = obj_bb.step ;
-//                mStartList.get(i).altitude = obj_bb.altitude ;
-//            }
-//            mStartList.get(cnt).x = mX  ;
-//            mStartList.get(cnt).y = mY  ;
-//            mStartList.get(cnt).z = mZ  ;
-//            mStartList.get(cnt).step = obj_bb.step ;
-//            mStartList.get(cnt).altitude = obj_bb.altitude ;
-//            is315 = false ;
-//            cnt315 = 0 ;
-//
-//            cnt++ ;
-//            return ;
-//        }
-//
-//        //=================================
-//        // 회전이 없고 4미터 이상이면 1층 측정
-//        //=================================
-//        if (Math.abs(gapAlitude) > 4) {
-//            long curTime = System.currentTimeMillis() ;
-//            // 2초갭에서 7초까지로 변경해봄
-//            //if (cnt < 20  || (curTime - goupTime) < 2000 ) {
-//            if (cnt < 35  || (curTime - goupTime) < 7000 ) {
-//                initMeasure();
-//                return;
-//            } else {
-//                if (step > 1) { // 걷기중이면
-//                    if (gapAlitude > 0) {
-//
-//                        AppUserBase user = DataHolder.instance().getAppUserBase() ;
-//                        SharedPreferences prefr = mContext.getSharedPreferences("userInfo", MODE_PRIVATE);
-//
-//                        try {
-//                            mCurBuildCount = user.getBuild_floor_amt();
-//                        } catch (Exception ex) {
-//                            if (null == prefr) {
-//                                mCurBuildCount = 10;
-//                            } else {
-//                                mCurBuildCount = prefr.getInt("curBuildCount", 10);
-//                            }
-//                        }
-//
-//                        try {
-//                            mIsBuild = user.getIsbuild() ;
-//                        } catch (Exception ex) {
-//                            mIsBuild = "Y";
-//                        }
-//
-//                        mClimbCount++;
-//                        mLogicCount = 0 ;
-//
-//                        if (mIsBuild.equals("Y")) {
-//                            if (mClimbCount > mCurBuildCount ) {
-//                                mIsBuild = "N" ;
-//                                mFloor++;
-//                                mBuildCount = mClimbCount ;
-//
-//                                if (mBuildCount == 1) {
-//                                    startTime = System.currentTimeMillis();
-//                                }
-//                                if (mBuildCount == Math.ceil(mCurBuildCount / 2)  && mBuildCount >= 3 ) {
-//                                    endTime = System.currentTimeMillis();
-//                                    isRedDot = true;
-//                                } else {
-//                                    isRedDot = false;
-//                                }
-//
-//                                if (step <= 5) return;
-//                                goupTime = System.currentTimeMillis();
-//                                sendDataToServer(1, "notbuilding", m);
-//                            } else {
-//
-//                                /**
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 * 이 부분에 대한 로직 추가 필요
-//                                 * 도원빌딩으로 강제 매핑했기 때문에,
-//                                 * 현재 오른 층수가 도원빌딩보다 높다고 해서, 빌딩이 아닌건 아님
-//                                 * 일단 계단을 올랐다는 로직 추가
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 * */
-//
-//
-//                                mBuildCount++ ;
-//                                mFloor++;
-//                                if (mBuildCount == 1) {
-//                                    startTime = System.currentTimeMillis();
-//                                }
-//                                if (mBuildCount == Math.ceil(mCurBuildCount / 2) && mBuildCount >= 3 ) {
-//                                    endTime = System.currentTimeMillis();
-//                                    isRedDot = true;
-//                                } else {
-//                                    isRedDot = false;
-//                                }
-//                                if (isTest) {
-//                                    //getTextView(R.id.txt_m).setText(m);
-//                                }
-//
-//                                if (step <= 5) return;
-//                                goupTime = System.currentTimeMillis();
-//                                sendDataToServer(1, "notbuilding", m);
-//                            }
-//                        } else {
-//                            mBuildCount++ ;
-//                            mFloor++;
-//                            if (mBuildCount == 1) {
-//                                startTime = System.currentTimeMillis();
-//                            }
-//                            if (mBuildCount == Math.ceil(mCurBuildCount / 2) && mBuildCount >= 3 ) {
-//                                endTime = System.currentTimeMillis();
-//                                isRedDot = true;
-//                            } else {
-//                                isRedDot = false;
-//                            }
-//                            if (isTest) {
-//                                //getTextView(R.id.txt_m).setText(m);
-//                            }
-//
-//                            if (step <= 5) return;
-//                            goupTime = System.currentTimeMillis();
-//                            sendDataToServer(1, "notbuilding", m);
-//                        }
-//                    } else {
-//                        mBuildCount = 0 ;
-//                        mClimbCount = 0 ;
-//                        mLogicCount = 0 ;
-//                        if (mIsBuild.equals("Y")) {
-//                            //mClimbCount++;
-//
-//                            /**
-//                             *
-//                             *
-//                             *
-//                             *
-//                             *
-//                             *
-//                             *
-//                             *
-//                             *
-//                             *
-//                             *
-//                             * 이 부분에 대한 로직 추가 필요
-//                             * 도원빌딩으로 강제 매핑했기 때문에,
-//                             * 현재 오른 층수가 도원빌딩보다 높다고 해서, 빌딩이 아닌건 아님
-//                             * 일단 계단을 올랐다는 로직 추가
-//                             *
-//                             *
-//                             *
-//                             *
-//                             *
-//                             *
-//                             *
-//                             *
-//                             *
-//                             * */
-//
-//                            mFloor++;
-//                            if (isTest) {
-//                                //getTextView(R.id.txt_m).setText(m);
-//                            }
-//
-//                            if (step <= 5) return;
-//                            goupTime = System.currentTimeMillis();
-//                            sendDataToServer(1, "notbuilding", m);
-//                        } else {
-//                            mFloor++;
-//                            if (isTest) {
-//                                //getTextView(R.id.txt_m).setText(m);
-//                            }
-//
-//                            if (step <= 5) return;
-//                            goupTime = System.currentTimeMillis();
-//                            sendDataToServer(1, "notbuilding", m);
-//                        }
-//                    }
-//                    initMeasure();
-//                    return ;
-//                }
-//            }
-//        }
-//
-//        if ( mDir > 400 ) {
-//            initMeasure();
-//            return ;
-//        }
-//
-//        cnt++ ;
-//    }
-
-    // 0.5초마다 스캔시
-//    private  void checkStart() {
-//        if (mAltitude == 0 )  {
-//            //return ;
-//        }
-//
-//        Log.d("999999999999777771", String.valueOf(mStarted) + "__" + mSleepCnt + "_______" + cnt + "___" + mSaveStep + "______" + mStep);
-//
-//        //if (0 == cnt%15)  mMeasureStep = 0;
-//        //if (cnt % 10 == 0) sendDataToServer(1, "building" );
-//        // 25초 이상 걷기 없으면 잠금
-//
-//
-//        // 5초마다 소리
-//        if ((cnt*5) % 50 == 0 && (cnt*5) < 10 * 24 && cnt > 0 ) {
-//            MediaPlayer mMediaPlayer = new MediaPlayer();
-//            try {
-//                Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init25);
-//                mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
-//                mMediaPlayer.prepare();
-//                mMediaPlayer.start();
-//            } catch (Exception e) {
-//
-//            }
-//        }
-//
-//        if ((cnt*5) >= 10 * 24 )  {
-//            Toast.makeText(mContext, "24초 초기화", Toast.LENGTH_SHORT).show();
-//
-//
-//            MediaPlayer mMediaPlayer = new MediaPlayer();
-//            try {
-//                Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init_all_loud);
-//                mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
-//                mMediaPlayer.prepare();
-//                mMediaPlayer.start();
-//            } catch (Exception e) {
-//
-//            }
-//
-//
-//
-//            if (mSaveStep <=  0 ) { // 걷기중이아니면
-//
-//
-//                // 원본소스
-//                mSleepCnt = mMaxSleepCnt;
-//                sleepMode = 0 ;
-//                initMeasure();
-//                return;
-//
-//                // 수정소스
-//                //Toast.makeText(mContext, "측정이 없으면 측정 잠금", Toast.LENGTH_SHORT).show();
-//                //sleepMode = 1 ;
-//                //mSleepCnt++ ;
-//                //initMeasure();
-//                //return;
-//            }
-//
-//            else {  // 120초이상 측정이 없으면 측정 잠금  mSleepCnt >= 4
-//                sleepMode = 1 ;
-//                mSleepCnt++ ;
-//                initMeasure();
-//                return;
-//            }
-//        }
-//        mSaveStep = 0 ;
-//
-//
-//
-//        MeasureObj obj = mStartList.get(cnt) ;
-//        obj.altitude = mAltitude ;
-//        obj.orientation = mOrientation ;
-//        obj.step = mStep ;
-//        obj.x = mX ;
-//        obj.y = mY ;
-//        obj.z = mZ ;
-//
-//        MeasureObj obj_b = mStartList.get(0) ;
-//        obj.altitudeGap =  obj.altitude -  obj_b.altitude ;
-//        obj.orientationGap =  Math.abs(obj.orientation -  obj_b.orientation) ;
-//        obj.stepGap =  Math.abs(obj.step -  obj_b.step) ;
-//        obj.xGap =  Math.abs(obj.x -  obj_b.x) ;
-//        obj.yGap =  Math.abs(obj.y -  obj_b.y) ;
-//        obj.zGap =  Math.abs(obj.z -  obj_b.z) ;
-//
-//        // 고도 합계
-//        double gapAlitude =   0 ;
-//        gapAlitude = obj.altitude - obj_b.altitude ;
-//
-//        // 스텝 합계
-//        double gapStep =   0 ;
-//        gapStep = obj.step - obj_b.step ;
-//
-//        if (cnt > 10) {
-//            MeasureObj obj_c ;
-//            obj_c = mStartList.get(cnt - 10 ) ;
-//            obj.stepGap = Math.abs(obj.step - obj_c.step);
-//            gapStep = obj.step - obj_c.step ;
-//        }
-//
-//
-//        double step = gapStep ; // 초당 걸음수
-//        mSaveStep = step ;
-//
-//        List<Double> list = Arrays.asList(obj.xGap,obj.yGap,obj.zGap ) ;
-//        Double mDir =  Collections.max(list) ;
-//
-//        String m = String.format("높이 : %.2f , 방향 : %.2f , 걷기 : %.2f , 시간 : %d" , gapAlitude, mDir, step, cnt);
-//        Log.d("999999999999777771", "[GAP]"+Math.abs(gapAlitude) + " " + m);
-//        if (cnt > 0 && cnt % 10 == 0) {
-//            long curTime1 = System.currentTimeMillis();
-//            Toast.makeText(mContext, m, Toast.LENGTH_SHORT).show();
-//
-//            //sendDataToServer(1, "building", m);
-//            // 5초 이내에 30센치 높이 이동이 없으면 다시 초기화
-//            if (Math.abs(gapAlitude) <= 0.3)
-//            {
-//                Toast.makeText(mContext, "여기서 초기화", Toast.LENGTH_SHORT).show();
-//                mSleepCnt++ ;
-//                initMeasure();
-//                return ;
-//            }
-//        }
-//
-//        if (!isContinue) {
-//            // 90도(135?) 에서 180도(190으로 버퍼를 둠)로 변경
-//            //if (mDir > 135 && Math.abs(gapAlitude) > 1.5  ) {
-//            if (mDir > 190 && Math.abs(gapAlitude) > 1.5  ) {
-//                // 자동측정일 경우, 7초 이내 측정이면  카운트 하지 않음 엘리베이터 사용자 걸름
-//                // 수동측정은 2초
-//                long curTime = System.currentTimeMillis();
-//                if ((cnt*5) < 30 || (curTime - goupTime) < 7000) {
-//                    MediaPlayer mMediaPlayer = new MediaPlayer();
-//                    try {
-//                        Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.elevator);
-//                        mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
-//                        mMediaPlayer.prepare();
-//                        mMediaPlayer.start();
-//                    } catch (Exception e) {
-//
-//                    }
-//                    /*if (cnt > 50) {
-//                        Toast.makeText(mContext, "엘리베이터 5초 알림", Toast.LENGTH_SHORT).show();
-//
-//                        MediaPlayer mMediaPlayer = new MediaPlayer();
-//                        try {
-//                            Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.elevator);
-//                            mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
-//                            mMediaPlayer.prepare();
-//                            mMediaPlayer.start();
-//                        } catch (Exception e) {
-//
-//                        }
-//                    }*/
-//
-//                    mSleepCnt++ ;
-//                    initMeasure();
-//                    return;
-//                }
-//
-//                if (step > 1) { // 걷기중이면
-//
-//                    AppUserBase user = DataHolder.instance().getAppUserBase() ;
-//                    SharedPreferences prefr = mContext.getSharedPreferences("userInfo", MODE_PRIVATE);
-//
-//                    try {
-//                        mCurBuildCount = user.getBuild_floor_amt();
-//                    } catch (Exception ex) {
-//                        if (null == prefr) {
-//                            mCurBuildCount = 10;
-//                        } else {
-//                            mCurBuildCount = prefr.getInt("curBuildCount", 10);
-//                        }
-//                    }
-//
-//                    try {
-//                        mIsBuild = user.getIsbuild() ;
-//                    } catch (Exception ex) {
-//                        mIsBuild = "Y";
-//                    }
-//
-//                    if (gapAlitude > 0) {
-//                        mFloor++;
-//                        mLogicCount++ ;
-//                        mClimbCount = 0 ;
-//
-//                        if  (mIsBuild.equals("Y")) {
-//                            mBuildCount++;
-//                        } else {
-//                            // 건물 모드 :건물높이의 1⁄2 이상이면 건물로 전환
-//                            if (mLogicCount >= Math.ceil(mCurBuildCount / 2)) {
-//                                mIsBuild = "Y";
-//                                mBuildCount = mLogicCount;
-//                            }
-//                        }
-//
-//                        if (mBuildCount == 1) {
-//                            startTime = System.currentTimeMillis() ;
-//                        }
-//
-//                        if (mBuildCount == Math.ceil(mCurBuildCount / 2)  && mBuildCount >= 4  ) {
-//                            endTime = System.currentTimeMillis() ;
-//                            isRedDot = true  ;
-//                        } else {
-//                            isRedDot = false ;
-//                        }
-//                        isCount = true ;
-//                        if (isTest) {
-//                            //getTextView(R.id.txt_m).setText(m);
-//                        }
-//
-//                        if (step <= 5) return;
-//                        goupTime = System.currentTimeMillis() ;
-//                        sendDataToServer(1, "building", m);
-//                    } else {
-//                        mBuildCount = 0 ;
-//                        mClimbCount = 0 ;
-//                        mLogicCount = 0 ;
-//
-//                        mFloor++;
-//                        isCount = true ;
-//                        if (isTest) {
-//                            //getTextView(R.id.txt_m).setText(m);
-//                        }
-//
-//                        if (step <= 5) return;
-//                        goupTime = System.currentTimeMillis() ;
-//                        sendDataToServer(1, "building", m);
-//                    }
-//
-//                    // 90이상이면 높이는 클리어  방향은 보존
-//                    MeasureObj obj_bb =  mStartList.get(0) ;
-//                    isContinue = true ;
-//                    mStartList.clear();
-//                    for (int i = 0; i < 600; i++) {
-//                        mStartList.add(new MeasureObj());
-//                    }
-//                    cnt = 0;
-//                    mStartList.get(0).x = obj_bb.x  ;
-//                    mStartList.get(0).y = obj_bb.y  ;
-//                    mStartList.get(0).z = obj_bb.z  ;
-//                    mStartList.get(0).xGap = obj_bb.xGap ;
-//                    mStartList.get(0).yGap = obj_bb.yGap ;
-//                    mStartList.get(0).zGap = obj_bb.zGap ;
-//                    mStartList.get(0).step = obj_bb.step ;
-//                    mStartList.get(0).altitude = mAltitude ;
-//
-//
-//
-//                    cnt++ ;
-//                    return ;
-//
-//                }
-//            }
-//
-//        }
-//
-//        if (mDir >  315 &&  isContinue   ) {  //
-//            // 315 이상이면 높이는 클리어  방향은 보존
-//            MeasureObj obj_bb =  mStartList.get(0) ;
-//            isContinue = false ;
-//            for (int i = 0; i < cnt; i++) {
-//                mStartList.get(i).x = obj_bb.x  ;
-//                mStartList.get(i).y = obj_bb.y  ;
-//                mStartList.get(i).z = obj_bb.z  ;
-//                mStartList.get(i).xGap = obj_bb.xGap ;
-//                mStartList.get(i).yGap = obj_bb.yGap ;
-//                mStartList.get(i).zGap = obj_bb.zGap ;
-//                mStartList.get(i).step = obj_bb.step ;
-//                mStartList.get(i).altitude = mAltitude ;
-//            }
-//            mStartList.get(cnt).x = obj_bb.x  ;
-//            mStartList.get(cnt).y = obj_bb.y  ;
-//            mStartList.get(cnt).z = obj_bb.z  ;
-//            mStartList.get(cnt).xGap = obj_bb.xGap ;
-//            mStartList.get(cnt).yGap = obj_bb.yGap ;
-//            mStartList.get(cnt).zGap = obj_bb.zGap ;
-//            mStartList.get(cnt).step = obj_bb.step ;
-//            mStartList.get(cnt).altitude = mAltitude ;
-//
-//            is315 = true ;
-//            cnt315 = (cnt*5) ;
-//
-//            cnt++ ;
-//            return ;
-//
-//        }
-//
-//        // 1초뒤에 방향만 클리어
-//        if ( is315 && (cnt*5) > (cnt315 + 10)  ) {  //
-//            MeasureObj obj_bb =  mStartList.get(0) ;
-//
-//            for (int i = 0; i < cnt ; i++) {
-//                mStartList.get(i).x = mX  ;
-//                mStartList.get(i).y = mY  ;
-//                mStartList.get(i).z = mZ  ;
-//                mStartList.get(i).step = obj_bb.step ;
-//                mStartList.get(i).altitude = obj_bb.altitude ;
-//            }
-//            mStartList.get(cnt).x = mX  ;
-//            mStartList.get(cnt).y = mY  ;
-//            mStartList.get(cnt).z = mZ  ;
-//            mStartList.get(cnt).step = obj_bb.step ;
-//            mStartList.get(cnt).altitude = obj_bb.altitude ;
-//            is315 = false ;
-//            cnt315 = 0 ;
-//
-//            cnt++ ;
-//            return ;
-//        }
-//
-//        //=================================
-//        // 회전이 없고 4미터 이상이면 1층 측정
-//        //=================================
-//
-//
-//
-//        if (Math.abs(gapAlitude) > 4) {
-//            long curTime = System.currentTimeMillis() ;
-//            // 2초갭에서 7초까지로 변경해봄
-//            //if (cnt < 20  || (curTime - goupTime) < 2000 ) {
-//            if ((cnt*50) < 70  || (curTime - goupTime) < 7000 ) {
-//
-//                //mSleepCnt++;
-//                initMeasure();
-//                return;
-//            } else {
-//                if (step > 1) { // 걷기중이면
-//                    if (gapAlitude > 0) {
-//
-//                        AppUserBase user = DataHolder.instance().getAppUserBase() ;
-//                        SharedPreferences prefr = mContext.getSharedPreferences("userInfo", MODE_PRIVATE);
-//
-//                        try {
-//                            mCurBuildCount = user.getBuild_floor_amt();
-//                        } catch (Exception ex) {
-//                            if (null == prefr) {
-//                                mCurBuildCount = 10;
-//                            } else {
-//                                mCurBuildCount = prefr.getInt("curBuildCount", 10);
-//                            }
-//                        }
-//
-//                        try {
-//                            mIsBuild = user.getIsbuild() ;
-//                        } catch (Exception ex) {
-//                            mIsBuild = "Y";
-//                        }
-//
-//                        mClimbCount++;
-//                        mLogicCount = 0 ;
-//
-//                        if (mIsBuild.equals("Y")) {
-//                            if (mClimbCount > mCurBuildCount ) {
-//                                mIsBuild = "N" ;
-//                                mFloor++;
-//                                mBuildCount = mClimbCount ;
-//
-//                                if (mBuildCount == 1) {
-//                                    startTime = System.currentTimeMillis();
-//                                }
-//                                if (mBuildCount == Math.ceil(mCurBuildCount / 2)  && mBuildCount >= 3 ) {
-//                                    endTime = System.currentTimeMillis();
-//                                    isRedDot = true;
-//                                } else {
-//                                    isRedDot = false;
-//                                }
-//
-//                                if (step <= 5) return;
-//                                goupTime = System.currentTimeMillis();
-//                                sendDataToServer(1, "notbuilding", m);
-//                            } else {
-//
-//                                /**
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 * 이 부분에 대한 로직 추가 필요
-//                                 * 도원빌딩으로 강제 매핑했기 때문에,
-//                                 * 현재 오른 층수가 도원빌딩보다 높다고 해서, 빌딩이 아닌건 아님
-//                                 * 일단 계단을 올랐다는 로직 추가
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 *
-//                                 * */
-//
-//
-//                                mBuildCount++ ;
-//                                mFloor++;
-//                                if (mBuildCount == 1) {
-//                                    startTime = System.currentTimeMillis();
-//                                }
-//                                if (mBuildCount == Math.ceil(mCurBuildCount / 2) && mBuildCount >= 3 ) {
-//                                    endTime = System.currentTimeMillis();
-//                                    isRedDot = true;
-//                                } else {
-//                                    isRedDot = false;
-//                                }
-//                                if (isTest) {
-//                                    //getTextView(R.id.txt_m).setText(m);
-//                                }
-//
-//                                if (step <= 5) return;
-//                                goupTime = System.currentTimeMillis();
-//                                sendDataToServer(1, "notbuilding", m);
-//                            }
-//                        } else {
-//                            mBuildCount++ ;
-//                            mFloor++;
-//                            if (mBuildCount == 1) {
-//                                startTime = System.currentTimeMillis();
-//                            }
-//                            if (mBuildCount == Math.ceil(mCurBuildCount / 2) && mBuildCount >= 3 ) {
-//                                endTime = System.currentTimeMillis();
-//                                isRedDot = true;
-//                            } else {
-//                                isRedDot = false;
-//                            }
-//                            if (isTest) {
-//                                //getTextView(R.id.txt_m).setText(m);
-//                            }
-//
-//                            if (step <= 5) return;
-//                            goupTime = System.currentTimeMillis();
-//                            sendDataToServer(1, "notbuilding", m);
-//                        }
-//                    } else {
-//                        mBuildCount = 0 ;
-//                        mClimbCount = 0 ;
-//                        mLogicCount = 0 ;
-//                        if (mIsBuild.equals("Y")) {
-//                            //mClimbCount++;
-//
-//                            /**
-//                             *
-//                             *
-//                             *
-//                             *
-//                             *
-//                             *
-//                             *
-//                             *
-//                             *
-//                             *
-//                             *
-//                             * 이 부분에 대한 로직 추가 필요
-//                             * 도원빌딩으로 강제 매핑했기 때문에,
-//                             * 현재 오른 층수가 도원빌딩보다 높다고 해서, 빌딩이 아닌건 아님
-//                             * 일단 계단을 올랐다는 로직 추가
-//                             *
-//                             *
-//                             *
-//                             *
-//                             *
-//                             *
-//                             *
-//                             *
-//                             *
-//                             * */
-//
-//                            mFloor++;
-//                            if (isTest) {
-//                                //getTextView(R.id.txt_m).setText(m);
-//                            }
-//
-//                            if (step <= 5) return;
-//                            goupTime = System.currentTimeMillis();
-//                            sendDataToServer(1, "notbuilding", m);
-//                        } else {
-//                            mFloor++;
-//                            if (isTest) {
-//                                //getTextView(R.id.txt_m).setText(m);
-//                            }
-//
-//                            if (step <= 5) return;
-//                            goupTime = System.currentTimeMillis();
-//                            sendDataToServer(1, "notbuilding", m);
-//                        }
-//                    }
-//                    initMeasure();
-//                    return ;
-//
-//
-//                }
-//            }
-//
-//        }
-//
-//        if ( mDir > 400 ) {
-//            initMeasure();
-//            return ;
-//        }
-//
-//        cnt++ ;
-//    }
-
 
     private  void initMeasure() {
         mStartList.clear();
@@ -1955,7 +1146,6 @@ public class StepThread extends Thread {
     }
 
     private void restartTracking() {
-        Toast.makeText(mContext, "[stepsensorservice] restartTracking", Toast.LENGTH_SHORT);
         Log.d("999999999999777771", "[stepsensorservice] restartTracking " + mMeasureStep + " " + mStarted + " " + AppConst.IS_STEP_SENSOR_LOADED);
 
         try {
@@ -2010,6 +1200,15 @@ public class StepThread extends Thread {
      */
 
     private void sendDataToServer(int goupAmt, String type, String measure) {
+        if ("notbuilding".equals(type)) {
+            Toast.makeText(mContext, "[등산 오르기] " + measure, Toast.LENGTH_SHORT).show();
+            mSleepCnt = 0 ;
+            initMeasure();
+        } else {
+            Toast.makeText(mContext, "[계단 오르기] " + measure, Toast.LENGTH_SHORT).show();
+            mSleepCnt = 0 ;
+            mTrashStep = 0 ;
+        }
         // 5걸음 이상 걷지 않았을 경우, 계단수에서 빼도록 처리
         /*if (mTrashStep < 10) {
             return;
@@ -2021,12 +1220,11 @@ public class StepThread extends Thread {
 
  //       if (mDebugMode)
  //       {
-            Toast.makeText(mContext, "[계단 오르기] " + measure, Toast.LENGTH_SHORT).show();
+
  //       }
 
 
-        mSleepCnt = 0 ;
-        mTrashStep = 0 ;
+
 
         String token = KUtil.getUserToken();
         String buildCode = KUtil.getBuildingCode();
