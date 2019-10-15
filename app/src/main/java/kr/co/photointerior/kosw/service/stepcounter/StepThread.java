@@ -405,11 +405,16 @@ public class StepThread extends Thread {
                 // 자동측정일 경우, 7초 이내 측정이면  카운트 하지 않음 엘리베이터 사용자 걸음
                 // 수동측정은 2초
                 long curTime = System.currentTimeMillis();
-                if (cnt < 20 || (curTime - goupTime) < 2000) {
+
+                // 엘리베이터 걸음 임시 주석 처리
+
+                /*if (cnt < 20 || (curTime - goupTime) < 2000) {
                     mSleepCnt++ ;
                     initMeasure();
                     return;
-                }
+                }*/
+
+
 //                    /*if (mDebugMode)
 //                    {
 //                        MediaPlayer mMediaPlayer = new MediaPlayer();
@@ -481,7 +486,7 @@ public class StepThread extends Thread {
                         }
 
                         if ((mSaveStep <= 5)
-                                || (System.currentTimeMillis() - goupTime) < 5000) {
+                                || (System.currentTimeMillis() - goupTime) < 4000) {
 
                             if (mDebugMode)
                             {
@@ -494,8 +499,8 @@ public class StepThread extends Thread {
 
                                     if (mSaveStep <= 5) {
                                         Toast.makeText(mContext, "[부정측정] 걸음수 미달 : " + mSaveStep + "걸음", Toast.LENGTH_LONG).show();
-                                    } else if ((System.currentTimeMillis() - goupTime) < 5000) {
-                                        Toast.makeText(mContext, "[부정측정] 5초이내 측정시도 : " + (System.currentTimeMillis() - goupTime) + "초", Toast.LENGTH_LONG).show();
+                                    } else if ((System.currentTimeMillis() - goupTime) < 4000) {
+                                        Toast.makeText(mContext, "[부정측정] 4초이내 측정시도 : " + (System.currentTimeMillis() - goupTime) + "초", Toast.LENGTH_LONG).show();
                                     }
                                 } catch (Exception e) {
                                 }
@@ -520,7 +525,7 @@ public class StepThread extends Thread {
                         }
 
                         if ((mSaveStep <= 5)
-                                || (System.currentTimeMillis() - goupTime) < 5000) {
+                                || (System.currentTimeMillis() - goupTime) < 4000) {
 
                             if (mDebugMode)
                             {
@@ -533,8 +538,8 @@ public class StepThread extends Thread {
 
                                     if (mSaveStep <= 5) {
                                         Toast.makeText(mContext, "[부정측정] 걸음수 미달 : " + mSaveStep + "걸음", Toast.LENGTH_LONG).show();
-                                    } else if ((System.currentTimeMillis() - goupTime) < 5000) {
-                                        Toast.makeText(mContext, "[부정측정] 5초이내 측정시도 : " + (System.currentTimeMillis() - goupTime) + "초", Toast.LENGTH_LONG).show();
+                                    } else if ((System.currentTimeMillis() - goupTime) < 4000) {
+                                        Toast.makeText(mContext, "[부정측정] 4초이내 측정시도 : " + (System.currentTimeMillis() - goupTime) + "초", Toast.LENGTH_LONG).show();
                                     }
                                 } catch (Exception e) {
                                 }
@@ -632,7 +637,7 @@ public class StepThread extends Thread {
             long curTime = System.currentTimeMillis() ;
             // 2초갭에서 7초까지로 변경해봄
             //if (cnt < 20  || (curTime - goupTime) < 2000 ) {
-            if (cnt < 60  || (curTime - goupTime) < 5000 ) {
+            if (cnt < 60  || (curTime - goupTime) < 4000 ) {
                 //mSleepCnt++;
                 mSleepCnt = mMaxSleepCnt;
                 initMeasure();
@@ -681,7 +686,7 @@ public class StepThread extends Thread {
 
                                 if ((mSaveStep <= 5)
                                     || Math.abs(gapAlitude) > 4
-                                    || (System.currentTimeMillis() - goupTime) < 5000) {
+                                    || (System.currentTimeMillis() - goupTime) < 4000) {
 
                                     if (mDebugMode)
                                     {
@@ -694,8 +699,8 @@ public class StepThread extends Thread {
 
                                             if (mSaveStep <= 5) {
                                                 Toast.makeText(mContext, "[부정측정] 걸음수 미달 : " + mSaveStep + "걸음", Toast.LENGTH_LONG).show();
-                                            } else if ((System.currentTimeMillis() - goupTime) < 5000) {
-                                                Toast.makeText(mContext, "[부정측정] 5초이내 측정시도 : " + (System.currentTimeMillis() - goupTime) + "초", Toast.LENGTH_LONG).show();
+                                            } else if ((System.currentTimeMillis() - goupTime) < 4000) {
+                                                Toast.makeText(mContext, "[부정측정] 4초이내 측정시도 : " + (System.currentTimeMillis() - goupTime) + "초", Toast.LENGTH_LONG).show();
                                             } else if (Math.abs(gapAlitude) > 4) {
                                                 Toast.makeText(mContext, "[부정측정] 4m 이상 높이 : " + Math.abs(gapAlitude) + "m", Toast.LENGTH_LONG).show();
                                             }
@@ -756,7 +761,7 @@ public class StepThread extends Thread {
 
                                 if ((mSaveStep <= 5)
                                         || Math.abs(gapAlitude) > 4
-                                        || (System.currentTimeMillis() - goupTime) < 5000) {
+                                        || (System.currentTimeMillis() - goupTime) < 4000) {
 
                                     if (mDebugMode)
                                     {
@@ -769,8 +774,8 @@ public class StepThread extends Thread {
 
                                             if (mSaveStep <= 5) {
                                                 Toast.makeText(mContext, "[부정측정] 걸음수 미달 : " + mSaveStep + "걸음", Toast.LENGTH_LONG).show();
-                                            } else if ((System.currentTimeMillis() - goupTime) < 5000) {
-                                                Toast.makeText(mContext, "[부정측정] 5초이내 측정시도 : " + (System.currentTimeMillis() - goupTime) + "초", Toast.LENGTH_LONG).show();
+                                            } else if ((System.currentTimeMillis() - goupTime) < 4000) {
+                                                Toast.makeText(mContext, "[부정측정] 4초이내 측정시도 : " + (System.currentTimeMillis() - goupTime) + "초", Toast.LENGTH_LONG).show();
                                             } else if (Math.abs(gapAlitude) > 4) {
                                                 Toast.makeText(mContext, "[부정측정] 4m 이상 높이 : " + Math.abs(gapAlitude) + "m", Toast.LENGTH_LONG).show();
                                             }
@@ -803,7 +808,7 @@ public class StepThread extends Thread {
 
                             if ((mSaveStep <= 5)
                                     || Math.abs(gapAlitude) > 4
-                                    || (System.currentTimeMillis() - goupTime) < 5000) {
+                                    || (System.currentTimeMillis() - goupTime) < 4000) {
 
                                 if (mDebugMode)
                                 {
@@ -816,8 +821,8 @@ public class StepThread extends Thread {
 
                                         if (mSaveStep <= 5) {
                                             Toast.makeText(mContext, "[부정측정] 걸음수 미달 : " + mSaveStep + "걸음", Toast.LENGTH_LONG).show();
-                                        } else if ((System.currentTimeMillis() - goupTime) < 5000) {
-                                            Toast.makeText(mContext, "[부정측정] 5초이내 측정시도 : " + (System.currentTimeMillis() - goupTime) + "초", Toast.LENGTH_LONG).show();
+                                        } else if ((System.currentTimeMillis() - goupTime) < 4000) {
+                                            Toast.makeText(mContext, "[부정측정] 4초이내 측정시도 : " + (System.currentTimeMillis() - goupTime) + "초", Toast.LENGTH_LONG).show();
                                         } else if (Math.abs(gapAlitude) > 4) {
                                             Toast.makeText(mContext, "[부정측정] 4m 이상 높이 : " + Math.abs(gapAlitude) + "m", Toast.LENGTH_LONG).show();
                                         }
@@ -871,9 +876,9 @@ public class StepThread extends Thread {
                                 //getTextView(R.id.txt_m).setText(m);
                             }
 
-                            if ((mSaveStep <= 7)
+                            if ((mSaveStep <= 5)
                                     || Math.abs(gapAlitude) > 4
-                                    || (System.currentTimeMillis() - goupTime) < 5000) {
+                                    || (System.currentTimeMillis() - goupTime) < 4000) {
 
 //                                if (mDebugMode)
 ////                                {
@@ -901,9 +906,9 @@ public class StepThread extends Thread {
                                 //getTextView(R.id.txt_m).setText(m);
                             }
 
-                            if ((mSaveStep <= 7)
+                            if ((mSaveStep <= 5)
                                     || Math.abs(gapAlitude) > 4
-                                    || (System.currentTimeMillis() - goupTime) < 5000) {
+                                    || (System.currentTimeMillis() - goupTime) < 4000) {
 
                                 if (mDebugMode)
                                 {
@@ -916,8 +921,8 @@ public class StepThread extends Thread {
 
                                         if (mSaveStep <= 5) {
                                             Toast.makeText(mContext, "[부정측정] 걸음수 미달 : " + mSaveStep + "걸음", Toast.LENGTH_LONG).show();
-                                        } else if ((System.currentTimeMillis() - goupTime) < 5000) {
-                                            Toast.makeText(mContext, "[부정측정] 5초이내 측정시도 : " + (System.currentTimeMillis() - goupTime) + "초", Toast.LENGTH_LONG).show();
+                                        } else if ((System.currentTimeMillis() - goupTime) < 4000) {
+                                            Toast.makeText(mContext, "[부정측정] 4초이내 측정시도 : " + (System.currentTimeMillis() - goupTime) + "초", Toast.LENGTH_LONG).show();
                                         } else if (Math.abs(gapAlitude) > 4) {
                                             Toast.makeText(mContext, "[부정측정] 4m 이상 높이 : " + Math.abs(gapAlitude) + "m", Toast.LENGTH_LONG).show();
                                         }
