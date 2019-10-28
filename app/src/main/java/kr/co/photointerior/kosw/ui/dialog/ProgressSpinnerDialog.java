@@ -36,5 +36,4 @@ public class ProgressSpinnerDialog extends BaseDialog {
             tv.setText(mMessage);
         }
     }
-
 }

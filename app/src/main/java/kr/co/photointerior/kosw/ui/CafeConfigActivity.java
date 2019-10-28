@@ -1,17 +1,44 @@
 package kr.co.photointerior.kosw.ui;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Typeface;
+import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -33,9 +60,13 @@ import kr.co.photointerior.kosw.utils.LogUtils;
 import kr.co.photointerior.kosw.widget.KoswButton;
 import kr.co.photointerior.kosw.widget.KoswEditText;
 import kr.co.photointerior.kosw.widget.KoswTextView;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Multipart;
 
 public class CafeConfigActivity extends BaseActivity {
     private String TAG = LogUtils.makeLogTag(CafeConfigActivity.class);
@@ -45,17 +76,36 @@ public class CafeConfigActivity extends BaseActivity {
     private ImageView btn_back;
     private KoswTextView txt_cafekey, txt_privacy;
     private TextView txt_category, txt_notice, txt_member;
-    private KoswEditText txt_cafename, txt_cafedesc;
-    private KoswButton btn_invite, btn_edit_cafe;
+    private KoswEditText txt_cafename, txt_cafedesc, et_logo, et_logo_desc;
+    private KoswButton btn_invite, btn_edit_cafe, btn_change_logo, btn_delete_logo;
     private CheckBox check_privacy_hide, check_privacy_open;
     private RelativeLayout rl_category, rl_notice, rl_member;
+    private ImageView iv_logo;
 
     private String mCafeseq, mConfirm;
+
+
+
+    private int mSelectItem;
+    private final int CAMERA_CODE = 1111;
+    private final int GALLERY_CODE=1112;
+
+    private File tempFile;
+    private Uri photoUri;
+    private String currentPhotoPath;//실제 사진 파일 경로
+    String mImageCaptureName;//이미지 이름
+
+    private Bitmap bitmap;
+
+
+    Activity mActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cafe_config);
+
+        mActivity = this;
 
         mCafeseq = getIntent().getStringExtra("cafeseq");
 
@@ -96,6 +146,20 @@ public class CafeConfigActivity extends BaseActivity {
 
         btn_edit_cafe = findViewById(R.id.btn_edit_cafe);
         btn_back = findViewById(R.id.btn_back);
+
+        iv_logo = findViewById(R.id.iv_logo);
+
+        btn_change_logo = findViewById(R.id.btn_change_logo);
+        btn_delete_logo = findViewById(R.id.btn_delete_logo);
+
+        et_logo = findViewById(R.id.et_logo);
+        et_logo_desc = findViewById(R.id.et_logo_desc);
+
+        et_logo.setFocusable(false);
+        et_logo.setClickable(false);
+
+        et_logo_desc.setFocusable(false);
+        et_logo_desc.setClickable(false);
     }
 
     @Override
@@ -181,6 +245,21 @@ public class CafeConfigActivity extends BaseActivity {
             setResult(RESULT_OK, intent);
             finish();
         });
+
+        btn_change_logo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPicDialog();
+            }
+        });
+
+        btn_delete_logo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteLogo();
+
+            }
+        });
     }
 
     @Override
@@ -201,13 +280,28 @@ public class CafeConfigActivity extends BaseActivity {
             check_privacy_hide.setChecked(false);
             check_privacy_open.setChecked(true);
         }
+
+        if (null != mCafe.getLogo() && !"".equals(mCafe.getLogo())) {
+            Picasso.with(mActivity)
+                    .load(mCafe.getLogo())
+                    .placeholder(R.drawable.ic_logo)
+                    .error(R.drawable.ic_logo)
+                    .into(iv_logo);
+        }
     }
 
     private void getCafeDetail() {
         showSpinner("");
         AppUserBase user = DataHolder.instance().getAppUserBase() ;
         Map<String, Object> query = KUtil.getDefaultQueryMap();
-        query.put("user_seq",user.getUser_seq() );
+
+        try {
+            query.put("user_seq", user.getUser_seq());
+        } catch (Exception ex) {
+            SharedPreferences prefr = getSharedPreferences("userInfo", MODE_PRIVATE);
+            query.put("user_seq", prefr.getInt("user_seq", -1));
+        }
+
         if (null != mCafeseq && !"".equals(mCafeseq)) {
             query.put("cafeseq", mCafeseq);
         }
@@ -359,6 +453,107 @@ public class CafeConfigActivity extends BaseActivity {
         });
     }
 
+    @Multipart
+    private void updateLogo() {
+        showSpinner("");
+
+        AppUserBase user = DataHolder.instance().getAppUserBase() ;
+        Map<String, Object> query = KUtil.getDefaultQueryMap();
+        query.put("user_seq",user.getUser_seq() );
+        query.put("cafeseq", mCafeseq);
+
+        File f = null;
+        MultipartBody.Part uploadFile = null;
+
+        f = SaveBitmapToFileCache(bitmap);
+
+        double bytes = f.length();
+        double kilobytes = (bytes / 1024);
+
+        if (kilobytes > 50) {
+            closeSpinner();
+            toast(R.string.warn_logo_upload_size);
+        } else {
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), f);
+            uploadFile = MultipartBody.Part.createFormData("file", f.getName(), requestFile);
+
+            Call<ResponseBase> call =
+                    new DefaultRestClient<CafeService>(this)
+                            .getClient(CafeService.class).updateLogo(query, uploadFile);
+            call.enqueue(new Callback<ResponseBase>() {
+                @Override
+                public void onResponse(Call<ResponseBase> call, Response<ResponseBase> response) {
+                    closeSpinner();
+                    LogUtils.err(TAG, response.raw().toString());
+                    if (response.isSuccessful()) {
+                        ResponseBase base = response.body();
+                        if (base.isSuccess()) {
+                            // 로고 업로드 성공시
+                            toast(R.string.txt_logo_update);
+
+                        } else {
+                            toast(R.string.warn_logo_upload_fail);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBase> call, Throwable t) {
+                    LogUtils.err(TAG, t);
+                    toast(R.string.warn_logo_upload_fail);
+                }
+            });
+
+            closeSpinner();
+        }
+    }
+
+    private void deleteLogo() {
+        showSpinner("");
+
+        AppUserBase user = DataHolder.instance().getAppUserBase() ;
+        Map<String, Object> query = KUtil.getDefaultQueryMap();
+        query.put("user_seq",user.getUser_seq() );
+        query.put("cafeseq", mCafeseq);
+
+        Call<ResponseBase> call =
+                new DefaultRestClient<CafeService>(this)
+                        .getClient(CafeService.class).deleteLogo(query);
+
+        call.enqueue(new Callback<ResponseBase>() {
+            @Override
+            public void onResponse(Call<ResponseBase> call, Response<ResponseBase> response) {
+                closeSpinner();
+                LogUtils.err(TAG, response.raw().toString());
+                if(response.isSuccessful()){
+                    ResponseBase base = response.body();
+                    if (base.isSuccess()) {
+                        // 로고 삭제 성공시
+                        toast(R.string.txt_logo_delete);
+
+                        Picasso.with(mActivity)
+                                .load(R.drawable.ic_logo)
+                                .placeholder(R.drawable.ic_logo)
+                                .error(R.drawable.ic_logo)
+                                .into(iv_logo);
+                    } else {
+                        toast(R.string.warn_logo_delete_fail);
+                    }
+
+                }else{
+                    toast(response.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBase> call, Throwable t) {
+                closeSpinner();
+                LogUtils.err(TAG, t);
+                toast(R.string.warn_server_not_smooth);
+            }
+        });
+    }
+
     private void showConfirmPopup(){
         if(!isFinishing()){
             if(mDialog != null){
@@ -382,6 +577,250 @@ public class CafeConfigActivity extends BaseActivity {
             mDialog.show();
         }
     }
+
+    private void showPicDialog() {
+        mSelectItem = -1;
+        final CharSequence[] oItems = {"사진 촬영하기", "앨범에서 사진찾기"};
+
+        AlertDialog.Builder oDialog = new AlertDialog.Builder(this,
+                android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
+
+        oDialog.setTitle("사진 선택")
+                .setSingleChoiceItems(oItems, -1, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        mSelectItem = which;
+                    }
+                })
+                .setNeutralButton("선택", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        if (mSelectItem == 0) {
+                            // 사진촬영하기
+                            //selectPhoto();
+                            checkCameraPermission();
+                        } else if (mSelectItem == 1) {
+                            // 앨범에서 사진찾기
+                            selectGallery();
+                        }
+                    }
+                })
+                .show();
+    }
+
+    private void checkCameraPermission() {
+        int permssionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+
+        if (permssionCheck!= PackageManager.PERMISSION_GRANTED) {
+
+            //Toast.makeText(this,"권한 승인이 필요합니다",Toast.LENGTH_LONG).show();
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.CAMERA)) {
+                Toast.makeText(this,"로고 등록을 위해 카메라 권한이 필요합니다.",Toast.LENGTH_LONG).show();
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.CAMERA},
+                        CAMERA_CODE);
+                Toast.makeText(this,"로고 등록을 위해 카메라 권한이 필요합니다.",Toast.LENGTH_LONG).show();
+            }
+        } else {
+            takePhoto();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case CAMERA_CODE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    //Toast.makeText(this,"승인이 허가되어 있습니다.",Toast.LENGTH_LONG).show();
+                    takePhoto();
+                } else {
+                    Toast.makeText(this,"아직 승인받지 않았습니다.",Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+
+        }
+    }
+
+    private void selectGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        startActivityForResult(intent, GALLERY_CODE);
+    }
+
+    private void takePhoto() {
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        try {
+            tempFile = createImageFile();
+        } catch (IOException e) {
+            Toast.makeText(this, "이미지 처리 오류! 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+            finish();
+            e.printStackTrace();
+        }
+        if (tempFile != null) {
+            Uri photoUri = FileProvider.getUriForFile(this, "kr.co.photointerior.kosw.fileprovider", tempFile);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+            startActivityForResult(intent, CAMERA_CODE);
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        File dir = new File(Environment.getExternalStorageDirectory() + "/path/");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        mImageCaptureName = timeStamp + ".png";
+        File storageDir = new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/path/" + mImageCaptureName);
+        currentPhotoPath = storageDir.getAbsolutePath();
+        return storageDir;
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode)
+            {
+                case GALLERY_CODE:
+                    sendPicture(data.getData()); //갤러리에서 가져오기
+                    break;
+                case CAMERA_CODE:
+                    getPictureForPhoto(); //카메라에서 가져오기
+                    break; default:
+                break;
+            }
+        }
+    }
+
+    private void sendPicture(Uri imgUri) {
+        String imagePath = getRealPathFromURI(imgUri); // path 경로
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(imagePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+        int exifDegree = exifOrientationToDegrees(exifOrientation);
+        bitmap = BitmapFactory.decodeFile(imagePath);//경로를 통해 비트맵으로 전환
+        iv_logo.setImageBitmap(rotate(bitmap, exifDegree));//이미지 뷰에 비트맵 넣기
+        iv_logo.setVisibility(View.VISIBLE);
+
+
+        updateLogo();
+    }
+
+    private void getPictureForPhoto() {
+        bitmap = BitmapFactory.decodeFile(currentPhotoPath);
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(currentPhotoPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int exifOrientation;
+        int exifDegree;
+        if (exif != null) {
+            exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            exifDegree = exifOrientationToDegrees(exifOrientation);
+        } else {
+            exifDegree = 0;
+        }
+        iv_logo.setImageBitmap(rotate(bitmap, exifDegree));//이미지 뷰에 비트맵 넣기
+        iv_logo.setVisibility(View.VISIBLE);
+
+        updateLogo();
+    }
+
+
+
+    private int exifOrientationToDegrees(int exifOrientation) {
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
+            return 90;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
+            return 180;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
+            return 270;
+        }
+
+        return 0;
+    }
+
+    private Bitmap rotate(Bitmap src, float degree) {
+        // Matrix 객체 생성
+        Matrix matrix = new Matrix();
+        // 회전 각도 셋팅
+        matrix.postRotate(degree);
+        // 이미지와 Matrix 를 셋팅해서 Bitmap 객체 생성
+        return Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), matrix, true);
+    }
+
+    private String getRealPathFromURI(Uri contentUri) {
+        int column_index=0;
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        if(cursor.moveToFirst()) {
+            column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        }
+
+        return cursor.getString(column_index);
+    }
+
+
+    private File SaveBitmapToFileCache(Bitmap bitmap) {
+        File dir = new File(Environment.getExternalStorageDirectory() + "/path/");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        mImageCaptureName = timeStamp + ".png";
+        String filename = Environment.getExternalStorageDirectory().getAbsoluteFile() + "/path/" + mImageCaptureName;
+
+        File fileCacheItem = new File(filename);
+        OutputStream out = null;
+
+        try
+        {
+            fileCacheItem.createNewFile();
+            out = new FileOutputStream(fileCacheItem);
+
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 30, out);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            try
+            {
+                out.close();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        return fileCacheItem;
+    }
+
 
 
     @Override

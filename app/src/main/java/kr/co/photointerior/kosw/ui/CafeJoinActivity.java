@@ -107,7 +107,7 @@ public class CafeJoinActivity extends BaseActivity {
             if (mNames.size() > 1) {
                 if (mDeptSpinner.getSelectedItemPosition() == 0) {
                     toast(R.string.txt_cafe_category_select);
-                } else if ("".equals(txt_additions.getText().toString())) {
+                } else if (!mDeptSpinner.isShown() && "".equals(txt_additions.getText().toString())) {
                     toast(R.string.txt_cafe_additions_select);
                 } else {
                     mSeledtedCateseq = mSeqs.get(mDeptSpinner.getSelectedItemPosition());

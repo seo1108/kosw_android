@@ -221,4 +221,22 @@ public interface CafeService {
     @POST("api/cafe/deleteNotice")
     Call<ResponseBase> deleteNotice(@QueryMap Map<String, Object> queryMap);
 
+
+    /**
+     * 카페 로고 변경하기
+     * @param queryMap
+     * @return
+     */
+    @Multipart
+    @POST("api/cafe/updateLogo")
+    Call<ResponseBase> updateLogo(@QueryMap Map<String, Object> queryMap, @Part MultipartBody.Part image);
+
+    /**
+     * 카페 로고 삭제
+     * @param queryMap
+     * @return
+     */
+    @POST("api/cafe/deleteLogo")
+    Call<ResponseBase> deleteLogo(@QueryMap Map<String, Object> queryMap);
+
 }

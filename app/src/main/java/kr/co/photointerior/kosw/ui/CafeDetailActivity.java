@@ -2,6 +2,7 @@ package kr.co.photointerior.kosw.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -168,9 +169,9 @@ public class CafeDetailActivity extends BaseActivity {
 
         String confirmMessage = "";
         if ("Y".equals(confirm)) {
-            confirmMessage = "비공개/자동 승인";
+            confirmMessage = "비공개";
         } else {
-            confirmMessage = "공개/자동 승인";
+            confirmMessage = "공개";
         }
 
         txt_open_date = findViewById(R.id.txt_open_date);
@@ -405,7 +406,13 @@ public class CafeDetailActivity extends BaseActivity {
         showSpinner("");
         AppUserBase user = DataHolder.instance().getAppUserBase() ;
         Map<String, Object> query = KUtil.getDefaultQueryMap();
-        query.put("user_seq",user.getUser_seq() );
+        try {
+            query.put("user_seq", user.getUser_seq());
+        } catch (Exception ex) {
+            SharedPreferences prefr = getSharedPreferences("userInfo", MODE_PRIVATE);
+            query.put("user_seq", prefr.getInt("user_seq", -1));
+        }
+
         if (null != mCafeseq && !"".equals(mCafeseq)) {
             query.put("cafeseq", mCafeseq);
         }
@@ -432,7 +439,11 @@ public class CafeDetailActivity extends BaseActivity {
                         mCate = mCafe.getCategory();
 
                         if ("1".equals(mCafe.getIsjoin())) {
-                            isAdmin = mMyInfo.getIsAdmin();
+                            try {
+                                isAdmin = mMyInfo.getIsAdmin();
+                            } catch (Exception e) {
+                                isAdmin = "N";
+                            }
                         } else {
                             isAdmin = "N";
                         }
@@ -685,7 +696,12 @@ public class CafeDetailActivity extends BaseActivity {
         showSpinner("");
         AppUserBase user = DataHolder.instance().getAppUserBase() ;
         Map<String, Object> query = KUtil.getDefaultQueryMap();
-        query.put("user_seq",user.getUser_seq() );
+        try {
+            query.put("user_seq", user.getUser_seq());
+        } catch (Exception ex) {
+            SharedPreferences prefr = getSharedPreferences("userInfo", MODE_PRIVATE);
+            query.put("user_seq", prefr.getInt("user_seq", -1));
+        }
         query.put("cafeseq", mCafeseq);
 
         Call<CafeBbsList> call =
@@ -1066,7 +1082,7 @@ public class CafeDetailActivity extends BaseActivity {
             } else {
                 holder.departName.setText("");
             }
-            holder.recordAmount.setText(act_amt);
+            holder.recordAmount.setText(act_amt + " F");
 
             if (position == 0 && null != item.getIsmine() && "Y".equals(item.getIsmine())) {
                 setTextBackground(holder);

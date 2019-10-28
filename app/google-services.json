@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "487872900718-3m3i2efolrkp84skcq8n1ioh53fad7r4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.co.photointerior.kosw",
+            "certificate_hash": "5765825008a236a1078c619686793294c57aae3c"
+          }
+        },
+        {
           "client_id": "487872900718-580s60dl52ualnfi37k7n7atj51nb57q.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -66,6 +74,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "487872900718-c173l71ab952diu7hu8dhqnsn50uuc3m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.co.photointerior.kosw.app",
+            "certificate_hash": "5765825008a236a1078c619686793294c57aae3c"
+          }
+        },
         {
           "client_id": "487872900718-lan019sru9r0ltl3tsfj7iho396qr9hf.apps.googleusercontent.com",
           "client_type": 1,

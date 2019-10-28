@@ -3,6 +3,7 @@ package kr.co.photointerior.kosw.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -200,7 +201,8 @@ public class CafeMainActivity extends BaseActivity {
         showSpinner("");
         AppUserBase user = DataHolder.instance().getAppUserBase() ;
         Map<String, Object> query = KUtil.getDefaultQueryMap();
-        query.put("user_seq",user.getUser_seq() );
+        query.put("user_seq", user.getUser_seq());
+
         Call<CafeMyAllList> call =
                 new DefaultRestClient<CafeService>(this)
                         .getClient(CafeService.class).selectMyCafeMainList(query);

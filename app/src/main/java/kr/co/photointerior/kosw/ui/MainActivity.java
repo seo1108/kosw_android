@@ -376,7 +376,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
 */
 
-
         //getAppKeyHash();
 
 
@@ -439,6 +438,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             editor.putString("country", user.getCountry());
             editor.putString("city", user.getCity());
             editor.putInt("curBuildCount", user.getBuild_floor_amt());
+            editor.putInt("user_seq", user.getUser_seq());
             editor.commit();
         } else {
             editor.putString("token", "");
@@ -452,6 +452,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             editor.putString("country", "");
             editor.putString("city", "");
             editor.putInt("curBuildCount", 1000);
+            editor.putInt("user_seq", -1);
             editor.commit();
         }
 
