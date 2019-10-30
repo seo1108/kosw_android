@@ -167,7 +167,7 @@ public class StepThread extends Thread {
 
     PowerManager.WakeLock wakeLock;
 
-    private boolean mDebugMode = false;
+    private boolean mDebugMode = true;
 
     public StepThread(Context context){
         mContext = context;
@@ -392,6 +392,17 @@ public class StepThread extends Thread {
 
             if (Math.abs(gapAlitude) <= 0.3 || mSaveStep <= 0)
             {
+                if (mDebugMode) {
+                    try {
+                        MediaPlayer mMediaPlayer = new MediaPlayer();
+                        Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init25);
+                        mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+                        mMediaPlayer.prepare();
+                        mMediaPlayer.start();
+                    } catch (Exception e) {
+                    }
+                }
+
                 mSleepCnt = mMaxSleepCnt;
                 initMeasure();
                 return ;
@@ -486,7 +497,7 @@ public class StepThread extends Thread {
                         }
 
                         if ((mSaveStep <= 5)
-                                || (System.currentTimeMillis() - goupTime) < 4000) {
+                                || (System.currentTimeMillis() - goupTime) < 3000) {
 
                             if (mDebugMode)
                             {
@@ -500,7 +511,7 @@ public class StepThread extends Thread {
                                     if (mSaveStep <= 5) {
                                         Toast.makeText(mContext, "[부정측정] 걸음수 미달 : " + mSaveStep + "걸음", Toast.LENGTH_LONG).show();
                                     } else if ((System.currentTimeMillis() - goupTime) < 4000) {
-                                        Toast.makeText(mContext, "[부정측정] 4초이내 측정시도 : " + (System.currentTimeMillis() - goupTime) + "초", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(mContext, "[부정측정] 3초이내 측정시도 : " + (System.currentTimeMillis() - goupTime) + "초", Toast.LENGTH_LONG).show();
                                     }
                                 } catch (Exception e) {
                                 }
@@ -525,7 +536,7 @@ public class StepThread extends Thread {
                         }
 
                         if ((mSaveStep <= 5)
-                                || (System.currentTimeMillis() - goupTime) < 4000) {
+                                || (System.currentTimeMillis() - goupTime) < 3000) {
 
                             if (mDebugMode)
                             {
@@ -539,7 +550,7 @@ public class StepThread extends Thread {
                                     if (mSaveStep <= 5) {
                                         Toast.makeText(mContext, "[부정측정] 걸음수 미달 : " + mSaveStep + "걸음", Toast.LENGTH_LONG).show();
                                     } else if ((System.currentTimeMillis() - goupTime) < 4000) {
-                                        Toast.makeText(mContext, "[부정측정] 4초이내 측정시도 : " + (System.currentTimeMillis() - goupTime) + "초", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(mContext, "[부정측정] 3초이내 측정시도 : " + (System.currentTimeMillis() - goupTime) + "초", Toast.LENGTH_LONG).show();
                                     }
                                 } catch (Exception e) {
                                 }
