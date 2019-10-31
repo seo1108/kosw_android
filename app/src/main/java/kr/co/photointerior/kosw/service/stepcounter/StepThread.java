@@ -303,7 +303,7 @@ public class StepThread extends Thread {
         if (mDebugMode)
         {
             // 5초마다 소리
-            if (cnt % 50 == 0 && cnt < 10 * 30 && cnt > 0) {
+            if (cnt % 48 == 0 && cnt < 10 * 30 && cnt > 0) {
                 MediaPlayer mMediaPlayer = new MediaPlayer();
                 try {
                     Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init25);
@@ -392,16 +392,16 @@ public class StepThread extends Thread {
 
             if (Math.abs(gapAlitude) <= 0.3 || mSaveStep <= 0)
             {
-                if (mDebugMode) {
-                    try {
-                        MediaPlayer mMediaPlayer = new MediaPlayer();
-                        Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init25);
-                        mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
-                        mMediaPlayer.prepare();
-                        mMediaPlayer.start();
-                    } catch (Exception e) {
-                    }
-                }
+//                if (mDebugMode) {
+//                    try {
+//                        MediaPlayer mMediaPlayer = new MediaPlayer();
+//                        Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.init25);
+//                        mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+//                        mMediaPlayer.prepare();
+//                        mMediaPlayer.start();
+//                    } catch (Exception e) {
+//                    }
+//                }
 
                 mSleepCnt = mMaxSleepCnt;
                 initMeasure();
