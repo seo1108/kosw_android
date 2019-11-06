@@ -206,35 +206,40 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/dp_4"
-                app:srcCompat="@drawable/club_1"/>
+                app:srcCompat="@drawable/club_1"
+                android:visibility="invisible"/>
 
             <ImageView
                 android:id="@+id/iv4102"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/dp_4"
-                app:srcCompat="@drawable/club_2"/>
+                app:srcCompat="@drawable/club_2"
+                android:visibility="invisible"/>
 
             <ImageView
                 android:id="@+id/iv4103"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/dp_4"
-                app:srcCompat="@drawable/club_3"/>
+                app:srcCompat="@drawable/club_3"
+                android:visibility="invisible"/>
 
             <ImageView
                 android:id="@+id/iv4104"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/dp_4"
-                app:srcCompat="@drawable/club_4"/>
+                app:srcCompat="@drawable/club_4"
+                android:visibility="invisible"/>
 
             <ImageView
                 android:id="@+id/iv4105"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/dp_4"
-                app:srcCompat="@drawable/club_5"/>
+                app:srcCompat="@drawable/club_5"
+                android:visibility="invisible"/>
         </TableRow>
 
         <RelativeLayout

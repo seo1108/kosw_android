@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -65,6 +66,7 @@ public class InfoSettingProfileActivity extends BaseUserActivity {
 
     private Spinner mDeptSpinner;
     private EditText mNickName;
+    private CheckBox mNickOpen;
     private Profile mProfile = DataHolder.instance().getProfile();
     private String mOldNick;
     private  ViewGroup mRootView ;
@@ -94,6 +96,7 @@ public class InfoSettingProfileActivity extends BaseUserActivity {
                 AUtil.toggleSoftKeyboard(this, mNickName, true);
             }
         });
+        mNickOpen = findViewById(R.id.check_privacy_open);
         mDeptSpinner = findViewById(R.id.spinner_depart);
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(
@@ -103,6 +106,15 @@ public class InfoSettingProfileActivity extends BaseUserActivity {
 
     @Override
     protected void attachEvents() {
+        findViewById(R.id.check_privacy_open).setOnClickListener(v->{
+            if (mNickOpen.isChecked()) {
+                // TODO : CheckBox is checked.
+                mNickOpen.setChecked(true);
+            } else {
+                // TODO : CheckBox is unchecked.
+                mNickOpen.setChecked(false);
+            }
+        });
         findViewById(R.id.popup_close).setOnClickListener(v->{
             finish();
             overridePendingTransition(R.anim.fade_in_full,R.anim.slide_out_right);

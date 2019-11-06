@@ -227,6 +227,7 @@
     <string name="txt_sing_up_extra_desc3">\'개인설정\'에서 등록 및 수정도 가능합니다.</string>
     <string name="txt_nick">닉네임</string>
     <string name="txt_nick_amend">닉네임 수정</string>
+    <string name="txt_nick_open">닉네임 공개</string>
     <string name="txt_character">캐릭터 선택</string>
     <string name="txt_title_today_ranking">커뮤니티</string>
 

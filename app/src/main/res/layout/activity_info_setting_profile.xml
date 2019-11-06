@@ -114,6 +114,35 @@
                         android:textSize="@dimen/sp_14"/>
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/privacy_open_linearlayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="38dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="24dp"
+                    app:layout_constraintTop_toBottomOf="@+id/nickname_box">
+
+                    <CheckBox
+                        android:id="@+id/check_privacy_open"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:button="@drawable/checkbox_custom_1"
+                        android:scaleX="1.0"
+                        android:scaleY="1.0" />
+                    <kr.co.photointerior.kosw.widget.KoswTextView
+                        android:id="@+id/txt_open"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="15dp"
+                        android:text="@string/txt_nick_open"
+                        android:textColor="@color/color_1a1a1a"
+                        android:textCursorDrawable="@null" />
+                </LinearLayout>
+
                 <kr.co.photointerior.kosw.widget.KoswTextView
                     android:id="@+id/input_warn"
                     android:layout_width="match_parent"
@@ -128,7 +157,7 @@
                     app:layout_constraintBottom_toTopOf="@+id/textView9"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/nickname_box"/>
+                    app:layout_constraintTop_toBottomOf="@+id/privacy_open_linearlayout"/>
 
                 <TextView
                     android:id="@+id/textView9"
