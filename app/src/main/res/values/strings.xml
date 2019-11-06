@@ -280,7 +280,7 @@
     <string name="txt_invite_message">회사(단체) 소속 인원들을 초대해 주세요.\n초대를 통해서만 카페 가입이 가능합니다.</string>
     <string name="txt_signcafe">카페가입/탈퇴하기</string>
     <string name="txt_help">도움말</string>
-    <string name="txt_provision">이용약관 개인정보처리방침</string>
+    <string name="txt_provision">이용약관 및 개인정보처리방침</string>
     <string name="txt_provision_1">이용약관</string>
     <string name="txt_calorie">칼로리</string>
     <string name="txt_health">건강수명</string>
