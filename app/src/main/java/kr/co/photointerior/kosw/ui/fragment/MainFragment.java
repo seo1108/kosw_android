@@ -108,6 +108,7 @@ import kr.co.photointerior.kosw.service.noti.NotificationChannelSupport;
 import kr.co.photointerior.kosw.service.stepcounter.StepCounterService;
 import kr.co.photointerior.kosw.ui.BaseActivity;
 import kr.co.photointerior.kosw.ui.CafeChangeActivity;
+import kr.co.photointerior.kosw.ui.CafeDetailActivity;
 import kr.co.photointerior.kosw.ui.CafeNoticeActivity;
 import kr.co.photointerior.kosw.ui.GPSAcceptActivity;
 import kr.co.photointerior.kosw.ui.InfoSettingProfileActivity;
@@ -342,9 +343,18 @@ public class MainFragment extends BaseFragment {
             bbs = mMainNotice;
         } else if (id == R.id.txt_noti_two) {
             if (mCustomerNotice == null) {
+                Bundle bu = new Bundle();
+                bu.putSerializable("cafeseq", mSelectedCafeSeq);
+                bu.putSerializable("cafekey", "");
+                mActivity.callActivity(CafeDetailActivity.class, bu, false);
                 return;
             }
             bbs = mCustomerNotice;
+
+            Bundle bu = new Bundle();
+            bu.putSerializable("cafeseq", mSelectedCafeSeq);
+            bu.putSerializable("cafekey", "");
+            mActivity.callActivity(CafeDetailActivity.class, bu, false);
         } else if (id == R.id.txt_noti_three || id == R.id.txt_noti_four || id == R.id.txt_noti_five) {
             mActivity.callActivity(NoticeRankingActivity.class, false);
             return;

@@ -167,7 +167,7 @@ public class StepThread extends Thread {
 
     PowerManager.WakeLock wakeLock;
 
-    private boolean mDebugMode = true;
+    private boolean mDebugMode = false;
 
     public StepThread(Context context){
         mContext = context;

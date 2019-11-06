@@ -196,18 +196,37 @@
                 android:textColor="#000000"
                 android:textSize="@dimen/sp_16"
                 android:textStyle="bold" />
-
+             <LinearLayout
+                 android:id="@+id/ll_notice_detail"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginStart="32dp"
+                 android:layout_marginEnd="32dp"
+                 android:orientation="horizontal">
                 <kr.co.photointerior.kosw.widget.KoswTextView
                     android:id="@+id/txt_notice"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingTop="5dp"
+                    android:text=""
+                    android:textColor="#000"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textSize="@dimen/sp_14" />
+
+                <kr.co.photointerior.kosw.widget.KoswTextView
+                    android:id="@+id/txt_notice_more"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
                     android:layout_marginEnd="32dp"
                     android:paddingTop="5dp"
-                    android:text=""
+                    android:text="[+더보기]"
                     android:textColor="#000"
+                    android:singleLine="true"
                     android:textSize="@dimen/sp_14" />
-
+             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/top_btn_box"

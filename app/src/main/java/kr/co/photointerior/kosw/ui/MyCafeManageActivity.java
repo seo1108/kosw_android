@@ -279,7 +279,8 @@ public class MyCafeManageActivity extends BaseActivity {
             } else {
                 holder.btn_unregist.setOnClickListener(v->{
                     // 회원탈퇴
-                    kickUser(String.valueOf(user.getUser_seq()), position, item.getCafeseq());
+                    //kickUser(String.valueOf(user.getUser_seq()), position, item.getCafeseq());
+                    kickUser(item.getAdminseq(), position, item.getCafeseq());
                 });
             }
 
@@ -405,14 +406,16 @@ public class MyCafeManageActivity extends BaseActivity {
         }
     }
 
-    private void kickUser(String kickuserseq, int position, String cafeseq) {
+    private void kickUser(String adminseq, int position, String cafeseq) {
         showSpinner("");
 
         AppUserBase user = DataHolder.instance().getAppUserBase() ;
         Map<String, Object> query = KUtil.getDefaultQueryMap();
-        query.put("user_seq",user.getUser_seq() );
-        query.put("kick_user_seq", kickuserseq);
+        query.put("user_seq",adminseq);
+        query.put("kick_user_seq", user.getUser_seq());
         query.put("cafeseq", cafeseq);
+
+        Log.d("EEEEEEEEEEEEEE", user.getUser_seq() + "____" + adminseq + "_____" + cafeseq);
 
         SharedPreferences prefr = getSharedPreferences("lastSelectedCafe", MODE_PRIVATE);
         String selectedCafeSeq = prefr.getString("cafeseq", "");
@@ -432,6 +435,7 @@ public class MyCafeManageActivity extends BaseActivity {
             @Override
             public void onResponse(Call<ResponseBase> call, Response<ResponseBase> response) {
                 LogUtils.err(TAG, response.raw().toString());
+
                 if(response.isSuccessful()){
                     ResponseBase base = response.body();
                     if(base.isSuccess()) {

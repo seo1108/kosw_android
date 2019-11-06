@@ -137,7 +137,7 @@
     <string name="cafe_notice_edit_success">공지사항을 수정하였습니다.</string>
     <string name="cafe_notice_delete_success">공지사항을 삭제하였습니다.</string>
     <string name="cafe_member_kick_success">강퇴되었습니다.</string>
-    <string name="cafe_member_kick_myself_success">카페를 탈퇴하였습니다.</string>
+    <string name="cafe_member_kick_myself_success">카페 탈퇴가 정상적으로 완료되었습니다.</string>
     <string name="cafe_open">공개 카페가 되었습니다.</string>
     <string name="cafe_close">비공개 카페가 되었습니다.</string>
     <string name="cafe_info_edit_success">카페정보를 수정하였습니다.</string>

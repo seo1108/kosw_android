@@ -84,7 +84,7 @@ public class CafeDetailActivity extends BaseActivity {
     private KoswButton btn_join_cafe;
     private AppCompatSpinner spinner, spinner_category;
     private ImageView btn_back, img_post, btn_config;
-    private LinearLayout ll_notice, notice_linearlayout;
+    private LinearLayout ll_notice, notice_linearlayout, ll_notice_detail;
     private NestedScrollView sv;
     private String mCafeseq = "";
     private String mCafekey = "";
@@ -164,6 +164,8 @@ public class CafeDetailActivity extends BaseActivity {
 
         txt_notice_date = findViewById(R.id.txt_notice_date);
         txt_notice_date.setTypeface(txt_notice_date.getTypeface(), Typeface.BOLD);
+
+        ll_notice_detail = findViewById(R.id.ll_notice_detail);
 
         txt_notice = findViewById(R.id.txt_notice);
 
@@ -495,14 +497,15 @@ public class CafeDetailActivity extends BaseActivity {
 
                         if (null != mNoticeList && mNoticeList.size() > 0) {
                             txt_notice_date.setText("[공지] " + mNoticeList.get(0).getRegdate());
-                            txt_notice.setText(mNoticeList.get(0).getContents() + "....[+더보기]");
-                            txt_notice.setOnClickListener(v->{
+                            txt_notice.setText(mNoticeList.get(0).getContents());
+                            ll_notice_detail.setOnClickListener(v->{
                                 // 공지사항 액티비티로 이동
                                 Bundle bu = new Bundle();
                                 bu.putSerializable("cafeseq", mCafeseq);
                                 callActivity(CafeNoticeActivity.class, bu, false);
                             });
                         } else {
+                            ll_notice_detail.setVisibility(View.GONE);
                             txt_notice_date.setVisibility(View.GONE);
                             txt_notice.setVisibility(View.GONE);
                         }
@@ -737,7 +740,8 @@ public class CafeDetailActivity extends BaseActivity {
                             int replycomm_id = Integer.parseInt("4" + mBbsList.get(idx).getBbsseq());
                             int bbs_config_id = Integer.parseInt("5" + mBbsList.get(idx).getBbsseq());
 
-                            String notice_info = mBbsList.get(idx).getRegdate() + "   " + mBbsList.get(idx).getNickname() + "님";
+                            // 이미지 파일 작업 처리
+                            String notice_info = mBbsList.get(idx).getRegdate() + "   " + mBbsList.get(idx).getNickname() + "";
                             KoswEditText et_info = (KoswEditText) con.findViewById(R.id.notice_info);
                             et_info.setId(info_id);
                             et_info.setText(notice_info);
