@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -160,6 +161,14 @@ public class InfoSettingProfileActivity extends BaseUserActivity {
     protected void setInitialData() {
         mOldNick = mProfile.getNickName();
         mNickName.setText(mProfile.getNickName());
+
+        Log.d("EEEEEEEEEEEEEEEEEEE", mProfile.getShow_nickname());
+
+        if ("Y".equals(mProfile.getShow_nickname())) {
+            mNickOpen.setChecked(true);
+        } else {
+            mNickOpen.setChecked(false);
+        }
         TextView companyName = getView(R.id.input_company_name);
         companyName.setText(mProfile.getCompanyName());
         drawCharacterList();
@@ -333,6 +342,12 @@ public class InfoSettingProfileActivity extends BaseUserActivity {
             map.put("deptSeq", mProfile.getDeparts().get(pos).getDepartSeq());
         }else{
             map.put("deptSeq", mProfile.getDepartSeq());
+        }
+
+        if (mNickOpen.isChecked()) {
+            map.put("show_nickname", "Y");
+        }else{
+            map.put("show_nickname", "N");
         }
         LogUtils.log("nick change", map);
         Call<ResponseBase> call =

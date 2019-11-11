@@ -167,11 +167,18 @@ public class FragmentActivityAnalysisByPeriod extends BaseFragment implements It
      * 칼로리, 건강수명, 랭킹정보 표시
      */
     private void setDataIntoViews(){
+//        mSummaries[0].setRecordAmount(
+//                KUtil.calcCalorieDefault(mActivityRecord.getAnalysisTotalToInt()));
+//        mSummaries[1].setRecordAmount(
+//                KUtil.calcLifeDefault(mActivityRecord.getAnalysisTotalToInt()));
+//        mSummaries[2].setRecordAmount(mActivityRecord.getAnalysisRanking());
         mSummaries[0].setRecordAmount(
-                KUtil.calcCalorieDefault(mActivityRecord.getAnalysisTotalToInt()));
+                mActivityRecord.getAnalysisTotalToInt() + ""
+        );
         mSummaries[1].setRecordAmount(
-                KUtil.calcLifeDefault(mActivityRecord.getAnalysisTotalToInt()));
-        mSummaries[2].setRecordAmount(mActivityRecord.getAnalysisRanking());
+                KUtil.calcCalorieDefault(mActivityRecord.getAnalysisTotalToInt()));
+        mSummaries[2].setRecordAmount(
+                  KUtil.calcLifeDefault(mActivityRecord.getAnalysisTotalToInt()));
         drawChart();
     }
 

@@ -13,6 +13,8 @@ import kr.co.photointerior.kosw.utils.StringUtil;
 public class Profile extends ResponseBase {
     @SerializedName("nickName")
     private String nickName;
+    @SerializedName("show_nickname")
+    private String show_nickname;
     @SerializedName("userId")
     private String userId;
     @SerializedName("userName")
@@ -39,6 +41,7 @@ public class Profile extends ResponseBase {
     private List<Depart> departs;
     private Depart depart;
 
+
     @SerializedName("chars")
     private List<Character> characters;
 
@@ -52,6 +55,14 @@ public class Profile extends ResponseBase {
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public String getShow_nickname() {
+        return show_nickname;
+    }
+
+    public void setShow_nickname(String show_nickname) {
+        this.show_nickname = show_nickname;
     }
 
     public String getUserId() {

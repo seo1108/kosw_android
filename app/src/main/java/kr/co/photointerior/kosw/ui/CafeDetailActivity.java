@@ -77,6 +77,7 @@ public class CafeDetailActivity extends BaseActivity {
     };
     private int mSelectedBtnId = mBtnResId[0];
 
+    private LinearLayout ll_ranking;
     private KoswTextView tv_title, txt_cafename, txt_cafe_message, txt_notice_date, txt_notice;
     private KoswTextView txt_open_date, txt_member, txt_admin;
     private KoswEditText txt_cafedesc;
@@ -125,6 +126,8 @@ public class CafeDetailActivity extends BaseActivity {
     protected void findViews() {
         String confirm = mCafe.getConfirm();
         String join = mCafe.getIsjoin();
+
+        ll_ranking = findViewById(R.id.ll_ranking);
 
         sv = findViewById(R.id.sv);
 
@@ -716,144 +719,148 @@ public class CafeDetailActivity extends BaseActivity {
                 closeSpinner();
                 LogUtils.err(TAG, response.toString());
                 if (response.isSuccessful()) {
-                    if (null == response.body().getList() || response.body().getList().size() == 0) {
-                        bbs_count.setText("게시글 : 0개");
-                        bbs_count.setTypeface(bbs_count.getTypeface(), Typeface.BOLD);
-                    } else {
-                        mBbsList = response.body().getList();
 
-                        bbs_count.setText("게시글 : " + mBbsList.size() + "개");
-                        bbs_count.setTypeface(bbs_count.getTypeface(), Typeface.BOLD);
+                    if ("1".equals(mCafe.getIsjoin())) {
 
-                        for (int idx = 0; idx < mBbsList.size(); idx++) {
-                            RowCafeBbs n_layout = new RowCafeBbs(getApplicationContext());
-                            LinearLayout con = (LinearLayout) findViewById(R.id.notice_linearlayout);
-                            con.addView(n_layout);
 
-                            final String bbsseq = mBbsList.get(idx).getBbsseq();
-                            final String bbscontent = mBbsList.get(idx).getContent();
-                            final String creatorseq = mBbsList.get(idx).getUser_seq();
+                        if (null == response.body().getList() || response.body().getList().size() == 0) {
+                            bbs_count.setText("게시글 : 0개");
+                            bbs_count.setTypeface(bbs_count.getTypeface(), Typeface.BOLD);
+                        } else {
+                            mBbsList = response.body().getList();
 
-                            int info_id = Integer.parseInt("1" + mBbsList.get(idx).getBbsseq());
-                            int content_id = Integer.parseInt("2" + mBbsList.get(idx).getBbsseq());
-                            int commcount_id = Integer.parseInt("3" + mBbsList.get(idx).getBbsseq());
-                            int replycomm_id = Integer.parseInt("4" + mBbsList.get(idx).getBbsseq());
-                            int bbs_config_id = Integer.parseInt("5" + mBbsList.get(idx).getBbsseq());
+                            bbs_count.setText("게시글 : " + mBbsList.size() + "개");
+                            bbs_count.setTypeface(bbs_count.getTypeface(), Typeface.BOLD);
 
-                            // 이미지 파일 작업 처리
-                            String notice_info = mBbsList.get(idx).getRegdate() + "   " + mBbsList.get(idx).getNickname() + "";
-                            KoswEditText et_info = (KoswEditText) con.findViewById(R.id.notice_info);
-                            et_info.setId(info_id);
-                            et_info.setText(notice_info);
+                            for (int idx = 0; idx < mBbsList.size(); idx++) {
+                                RowCafeBbs n_layout = new RowCafeBbs(getApplicationContext());
+                                LinearLayout con = (LinearLayout) findViewById(R.id.notice_linearlayout);
+                                con.addView(n_layout);
 
-                            KoswEditText et_context = (KoswEditText) con.findViewById(R.id.notice_context);
-                            et_context.setId(content_id);
-                            et_context.setTypeface(et_context.getTypeface(), Typeface.BOLD);
-                            et_context.setText(bbscontent);
+                                final String bbsseq = mBbsList.get(idx).getBbsseq();
+                                final String bbscontent = mBbsList.get(idx).getContent();
+                                final String creatorseq = mBbsList.get(idx).getUser_seq();
 
-                            KoswEditText et_comm_count = (KoswEditText) con.findViewById(R.id.notice_comment_count);
-                            et_comm_count.setId(commcount_id);
+                                int info_id = Integer.parseInt("1" + mBbsList.get(idx).getBbsseq());
+                                int content_id = Integer.parseInt("2" + mBbsList.get(idx).getBbsseq());
+                                int commcount_id = Integer.parseInt("3" + mBbsList.get(idx).getBbsseq());
+                                int replycomm_id = Integer.parseInt("4" + mBbsList.get(idx).getBbsseq());
+                                int bbs_config_id = Integer.parseInt("5" + mBbsList.get(idx).getBbsseq());
 
-                            ImageView bbs_config = (ImageView) con.findViewById(R.id.bbs_config);
-                            bbs_config.setId(bbs_config_id);
+                                // 이미지 파일 작업 처리
+                                String notice_info = mBbsList.get(idx).getRegdate() + "   " + mBbsList.get(idx).getNickname() + "";
+                                KoswEditText et_info = (KoswEditText) con.findViewById(R.id.notice_info);
+                                et_info.setId(info_id);
+                                et_info.setText(notice_info);
 
-                            //if ((mBbsList.get(idx).getUser_seq()).equals(String.valueOf(user.getUser_seq()))) {
-                            if ("1".equals(mCafe.getIsjoin())) {
-                                bbs_config.setVisibility(View.VISIBLE);
-                                bbs_config.setOnClickListener(v->{
-                                    // 게시글 상세
-                                    Intent intent = new Intent(getApplicationContext(), BbsDetailActivity.class);
-                                    intent.putExtra("bbsseq", bbsseq);
-                                    intent.putExtra("content", bbscontent);
-                                    intent.putExtra("isAdmin", isAdmin);
-                                    bbsType = "BBS";
+                                KoswEditText et_context = (KoswEditText) con.findViewById(R.id.notice_context);
+                                et_context.setId(content_id);
+                                et_context.setTypeface(et_context.getTypeface(), Typeface.BOLD);
+                                et_context.setText(bbscontent);
 
-                                    if (creatorseq.equals(String.valueOf(user.getUser_seq()))) {
-                                        intent.putExtra("isCreator", true);
-                                    } else {
-                                        intent.putExtra("isCreator", false);
+                                KoswEditText et_comm_count = (KoswEditText) con.findViewById(R.id.notice_comment_count);
+                                et_comm_count.setId(commcount_id);
+
+                                ImageView bbs_config = (ImageView) con.findViewById(R.id.bbs_config);
+                                bbs_config.setId(bbs_config_id);
+
+                                //if ((mBbsList.get(idx).getUser_seq()).equals(String.valueOf(user.getUser_seq()))) {
+                                if ("1".equals(mCafe.getIsjoin())) {
+                                    bbs_config.setVisibility(View.VISIBLE);
+                                    bbs_config.setOnClickListener(v -> {
+                                        // 게시글 상세
+                                        Intent intent = new Intent(getApplicationContext(), BbsDetailActivity.class);
+                                        intent.putExtra("bbsseq", bbsseq);
+                                        intent.putExtra("content", bbscontent);
+                                        intent.putExtra("isAdmin", isAdmin);
+                                        bbsType = "BBS";
+
+                                        if (creatorseq.equals(String.valueOf(user.getUser_seq()))) {
+                                            intent.putExtra("isCreator", true);
+                                        } else {
+                                            intent.putExtra("isCreator", false);
+                                        }
+
+                                        startActivityForResult(intent, mBbsCreateResultCode);
+
+                                    });
+                                }
+
+
+                                // 댓글달기 이벤트
+
+                                KoswEditText et_notice_comment = (KoswEditText) con.findViewById(R.id.notice_comment);
+                                et_notice_comment.setId(replycomm_id);
+                                if ("1".equals(mCafe.getIsjoin())) {
+                                    et_notice_comment.setOnClickListener(v -> {
+                                        //con.setTranslationY();
+                                        bbsType = "COMMENT";
+                                        offsetY = sv.getScrollY();
+
+                                        et_notice_comment.getTranslationY();
+                                        Intent intent = new Intent(getApplicationContext(), BbsPostActivity.class);
+                                        intent.putExtra("bbsseq", bbsseq);
+                                        intent.putExtra("postType", "COMMENT");
+
+                                        startActivityForResult(intent, mBbsCreateResultCode);
+                                    });
+                                } else {
+                                    et_notice_comment.setVisibility(View.GONE);
+                                }
+
+                                if (null != mBbsList.get(idx).getComments() && mBbsList.get(idx).getComments().size() > 0) {
+                                    et_comm_count.setText(mBbsList.get(idx).getComments().size() + "");
+
+                                    for (int b_idx = 0; b_idx < mBbsList.get(idx).getComments().size(); b_idx++) {
+                                        RowCafeBbsComment b_layout = new RowCafeBbsComment(getApplicationContext());
+                                        LinearLayout b_con = (LinearLayout) findViewById(R.id.notice_linearlayout);
+                                        b_con.addView(b_layout);
+
+                                        int comm_info_id = Integer.parseInt("6" + mBbsList.get(idx).getBbsseq() + mBbsList.get(idx).getComments().get(b_idx).getCommentseq());
+                                        int comm_content_id = Integer.parseInt("7" + mBbsList.get(idx).getBbsseq() + mBbsList.get(idx).getComments().get(b_idx).getCommentseq());
+                                        int comm_date_id = Integer.parseInt("8" + mBbsList.get(idx).getBbsseq() + mBbsList.get(idx).getComments().get(b_idx).getCommentseq());
+                                        int comm_profile_id = Integer.parseInt("9" + mBbsList.get(idx).getBbsseq() + mBbsList.get(idx).getComments().get(b_idx).getCommentseq());
+
+                                        KoswEditText et_comm_info = (KoswEditText) b_con.findViewById(R.id.comment_context_info);
+                                        et_comm_info.setId(comm_info_id);
+                                        et_comm_info.setTypeface(et_comm_info.getTypeface(), Typeface.BOLD);
+                                        et_comm_info.setText(mBbsList.get(idx).getComments().get(b_idx).getNickname());
+
+                                        KoswEditText et_comm_context = (KoswEditText) b_con.findViewById(R.id.comment_context);
+                                        et_comm_context.setId(comm_content_id);
+                                        et_comm_context.setText(mBbsList.get(idx).getComments().get(b_idx).getContent());
+
+                                        KoswEditText et_comm_date = (KoswEditText) b_con.findViewById(R.id.comment_date);
+                                        et_comm_date.setId(comm_date_id);
+                                        et_comm_date.setText(mBbsList.get(idx).getComments().get(b_idx).getRegdate());
+
+                                        CircleImageView img_profile = (CircleImageView) b_con.findViewById(R.id.img_profile);
+                                        img_profile.setId(comm_profile_id);
+                                        String charUrl = KUtil.getSubCharacterImgUrl(mBbsList.get(idx).getComments().get(b_idx).getCharImageFile());
+                                        Glide.with(getApplicationContext())
+                                                .applyDefaultRequestOptions(KUtil.getGlideCacheOption())
+                                                .load(charUrl).thumbnail(.5f).into(img_profile);
                                     }
+                                } else {
+                                    et_comm_count.setText("0");
+                                }
 
-                                    startActivityForResult(intent, mBbsCreateResultCode);
+                                RowDotSeparator d_layout = new RowDotSeparator(getApplicationContext());
+                                LinearLayout d_con = (LinearLayout) findViewById(R.id.notice_linearlayout);
+                                d_con.addView(d_layout);
 
+
+                            }
+
+                            // 댓글 작성 후, 댓글 단 위치로 이동
+                            if ("COMMENT".equals(bbsType) && offsetY > 0) {
+                                ViewTreeObserver vto = sv.getViewTreeObserver();
+                                vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                                    public void onGlobalLayout() {
+                                        sv.scrollTo(0, offsetY);
+                                    }
                                 });
                             }
-
-
-
-                            // 댓글달기 이벤트
-
-                            KoswEditText et_notice_comment = (KoswEditText) con.findViewById(R.id.notice_comment);
-                            et_notice_comment.setId(replycomm_id);
-                            if ("1".equals(mCafe.getIsjoin())) {
-                                et_notice_comment.setOnClickListener(v -> {
-                                    //con.setTranslationY();
-                                    bbsType = "COMMENT";
-                                    offsetY = sv.getScrollY();
-
-                                    et_notice_comment.getTranslationY();
-                                    Intent intent = new Intent(getApplicationContext(), BbsPostActivity.class);
-                                    intent.putExtra("bbsseq", bbsseq);
-                                    intent.putExtra("postType", "COMMENT");
-
-                                    startActivityForResult(intent, mBbsCreateResultCode);
-                                });
-                            } else {
-                                et_notice_comment.setVisibility(View.GONE);
-                            }
-
-                            if (null != mBbsList.get(idx).getComments() && mBbsList.get(idx).getComments().size() > 0) {
-                                et_comm_count.setText(mBbsList.get(idx).getComments().size() + "");
-
-                                for (int b_idx = 0; b_idx < mBbsList.get(idx).getComments().size(); b_idx++) {
-                                    RowCafeBbsComment b_layout = new RowCafeBbsComment(getApplicationContext());
-                                    LinearLayout b_con = (LinearLayout) findViewById(R.id.notice_linearlayout);
-                                    b_con.addView(b_layout);
-
-                                    int comm_info_id = Integer.parseInt("6" + mBbsList.get(idx).getBbsseq() + mBbsList.get(idx).getComments().get(b_idx).getCommentseq());
-                                    int comm_content_id = Integer.parseInt("7" + mBbsList.get(idx).getBbsseq() + mBbsList.get(idx).getComments().get(b_idx).getCommentseq());
-                                    int comm_date_id = Integer.parseInt("8" + mBbsList.get(idx).getBbsseq() + mBbsList.get(idx).getComments().get(b_idx).getCommentseq());
-                                    int comm_profile_id = Integer.parseInt("9" + mBbsList.get(idx).getBbsseq() + mBbsList.get(idx).getComments().get(b_idx).getCommentseq());
-
-                                    KoswEditText et_comm_info = (KoswEditText) b_con.findViewById(R.id.comment_context_info);
-                                    et_comm_info.setId(comm_info_id);
-                                    et_comm_info.setTypeface(et_comm_info.getTypeface(), Typeface.BOLD);
-                                    et_comm_info.setText(mBbsList.get(idx).getComments().get(b_idx).getNickname());
-
-                                    KoswEditText et_comm_context = (KoswEditText) b_con.findViewById(R.id.comment_context);
-                                    et_comm_context.setId(comm_content_id);
-                                    et_comm_context.setText(mBbsList.get(idx).getComments().get(b_idx).getContent());
-
-                                    KoswEditText et_comm_date = (KoswEditText) b_con.findViewById(R.id.comment_date);
-                                    et_comm_date.setId(comm_date_id);
-                                    et_comm_date.setText(mBbsList.get(idx).getComments().get(b_idx).getRegdate());
-
-                                    CircleImageView img_profile = (CircleImageView) b_con.findViewById(R.id.img_profile);
-                                    img_profile.setId(comm_profile_id);
-                                    String charUrl = KUtil.getSubCharacterImgUrl(mBbsList.get(idx).getComments().get(b_idx).getCharImageFile());
-                                    Glide.with(getApplicationContext())
-                                            .applyDefaultRequestOptions(KUtil.getGlideCacheOption())
-                                            .load( charUrl ).thumbnail(.5f).into(img_profile);
-                                }
-                            } else {
-                                et_comm_count.setText("0");
-                            }
-
-                            RowDotSeparator d_layout = new RowDotSeparator(getApplicationContext());
-                            LinearLayout d_con = (LinearLayout) findViewById(R.id.notice_linearlayout);
-                            d_con.addView(d_layout);
-
-
-                        }
-
-                        // 댓글 작성 후, 댓글 단 위치로 이동
-                        if ("COMMENT".equals(bbsType) && offsetY > 0) {
-                            ViewTreeObserver vto = sv.getViewTreeObserver();
-                            vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                                public void onGlobalLayout() {
-                                    sv.scrollTo(0, offsetY);
-                                }
-                            });
                         }
                     }
                 }

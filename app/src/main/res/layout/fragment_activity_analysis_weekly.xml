@@ -60,10 +60,10 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_42"
             app:recordAmt="270"
-            app:recordAmtColor="@color/color_1a1a1a"
+            app:recordAmtColor="@color/colorPrimary"
             app:recordIcon="@drawable/ic_floor"
-            app:recordTitle="@string/txt_calorie"
-            app:recordUnit="kcal" />
+            app:recordTitle="@string/txt_total_floor"
+            app:recordUnit="F" />
 
         <kr.co.photointerior.kosw.widget.RowActivityRecord
             android:id="@+id/row_record_life"
@@ -71,10 +71,10 @@
             android:layout_height="@dimen/dp_42"
             android:layout_below="@+id/row_record_calorie"
             app:recordAmt="72,00"
-            app:recordAmtColor="@color/color_1a1a1a"
+            app:recordAmtColor="@color/color_ed4524"
             app:recordIcon="@drawable/ic_my_calorie"
-            app:recordTitle="@string/txt_health"
-            app:recordUnit="sec" />
+            app:recordTitle="@string/txt_calorie"
+            app:recordUnit="kcal" />
 
         <kr.co.photointerior.kosw.widget.RowActivityRecord
             android:id="@+id/row_record_ranking"
@@ -82,11 +82,11 @@
             android:layout_height="@dimen/dp_42"
             android:layout_below="@+id/row_record_life"
             app:recordAmt="120"
-            app:recordAmtColor="@color/color_1a1a1a"
+            app:recordAmtColor="@color/color_A937AE41"
             app:recordIcon="@drawable/ic_my_health"
-            app:recordTitle="@string/txt_ranking"
+            app:recordTitle="@string/txt_health"
             app:recordBg="@color/colorWhite"
-            app:recordUnit="pos" />
+            app:recordUnit="sec" />
 
     </RelativeLayout>
 
