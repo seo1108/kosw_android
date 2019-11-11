@@ -162,8 +162,6 @@ public class InfoSettingProfileActivity extends BaseUserActivity {
         mOldNick = mProfile.getNickName();
         mNickName.setText(mProfile.getNickName());
 
-        Log.d("EEEEEEEEEEEEEEEEEEE", mProfile.getShow_nickname());
-
         if ("Y".equals(mProfile.getShow_nickname())) {
             mNickOpen.setChecked(true);
         } else {
