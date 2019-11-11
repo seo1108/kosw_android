@@ -165,6 +165,8 @@ public class StepThread extends Thread {
     private TimerTask mTask;
     private Timer mTimer;
 
+    private int mUnsentStairCnt = 0;
+
     PowerManager.WakeLock wakeLock;
 
     private boolean mDebugMode = false;
@@ -1211,169 +1213,173 @@ public class StepThread extends Thread {
      */
 
     private void sendDataToServer(int goupAmt, String type, String measure) {
-
-        if (mDebugMode) {
-            if ("notbuilding".equals(type)) {
-                Toast.makeText(mContext, "[등산 오르기] " + measure, Toast.LENGTH_SHORT).show();
-                mSleepCnt = 0;
-                initMeasure();
-            } else {
-                Toast.makeText(mContext, "[계단 오르기] " + measure, Toast.LENGTH_SHORT).show();
-                mSleepCnt = 0;
-                mTrashStep = 0;
-            }
-        }
-        // 5걸음 이상 걷지 않았을 경우, 계단수에서 빼도록 처리
-        /*if (mTrashStep < 10) {
-            return;
-        }*/
-
-       /* if (mSaveStep <=  10 ) {
-            return;
-        }*/
-
- //       if (mDebugMode)
- //       {
-
- //       }
-
-
-
-
-        String token = KUtil.getUserToken();
-        String buildCode = KUtil.getBuildingCode();
-        /*if (null == buildCode || "".equals(buildCode)) {
-            Pref pref = Pref.instance();
-            pref.saveStringValue(PrefKey.BUILDING_CODE, "100001");
-        }*/
-
-        if(StringUtil.isEmptyOrWhiteSpace(token) || StringUtil.isEmptyOrWhiteSpace(buildCode)){
-            return;
-        }
-
-        AppUserBase user =  DataHolder.instance().getAppUserBase() ;
-
-        SharedPreferences prefr = mContext.getSharedPreferences("userInfo", MODE_PRIVATE);
-        if (null == prefr) return;
-        String userToken = prefr.getString("token", "");
-        if ("".equals(userToken)) {
-            return;
-        }
-
-        if (mDebugMode)
-        {
-            MediaPlayer mMediaPlayer = new MediaPlayer();
-
-            try {
-                if ("building".equals(type)) {
-                    Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.alert);
-                    mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
-                    mMediaPlayer.prepare();
-                    mMediaPlayer.start();
-                } else {
-                    Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.alert2);
-                    mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
-                    mMediaPlayer.prepare();
-                    mMediaPlayer.start();
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        //return;
         try {
-            Map<String, Object> query = new HashMap<>();
-            query.put("token", prefr.getString("token", "")) ;
-            query.put("beacon_uuid", "");
-            query.put("major_value", "");
-            query.put("minor_value", "");
-            query.put("install_floor", "");
-            //map.put("beacon_seq", getBeaconSeq());
-            query.put("beacon_seq", prefr.getInt("beacon_seq", 0));
+            if (mDebugMode) {
+                if ("notbuilding".equals(type)) {
+                    Toast.makeText(mContext, "[등산 오르기] " + measure, Toast.LENGTH_SHORT).show();
+                    mSleepCnt = 0;
+                    initMeasure();
+                } else {
+                    Toast.makeText(mContext, "[계단 오르기] " + measure, Toast.LENGTH_SHORT).show();
+                    mSleepCnt = 0;
+                    mTrashStep = 0;
+                }
+            }
+            // 5걸음 이상 걷지 않았을 경우, 계단수에서 빼도록 처리
+            /*if (mTrashStep < 10) {
+                return;
+            }*/
+
+           /* if (mSaveStep <=  10 ) {
+                return;
+            }*/
+
+            //       if (mDebugMode)
+            //       {
+
+            //       }
+
+
+            String token = KUtil.getUserToken();
+            String buildCode = KUtil.getBuildingCode();
+            /*if (null == buildCode || "".equals(buildCode)) {
+                Pref pref = Pref.instance();
+                pref.saveStringValue(PrefKey.BUILDING_CODE, "100001");
+            }*/
+
+            if (StringUtil.isEmptyOrWhiteSpace(token) || StringUtil.isEmptyOrWhiteSpace(buildCode)) {
+                return;
+            }
+
+            AppUserBase user = DataHolder.instance().getAppUserBase();
+
+            SharedPreferences prefr = mContext.getSharedPreferences("userInfo", MODE_PRIVATE);
+            if (null == prefr) return;
+            String userToken = prefr.getString("token", "");
+            if ("".equals(userToken)) {
+                return;
+            }
+
+            if (mDebugMode) {
+                MediaPlayer mMediaPlayer = new MediaPlayer();
+
+                try {
+                    if ("building".equals(type)) {
+                        Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.alert);
+                        mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+                        mMediaPlayer.prepare();
+                        mMediaPlayer.start();
+                    } else {
+                        Uri mediaPath = Uri.parse("android.resource://" + mContext.getPackageName() + "/" + R.raw.alert2);
+                        mMediaPlayer.setDataSource(mContext.getApplicationContext(), mediaPath);
+                        mMediaPlayer.prepare();
+                        mMediaPlayer.start();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            //return;
             try {
-                if (user.getBeacon_seq() == 0) {
+                Map<String, Object> query = new HashMap<>();
+                query.put("token", prefr.getString("token", ""));
+                query.put("beacon_uuid", "");
+                query.put("major_value", "");
+                query.put("minor_value", "");
+                query.put("install_floor", "");
+                //map.put("beacon_seq", getBeaconSeq());
+                query.put("beacon_seq", prefr.getInt("beacon_seq", 0));
+                try {
+                    if (user.getBeacon_seq() == 0) {
+                        DefaultCode.BEACON_SEQ.getValue();
+                    }
+                } catch (Exception e) {
                     DefaultCode.BEACON_SEQ.getValue();
                 }
-            } catch (Exception e) {
-                DefaultCode.BEACON_SEQ.getValue();
-            }
-            query.put("stair_seq", prefr.getInt("stair_seq", 0));
-            query.put("build_seq", prefr.getString("build_seq", "")) ;
-            query.put("build_name", prefr.getString("build_name", "")) ;
-            query.put("floor_amount", 0);
-            query.put("stair_amount", 0);
-            query.put("cust_seq", prefr.getInt("cust_seq", 0));
-            query.put("cust_name", prefr.getString("cust_name", "")) ;
-            query.put("build_code", prefr.getString("build_code", "")) ;
-            query.put("godo", mAltitude);
-            query.put("goup_amt", goupAmt);
-            query.put("curBuildCount",mCurBuildCount) ;
-            query.put("buildCount",mBuildCount) ;
-            query.put("isbuild",mIsBuild) ;
-            query.put("country", prefr.getString("country", "대한민국")) ;
-            query.put("city", prefr.getString("city", "서울특별시")) ;
+                query.put("stair_seq", prefr.getInt("stair_seq", 0));
+                query.put("build_seq", prefr.getString("build_seq", ""));
+                query.put("build_name", prefr.getString("build_name", ""));
+                query.put("floor_amount", 0);
+                query.put("stair_amount", 0);
+                query.put("cust_seq", prefr.getInt("cust_seq", 0));
+                query.put("cust_name", prefr.getString("cust_name", ""));
+                query.put("build_code", prefr.getString("build_code", ""));
+                query.put("godo", mAltitude);
+                query.put("goup_amt", goupAmt+mUnsentStairCnt);
+                query.put("curBuildCount", mCurBuildCount);
+                query.put("buildCount", mBuildCount);
+                query.put("isbuild", mIsBuild);
+                query.put("country", prefr.getString("country", "대한민국"));
+                query.put("city", prefr.getString("city", "서울특별시"));
 
-            if (isRedDot) {
-                query.put("start_time", startTime);
-                query.put("end_time", endTime);
-            }
+                if (isRedDot) {
+                    query.put("start_time", startTime);
+                    query.put("end_time", endTime);
+                }
 
-            Log.d("999999999999777771", mCurBuildCount + " ");
+                Log.d("999999999999777771", mCurBuildCount + " ");
 
-            final String localTime = DateUtil.currentDate("yyyyMMddHHmmss");
+                final String localTime = DateUtil.currentDate("yyyyMMddHHmmss");
 
-            if(NetworkConnectivityReceiver.isConnected(mContext)) {
-                Call<BeaconUuid> call =
-                        new DefaultRestClient<App>(mContext)
-                                .getClient(App.class).sendStairGoUpAmountToServer(query);
-                final String goupSentTime = DateUtil.currentDate("yyyyMMdd HHmmss");
+                if (NetworkConnectivityReceiver.isConnected(mContext)) {
+                    Call<BeaconUuid> call =
+                            new DefaultRestClient<App>(mContext)
+                                    .getClient(App.class).sendStairGoUpAmountToServer(query);
+                    final String goupSentTime = DateUtil.currentDate("yyyyMMdd HHmmss");
 
-                call.enqueue(new Callback<BeaconUuid>() {
-                    @Override
-                    public void onResponse(Call<BeaconUuid> call, Response<BeaconUuid> response) {
-                        /*
-                        if (isReddot) {
-                            mReddotStack.clear();
-                        }
-                        */
-                        LogUtils.e(TAG, "success-data response raw:" + response.raw().toString());
-                        if (response.isSuccessful()) {
-                            LogUtils.e(TAG, "success-data response body:" + response.body().string());
-
-                            BeaconUuid uuid = response.body();
-                            if (uuid != null && uuid.isSuccess()) {
-                                //broadcastServerResult(uuid);
-                                updateFloorCount(uuid);
-
-                            }else {
-                                saveGoUpDataToLocalDb(query, localTime);
+                    call.enqueue(new Callback<BeaconUuid>() {
+                        @Override
+                        public void onResponse(Call<BeaconUuid> call, Response<BeaconUuid> response) {
+                            /*
+                            if (isReddot) {
+                                mReddotStack.clear();
                             }
-                            //sendBeaconLog(beaconUuid, floorDiff, "go up ", goupSentTime);//층간이동 전송 성공하면 로그 전송
+                            */
+                            LogUtils.e(TAG, "success-data response raw:" + response.raw().toString());
+                            if (response.isSuccessful()) {
+                                LogUtils.e(TAG, "success-data response body:" + response.body().string());
+
+                                BeaconUuid uuid = response.body();
+                                if (uuid != null && uuid.isSuccess()) {
+                                    //broadcastServerResult(uuid);
+                                    updateFloorCount(uuid);
+                                    mUnsentStairCnt = 0;
+                                } else {
+                                    mUnsentStairCnt++;
+                                    //saveGoUpDataToLocalDb(query, localTime);
+                                }
+                                //sendBeaconLog(beaconUuid, floorDiff, "go up ", goupSentTime);//층간이동 전송 성공하면 로그 전송
 
 
-                            // 노티피케이션 업데이트
-                            //requestgetActivityRecords();
-                            // 메인 화면 업데이트
-                            //sendScreenRefresh();
+                                // 노티피케이션 업데이트
+                                //requestgetActivityRecords();
+                                // 메인 화면 업데이트
+                                //sendScreenRefresh();
 
 
-                        }else {
-                            saveGoUpDataToLocalDb(query, localTime);
+                            } else {
+                                mUnsentStairCnt++;
+                                //saveGoUpDataToLocalDb(query, localTime);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<BeaconUuid> call, Throwable t) {
-                        saveGoUpDataToLocalDb(query, localTime);
-                    }
-                });
-            }else{
-                saveGoUpDataToLocalDb(query, localTime);
+                        @Override
+                        public void onFailure(Call<BeaconUuid> call, Throwable t) {
+                            mUnsentStairCnt++;
+                            //saveGoUpDataToLocalDb(query, localTime);
+                        }
+                    });
+                } else {
+                    mUnsentStairCnt++;
+                    //saveGoUpDataToLocalDb(query, localTime);
+                }
+            } catch (Exception e) {
+                Toast.makeText(mContext, e.toString(), Toast.LENGTH_SHORT);
             }
-        }catch (Exception e){
-            Toast.makeText(mContext, e.toString(), Toast.LENGTH_SHORT);
+        }catch (Exception ex) {
+
         }
     }
 
