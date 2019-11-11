@@ -174,6 +174,7 @@ public class InfoSettingProfileActivity extends BaseUserActivity {
         selectBgColor(0);
     }
 
+
     private void selectBgColor(int n) {
         int bglist[] = DataHolder.instance().getBgColors() ;
         for(int i=0 ; i< 10 ;i++ ) {

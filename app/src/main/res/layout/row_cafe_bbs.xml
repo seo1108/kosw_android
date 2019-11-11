@@ -15,15 +15,35 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="10dp"
+            android:paddingLeft="20dp">
+            <kr.co.photointerior.kosw.widget.CircleImageView
+                android:id="@+id/img_profile"
+                android:layout_width="@dimen/dp_50"
+                android:layout_height="@dimen/dp_50"
+                android:layout_marginRight="@dimen/dp_2"
+                android:layout_gravity="top"
+                app:srcCompat="@drawable/img_character1" />
+
             <kr.co.photointerior.kosw.widget.KoswEditText
                 android:id="@+id/notice_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="날짜/작성자"
                 android:padding="10dp"
-                android:layout_weight="1"
                 android:textColor="@color/pad_char"
+                android:background="@null"
+                android:textSize="@dimen/sp_15" />
+
+            <kr.co.photointerior.kosw.widget.KoswEditText
+                android:id="@+id/notice_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="날짜/작성자"
+                android:padding="10dp"
+                android:layout_weight="1"
+                android:textColor="@color/colorBlack"
                 android:background="@null"
                 android:textSize="@dimen/sp_15" />
 

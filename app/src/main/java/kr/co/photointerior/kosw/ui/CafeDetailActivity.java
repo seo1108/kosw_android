@@ -746,12 +746,27 @@ public class CafeDetailActivity extends BaseActivity {
                                 int commcount_id = Integer.parseInt("3" + mBbsList.get(idx).getBbsseq());
                                 int replycomm_id = Integer.parseInt("4" + mBbsList.get(idx).getBbsseq());
                                 int bbs_config_id = Integer.parseInt("5" + mBbsList.get(idx).getBbsseq());
+                                int img_notice_id = Integer.parseInt("10" + mBbsList.get(idx).getBbsseq());
+                                int name_id = Integer.parseInt("11" + mBbsList.get(idx).getBbsseq());
+
+                                CircleImageView img_profile_notice = con.findViewById(R.id.img_profile);
+                                img_profile_notice.setId(img_notice_id);
+                                String charUrl1 = KUtil.getSubCharacterImgUrl(mBbsList.get(idx).getCharImageFile());
+                                Glide.with(getApplicationContext())
+                                        .applyDefaultRequestOptions(KUtil.getGlideCacheOption())
+                                        .load(charUrl1).thumbnail(.5f).into(img_profile_notice);
 
                                 // 이미지 파일 작업 처리
-                                String notice_info = mBbsList.get(idx).getRegdate() + "   " + mBbsList.get(idx).getNickname() + "";
+                                String notice_info = mBbsList.get(idx).getRegdate();
                                 KoswEditText et_info = (KoswEditText) con.findViewById(R.id.notice_info);
                                 et_info.setId(info_id);
                                 et_info.setText(notice_info);
+
+                                String notice_name = mBbsList.get(idx).getNickname();
+                                KoswEditText et_notice_name = (KoswEditText) con.findViewById(R.id.notice_name);
+                                et_notice_name.setId(name_id);
+                                et_notice_name.setTypeface(et_notice_name.getTypeface(), Typeface.BOLD);
+                                et_notice_name.setText(notice_name);
 
                                 KoswEditText et_context = (KoswEditText) con.findViewById(R.id.notice_context);
                                 et_context.setId(content_id);

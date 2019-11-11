@@ -18,6 +18,8 @@ public class CafeNotice extends ResponseBase {
     private String content;
     @SerializedName("comments")
     private List<Comment> comments;
+    @SerializedName("charImageFile")
+    private String charImageFile;
 
     public String getNickname() {
         return nickname;
@@ -65,6 +67,14 @@ public class CafeNotice extends ResponseBase {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public String getCharImageFile() {
+        return charImageFile;
+    }
+
+    public void setCharImageFile(String charImageFile) {
+        this.charImageFile = charImageFile;
     }
 
     @Override
