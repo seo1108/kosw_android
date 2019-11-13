@@ -312,7 +312,8 @@ public class CafeCreateOptionActivity extends BaseActivity {
 
     private void showPicDialog() {
         mSelectItem = -1;
-        final CharSequence[] oItems = {"사진 촬영하기", "앨범에서 사진찾기"};
+        //final CharSequence[] oItems = {"사진 촬영하기", "앨범에서 사진찾기"};
+        final CharSequence[] oItems = {"앨범에서 사진찾기"};
 
         AlertDialog.Builder oDialog = new AlertDialog.Builder(this,
                 android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
@@ -331,13 +332,16 @@ public class CafeCreateOptionActivity extends BaseActivity {
                     public void onClick(DialogInterface dialog, int which)
                     {
                         if (mSelectItem == 0) {
-                            // 사진촬영하기
-                            //selectPhoto();
-                            checkCameraPermission();
-                        } else if (mSelectItem == 1) {
-                            // 앨범에서 사진찾기
                             selectGallery();
                         }
+//                        if (mSelectItem == 0) {
+//                            // 사진촬영하기
+//                            //selectPhoto();
+//                            checkCameraPermission();
+//                        } else if (mSelectItem == 1) {
+//                            // 앨범에서 사진찾기
+//                            selectGallery();
+//                        }
                     }
                 })
                 .show();
@@ -527,7 +531,8 @@ public class CafeCreateOptionActivity extends BaseActivity {
             fileCacheItem.createNewFile();
             out = new FileOutputStream(fileCacheItem);
 
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            // 30% 퀄러티로 압축
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 30, out);
         }
         catch (Exception e)
         {

@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import kr.co.photointerior.kosw.R;
+import kr.co.photointerior.kosw.conf.ConditionHolder;
 import kr.co.photointerior.kosw.rest.DefaultRestClient;
 import kr.co.photointerior.kosw.rest.api.CafeService;
 import kr.co.photointerior.kosw.rest.model.AppUserBase;
@@ -415,7 +416,7 @@ public class MyCafeManageActivity extends BaseActivity {
         query.put("kick_user_seq", user.getUser_seq());
         query.put("cafeseq", cafeseq);
 
-        Log.d("EEEEEEEEEEEEEE", user.getUser_seq() + "____" + adminseq + "_____" + cafeseq);
+        Log.d("EEEEEEEEEEEEEE", user.getUser_seq() + "____" + adminseq + "_____" + cafeseq + "___" + ConditionHolder.instance().getRestBaseUrl());
 
         SharedPreferences prefr = getSharedPreferences("lastSelectedCafe", MODE_PRIVATE);
         String selectedCafeSeq = prefr.getString("cafeseq", "");
@@ -442,10 +443,11 @@ public class MyCafeManageActivity extends BaseActivity {
                         toast(R.string.cafe_member_kick_myself_success);
                         mAdapter.deleteItem(position);
                     }else{
-                        toast(R.string.warn_cafe_member_fail_kick);
+                        toast(R.string.warn_cafe_out);
+
                     }
                 }else{
-                    toast(R.string.warn_cafe_member_fail_kick);
+                    toast(R.string.warn_cafe_out);
                 }
                 closeSpinner();
             }

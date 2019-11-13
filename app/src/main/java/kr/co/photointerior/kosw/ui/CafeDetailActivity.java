@@ -770,7 +770,6 @@ public class CafeDetailActivity extends BaseActivity {
 
                                 KoswEditText et_context = (KoswEditText) con.findViewById(R.id.notice_context);
                                 et_context.setId(content_id);
-                                et_context.setTypeface(et_context.getTypeface(), Typeface.BOLD);
                                 et_context.setText(bbscontent);
 
                                 KoswEditText et_comm_count = (KoswEditText) con.findViewById(R.id.notice_comment_count);
@@ -838,7 +837,6 @@ public class CafeDetailActivity extends BaseActivity {
 
                                         KoswEditText et_comm_info = (KoswEditText) b_con.findViewById(R.id.comment_context_info);
                                         et_comm_info.setId(comm_info_id);
-                                        et_comm_info.setTypeface(et_comm_info.getTypeface(), Typeface.BOLD);
                                         et_comm_info.setText(mBbsList.get(idx).getComments().get(b_idx).getNickname());
 
                                         KoswEditText et_comm_context = (KoswEditText) b_con.findViewById(R.id.comment_context);
