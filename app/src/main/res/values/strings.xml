@@ -106,7 +106,7 @@
     <string name="warn_cafe_fail_notice_delete">공지사항 삭제를 실패하였습니다.\n다시 시도해주세요.</string>
     <string name="warn_cafe_fail_category_edit">분류정보 수정을 실패하였습니다.\n다시 시도해주세요.</string>
     <string name="warn_cafe_bbs_content_empty">작성된 내용이 없습니다.</string>
-    <string name="warn_cafe_fail_comment_write">댓글 작성을 실패하였습니다.\n다시 시도해주세요.</string>
+    <string name="warn_cafe_fail_comment_write">내용이 너무 길어 저장할 수 없습니다. \n다시 시도해주세요.</string>
     <string name="warn_cafe_member_fail_kick">회원 강퇴를 실패하였습니다.\n다시 시도해주세요.</string>
     <string name="warn_cafe_out">카페 탈퇴를 실패하였습니다.\n다시 시도해주세요.</string>
     <string name="warn_my_cafe_not_exists">가입한 카페가 없습니다.</string>

@@ -45,8 +45,13 @@
             app:layout_constraintVertical_bias="0.0" />
     </android.support.constraint.ConstraintLayout>
 
+    <WebView
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/constraint" />
 
-    <android.support.v4.widget.NestedScrollView
+    <!--<android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/constraint">
@@ -152,44 +157,6 @@
                 android:paddingBottom="20dp"
                 android:textColor="#000"
                 android:textSize="@dimen/sp_15"/>
-
-            <!--<kr.co.photointerior.kosw.widget.KoswTextView
-                android:id="@+id/tv_privacy_hide_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/txt_cafe_about_privacy_hide_title"
-                android:textColor="#000"
-                android:textSize="@dimen/sp_16"
-                android:textStyle="bold" />
-
-            <kr.co.photointerior.kosw.widget.KoswTextView
-                android:id="@+id/tv_privacy_hide"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/txt_cafe_about_privacy_hide"
-                android:paddingTop="5dp"
-                android:textColor="#000"
-                android:textSize="@dimen/sp_15"/>
-
-            <kr.co.photointerior.kosw.widget.KoswTextView
-                android:id="@+id/tv_privacy_open_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/txt_cafe_about_privacy_open_title"
-                android:textColor="#000"
-                android:paddingTop="20dp"
-                android:textSize="@dimen/sp_16"
-                android:textStyle="bold" />
-
-            <kr.co.photointerior.kosw.widget.KoswTextView
-                android:id="@+id/tv_privacy_open"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/txt_cafe_about_privacy_open"
-                android:paddingTop="5dp"
-                android:textColor="#000"
-                android:textSize="@dimen/sp_15"/>-->
-
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </android.support.v4.widget.NestedScrollView>-->
 </RelativeLayout>

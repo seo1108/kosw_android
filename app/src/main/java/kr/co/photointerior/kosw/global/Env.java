@@ -113,6 +113,8 @@ public class Env {
 
         //CHARACTER_NEW("images/charecter"),
 
+        /** 카페 가이드**/
+        CAFEGUIDE("http://stairsking.co.kr/cafe/image/guide.html"),
         /** 이용약관, 개인정보처리방침 */
         PROVISION("terms.html"),
         /** 도움말 */

@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
 
 import java.text.MessageFormat;
 import java.util.Map;
@@ -270,17 +272,37 @@ public class InfoSettingFragment extends BaseFragment {
             Acceptor acceptor = new AbstractAcceptor() {
                 @Override
                 public void accept() {
-                    Pref pref = Pref.instance();
-                    /*pref.saveStringValue(PrefKey.USER_ID, "");
-                    pref.saveStringValue(PrefKey.USER_TOKEN, "");
-                    pref.saveStringValue(PrefKey.USER_NICK, "");
-                    pref.saveStringValue(PrefKey.PUSH_RECEIVE_FLAG, "");
-                    pref.saveStringValue(PrefKey.USER_CHARACTER, "");
-                    pref.saveStringValue(PrefKey.PUSH_RECEIVE_FLAG, "");*/
-                    pref.clear();
-                    mActivity.sendBroadcast(new Intent(Env.Action.EXIT_ACTION.action()));
-                    mActivity.stopService(new Intent(mActivity, BeaconRagingInRegionService.class));//비콘 서비스 종료
-                    mActivity.finish();
+                    AppUserBase user = DataHolder.instance().getAppUserBase();
+                    if ("kakao".equals(user.getLoginType())) {
+                        try {
+                            // 카카오 계정이면 로그아웃
+                            UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
+                                @Override
+                                public void onCompleteLogout() {
+                                    Pref pref = Pref.instance();
+                                    pref.clear();
+                                    mActivity.sendBroadcast(new Intent(Env.Action.EXIT_ACTION.action()));
+                                    mActivity.stopService(new Intent(mActivity, BeaconRagingInRegionService.class));//비콘 서비스 종료
+                                    mActivity.finish();
+                                }
+                            });
+                        } catch (Exception ex) {
+
+                        }
+                    } else {
+                        Pref pref = Pref.instance();
+                        /*pref.saveStringValue(PrefKey.USER_ID, "");
+                        pref.saveStringValue(PrefKey.USER_TOKEN, "");
+                        pref.saveStringValue(PrefKey.USER_NICK, "");
+                        pref.saveStringValue(PrefKey.PUSH_RECEIVE_FLAG, "");
+                        pref.saveStringValue(PrefKey.USER_CHARACTER, "");
+                        pref.saveStringValue(PrefKey.PUSH_RECEIVE_FLAG, "");*/
+                        pref.clear();
+                        mActivity.sendBroadcast(new Intent(Env.Action.EXIT_ACTION.action()));
+                        mActivity.stopService(new Intent(mActivity, BeaconRagingInRegionService.class));//비콘 서비스 종료
+                        mActivity.finish();
+                    }
+
                 }
             };
             String msg = getString(R.string.warn_logout);
