@@ -276,6 +276,23 @@
     <string name="txt_cafe_about_privacy_open_title">공개</string>
     <string name="txt_cafe_about_privacy_open">누구나 카페를 검색하고, 게시글과 랭킹 등의 카페 정보를 볼 수 있습니다.</string>
 
+    <string name="txt_cafe_guide_1_title">1. 카페 만들기</string>
+    <string name="txt_cafe_guide_1_desc">a) 누구나 자유롭게 카페를 만들 수 있습니다.\nb) 카페이름, 카페설명, 프라이버시(공개/비공개) 타입 설정만으로 쉽게 카페를 만들 수 있습니다.\nc) 카페로고,분류명,추가분류 등의 선택 항목을 입력할 수 있습니다.\nd) 카페 로고는 세로 120px / 용량 50kb 이하의 PNG 형식 이미지(배경투명 권장)만 등록 할 수 있습니다.\ne) 모든 카페는 카페별 일간/주간/월간 랭킹을 지원 합니다.\nf) 카페 정보(게시글, 랭킹 정보 등)는 프라이버시 타입(공개/비공개)에 따라 표시여부가 결정됩니다.\ng) 모든 카페에는 게시글/댓글 작성 기능이 제공 됩니다.</string>
+
+    <string name="txt_cafe_guide_2_title">2. 공개카페</string>
+    <string name="txt_cafe_guide_2_desc">a) 카페 메뉴에서 카페 이름이 노출되고, 누구나 자유롭게 검색하여 가입 할 수 있습니다.\nb) 지역, 친목, 취미, 같이운동하기 등의 용도로 사용하기에 적합힙니다.</string>
+
+    <string name="txt_cafe_guide_3_title">3. 비공개 카페 (회사/단체 전용)</string>
+    <string name="txt_cafe_guide_3_desc">a) 카페 메뉴에서 카페 이름이 노출 되지 않고, 검색도 되지 않습니다.\nb) 회원들에게 공유 한 별도의 카페 키 입력을 통해서만 카페 가입이 가능합니다.\nc) 회사나 단체에서 사용하기에 적합합니다.</string>
+
+    <string name="txt_cafe_guide_4_title">4. 카페 관리</string>
+    <string name="txt_cafe_guide_4_desc">a) 관리자 메뉴는 각 카페의 첫화면 상단 우측에 있는 설정 아이콘을 터치하면 접근 할 수 있습니다. (관리자만 접근 가능)\nb) 기본적인 카페 관리(프리이버시 타입 변경, 공지사항 작성, 로고 변경, 분류 등록 및 수정, 회원 강퇴 등)는 계단왕 앱에서도 가능합니다.\nc) 카페 관리자에게, 관리용 웹페이지를 제공합니다.\n(개설 후 관리자에게 발송되는 메일의 URL을 통해 카페관리용 웹페이지에 접속 할 수 있습니다.)\nd) 카페 관리자는 다른 회원에게 관리자 권한을 넘겨 줄 수 있습니다.</string>
+
+    <string name="txt_cafe_guide_5_title">5. 카페 초대</string>
+    <string name="txt_cafe_guide_5_desc">a) 모든 카페에는 고유의 카페 키가 발급됩니다.\nb) 공개/비공개 카페 모두 초대하기 기능을 사용 할 수 있습니다.</string>
+
+
+
 
     <string name="txt_invite">초대하기</string>
     <string name="txt_invite_message">회사(단체) 소속 인원들을 초대해 주세요.\n초대를 통해서만 카페 가입이 가능합니다.</string>

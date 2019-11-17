@@ -7,6 +7,7 @@
     android:layout_height="match_parent">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorWhite"
@@ -44,51 +45,151 @@
             app:layout_constraintVertical_bias="0.0" />
     </android.support.constraint.ConstraintLayout>
 
-    <LinearLayout
+
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="60dp"
-        android:layout_marginEnd="32dp"
-        android:orientation="vertical"
-        android:paddingBottom="10dp">
-
-        <kr.co.photointerior.kosw.widget.KoswTextView
-            android:id="@+id/tv_privacy_hide_title"
+        android:layout_below="@+id/constraint">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/txt_cafe_about_privacy_hide_title"
-            android:textColor="#000"
-            android:textSize="@dimen/sp_16"
-            android:textStyle="bold" />
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:orientation="vertical"
+            android:paddingBottom="10dp">
 
-        <kr.co.photointerior.kosw.widget.KoswTextView
-            android:id="@+id/tv_privacy_hide"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/txt_cafe_about_privacy_hide"
-            android:paddingTop="5dp"
-            android:textColor="#000"
-            android:textSize="@dimen/sp_15"/>
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/tv_title_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_cafe_guide_1_title"
+                android:textColor="#000"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold" />
 
-        <kr.co.photointerior.kosw.widget.KoswTextView
-            android:id="@+id/tv_privacy_open_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/txt_cafe_about_privacy_open_title"
-            android:textColor="#000"
-            android:paddingTop="20dp"
-            android:textSize="@dimen/sp_16"
-            android:textStyle="bold" />
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/tv_desc_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_cafe_guide_1_desc"
+                android:paddingTop="5dp"
+                android:textColor="#000"
+                android:textSize="@dimen/sp_15"/>
 
-        <kr.co.photointerior.kosw.widget.KoswTextView
-            android:id="@+id/tv_privacy_open"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/txt_cafe_about_privacy_open"
-            android:paddingTop="5dp"
-            android:textColor="#000"
-            android:textSize="@dimen/sp_15"/>
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/tv_title_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_cafe_guide_2_title"
+                android:textColor="#000"
+                android:paddingTop="20dp"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold" />
 
-    </LinearLayout>
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/tv_desc_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_cafe_guide_2_desc"
+                android:paddingTop="5dp"
+                android:textColor="#000"
+                android:textSize="@dimen/sp_15"/>
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/tv_title_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_cafe_guide_3_title"
+                android:textColor="#000"
+                android:paddingTop="20dp"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold" />
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/tv_desc_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_cafe_guide_3_desc"
+                android:paddingTop="5dp"
+                android:textColor="#000"
+                android:textSize="@dimen/sp_15"/>
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/tv_title_4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_cafe_guide_4_title"
+                android:textColor="#000"
+                android:paddingTop="20dp"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold" />
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/tv_desc_4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_cafe_guide_4_desc"
+                android:paddingTop="5dp"
+                android:textColor="#000"
+                android:textSize="@dimen/sp_15"/>
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/tv_title_5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_cafe_guide_5_title"
+                android:textColor="#000"
+                android:paddingTop="20dp"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold" />
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/tv_desc_5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_cafe_guide_5_desc"
+                android:paddingTop="5dp"
+                android:paddingBottom="20dp"
+                android:textColor="#000"
+                android:textSize="@dimen/sp_15"/>
+
+            <!--<kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/tv_privacy_hide_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_cafe_about_privacy_hide_title"
+                android:textColor="#000"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold" />
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/tv_privacy_hide"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_cafe_about_privacy_hide"
+                android:paddingTop="5dp"
+                android:textColor="#000"
+                android:textSize="@dimen/sp_15"/>
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/tv_privacy_open_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_cafe_about_privacy_open_title"
+                android:textColor="#000"
+                android:paddingTop="20dp"
+                android:textSize="@dimen/sp_16"
+                android:textStyle="bold" />
+
+            <kr.co.photointerior.kosw.widget.KoswTextView
+                android:id="@+id/tv_privacy_open"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_cafe_about_privacy_open"
+                android:paddingTop="5dp"
+                android:textColor="#000"
+                android:textSize="@dimen/sp_15"/>-->
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 </RelativeLayout>

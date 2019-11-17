@@ -108,6 +108,7 @@ public class BbsPostActivity extends BaseActivity {
                         setResult(RESULT_OK, intent);
                         finish();
                     }else{
+
                         toast(R.string.warn_cafe_fail_bbs_write);
                     }
                 }else{

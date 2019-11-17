@@ -11,7 +11,7 @@ import kr.co.photointerior.kosw.widget.KoswTextView;
 public class CafeGuideActivity extends BaseActivity {
     private String TAG = LogUtils.makeLogTag(CafeGuideActivity.class);
 
-    private KoswTextView tv_privacy_hide_title, tv_privacy_open_title;
+    private KoswTextView tv_title_1, tv_title_2, tv_title_3, tv_title_4, tv_title_5;
     private ImageView btn_back;
 
     @Override
@@ -26,10 +26,16 @@ public class CafeGuideActivity extends BaseActivity {
 
     @Override
     protected void findViews() {
-        tv_privacy_hide_title = findViewById(R.id.tv_privacy_hide_title);
-        tv_privacy_hide_title.setTypeface(tv_privacy_hide_title.getTypeface(), Typeface.BOLD);
-        tv_privacy_open_title = findViewById(R.id.tv_privacy_open_title);
-        tv_privacy_open_title.setTypeface(tv_privacy_open_title.getTypeface(), Typeface.BOLD);
+        tv_title_1 = findViewById(R.id.tv_title_1);
+        tv_title_1.setTypeface(tv_title_1.getTypeface(), Typeface.BOLD);
+        tv_title_2 = findViewById(R.id.tv_title_2);
+        tv_title_2.setTypeface(tv_title_2.getTypeface(), Typeface.BOLD);
+        tv_title_3 = findViewById(R.id.tv_title_3);
+        tv_title_3.setTypeface(tv_title_3.getTypeface(), Typeface.BOLD);
+        tv_title_4 = findViewById(R.id.tv_title_4);
+        tv_title_4.setTypeface(tv_title_4.getTypeface(), Typeface.BOLD);
+        tv_title_5 = findViewById(R.id.tv_title_5);
+        tv_title_5.setTypeface(tv_title_5.getTypeface(), Typeface.BOLD);
 
         btn_back = findViewById(R.id.btn_back);
         btn_back.setOnClickListener(v->{

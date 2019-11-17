@@ -346,7 +346,8 @@ public class MainFragment extends BaseFragment {
                 Bundle bu = new Bundle();
                 bu.putSerializable("cafeseq", mSelectedCafeSeq);
                 bu.putSerializable("cafekey", "");
-                mActivity.callActivity(CafeDetailActivity.class, bu, false);
+                //mActivity.callActivity(CafeDetailActivity.class, bu, false);
+                mActivity.callActivity(CafeNoticeActivity.class, bu, false);
                 return;
             }
             bbs = mCustomerNotice;
@@ -354,7 +355,8 @@ public class MainFragment extends BaseFragment {
             Bundle bu = new Bundle();
             bu.putSerializable("cafeseq", mSelectedCafeSeq);
             bu.putSerializable("cafekey", "");
-            mActivity.callActivity(CafeDetailActivity.class, bu, false);
+            //mActivity.callActivity(CafeDetailActivity.class, bu, false);
+            mActivity.callActivity(CafeNoticeActivity.class, bu, false);
         } else if (id == R.id.txt_noti_three || id == R.id.txt_noti_four || id == R.id.txt_noti_five) {
             mActivity.callActivity(NoticeRankingActivity.class, false);
             return;
