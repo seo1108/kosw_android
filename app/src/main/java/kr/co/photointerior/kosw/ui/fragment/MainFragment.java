@@ -787,14 +787,24 @@ public class MainFragment extends BaseFragment {
 
                         AppUserBase user = DataHolder.instance().getAppUserBase();
                         // 나무심기
+
+                        Log.d("DDDDDDDDDDDDDDDDD", user.getNickName());
+
+                        String nick = "";
+                        if (user.getNickName().length() > 23) {
+                            nick = user.getNickName().substring(0, 20) + "...";
+                        } else {
+                            nick = user.getNickName();
+                        }
+
                         TextView tv_tree2 = getTextView(R.id.txt_tree_two);
                         DecimalFormat formatter = new DecimalFormat("#,###,###");
                         String userCnt = formatter.format(mainData.getUserCnt());
                         tv_tree2.setText(user.getNickName() + "님과 함께 " + userCnt + "명이");
                         Spannable spanText2 = new SpannableString(tv_tree2.getText().toString());
-                        spanText2.setSpan(new ForegroundColorSpan(Color.BLACK), 0, user.getNickName().length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        spanText2.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, user.getNickName().length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        spanText2.setSpan(new RelativeSizeSpan(1.2f), 0, user.getNickName().length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        spanText2.setSpan(new ForegroundColorSpan(Color.BLACK), 0, nick.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        spanText2.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, nick.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        spanText2.setSpan(new RelativeSizeSpan(1.2f), 0, nick.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                         tv_tree2.setText(spanText2, TextView.BufferType.SPANNABLE);
 

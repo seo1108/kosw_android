@@ -621,7 +621,7 @@ public class CafeDetailActivity extends BaseActivity {
 
                         if (null != mMyInfo) {
                             for (int idx = 0; idx < mList.size(); idx++) {
-                                if (mMyInfo.getCatename().equals(mList.get(idx).getCatename())) {
+                                if (null != mMyInfo.getCatename() && null != mList.get(idx).getCatename() && mMyInfo.getCatename().equals(mList.get(idx).getCatename())) {
                                     mList.get(idx).setIsmine("Y");
                                     mList.add(0, mList.get(idx));
                                     break;
