@@ -75,6 +75,12 @@ public class MainData extends ResponseBase {
     @SerializedName("total_amt")
     private int totalAmt;
 
+    @SerializedName("showPopup")
+    private String showPopup;
+
+    @SerializedName("popupUrl")
+    private String popupUrl;
+
     public String getIsbuild() {
         return isbuild;
     }
@@ -243,16 +249,48 @@ public class MainData extends ResponseBase {
         this.totalAmt = totalAmt;
     }
 
-    public String string() {
-        final StringBuffer sb = new StringBuffer("MainData{");
-        sb.append("todayRecord=").append(todayRecord);
-        sb.append(", mainNotice=").append(mainNotice);
-        sb.append(", customerNotice=").append(customerNotice);
-        sb.append(", goldJersey='").append(goldJersey).append('\'');
-        sb.append(", greenJersey='").append(greenJersey).append('\'');
-        sb.append(", redDotJersey='").append(redDotJersey).append('\'');
-        sb.append(", buildingName='").append(buildingName).append('\'');
-        sb.append('}');
-        return sb.toString();
+    public String getShowPopup() {
+        return showPopup;
+    }
+
+    public void setShowPopup(String showPopup) {
+        this.showPopup = showPopup;
+    }
+
+    public String getPopupUrl() {
+        return popupUrl;
+    }
+
+    public void setPopupUrl(String popupUrl) {
+        this.popupUrl = popupUrl;
+    }
+
+    @Override
+    public String toString() {
+        return "MainData{" +
+                "todayRecord=" + todayRecord +
+                ", mainNotice=" + mainNotice +
+                ", customerNotice=" + customerNotice +
+                ", goldJersey='" + goldJersey + '\'' +
+                ", greenJersey='" + greenJersey + '\'' +
+                ", redDotJersey='" + redDotJersey + '\'' +
+                ", buildingName='" + buildingName + '\'' +
+                ", build_seq=" + build_seq +
+                ", build_floor_amt=" + build_floor_amt +
+                ", mainCharImageFile='" + mainCharImageFile + '\'' +
+                ", subCharImageFile='" + subCharImageFile + '\'' +
+                ", custName='" + custName + '\'' +
+                ", userCnt=" + userCnt +
+                ", actAmt=" + actAmt +
+                ", botyType=" + botyType +
+                ", cust_build_seq=" + cust_build_seq +
+                ", userLevel='" + userLevel + '\'' +
+                ", clubList=" + clubList +
+                ", ggrList=" + ggrList +
+                ", isbuild='" + isbuild + '\'' +
+                ", totalAmt=" + totalAmt +
+                ", showPopup='" + showPopup + '\'' +
+                ", popupUrl='" + popupUrl + '\'' +
+                '}';
     }
 }

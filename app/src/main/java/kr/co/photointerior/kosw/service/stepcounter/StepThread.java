@@ -386,6 +386,11 @@ public class StepThread extends Thread {
         String m = String.format("높이 : %.2f , 방향 : %.2f , 걷기 : %.2f , 시간 : %d" , gapAlitude, mDir, step, cnt);
 
         if (cnt > 0 && cnt % 50 == 0) {
+
+            // 테스트용
+            //sendDataToServer(1, "building", m);
+
+
             if (mDebugMode)
             {
                 long curTime1 = System.currentTimeMillis();
@@ -989,8 +994,6 @@ public class StepThread extends Thread {
 
         // 5분 지나면 잠금
         if (mSleepCnt >= mMaxSleepCnt ) {
-            Log.d("999999999999777771", "[stepsensor] is-sleep");
-
             mMeasureStep = 0;
             isSleep = true;;
             mSleepCnt = 0  ;
@@ -1130,7 +1133,7 @@ public class StepThread extends Thread {
         mStep += val;
         mTrashStep += val;
         mMeasureStep += val;
-        Log.d("999999999999777771", "[stepsensor] " + mMeasureStep + " " + mStarted + " " + mStep);
+        //Log.d("999999999999777771", "[stepsensor] " + mMeasureStep + " " + mStarted + " " + mStep);
         /*if (!mStarted && mMeasureStep > 20) {
             Toast.makeText(mContext, "측정서비스재시작 " + mMeasureStep, Toast.LENGTH_SHORT).show();
             mMeasureStep = 0;
@@ -1147,8 +1150,6 @@ public class StepThread extends Thread {
     }
 
     public void setCheckMove(double val ) {
-        Log.d("999999999999777771", "[stepsensorservice] " + isSleep + " " + mStarted + " " + AppConst.IS_STEP_SENSOR_LOADED);
-        Log.d("999999999999777771", "[stepsensorservice] STEP CHECK");
         if (!mStarted && isSleep && !AppConst.IS_STEP_SENSOR_LOADED ) {
 
             AppConst.IS_STEP_SENSOR_LOADED = true;
@@ -1159,8 +1160,6 @@ public class StepThread extends Thread {
     }
 
     private void restartTracking() {
-        Log.d("999999999999777771", "[stepsensorservice] restartTracking " + mMeasureStep + " " + mStarted + " " + AppConst.IS_STEP_SENSOR_LOADED);
-
         try {
             //mStepManager.stopMeasure();
 
@@ -1176,7 +1175,6 @@ public class StepThread extends Thread {
             AppConst.IS_STEP_SENSOR_LOADED = false;
             mMeasureStep = 0;
         } catch (Exception e) {
-            Log.d("999999999999777771", "[stepsensor] unregist failed on RestartTracking : " + e.toString());
         }
         /*try {
             mStepManager.stopMeasure();
@@ -1319,7 +1317,7 @@ public class StepThread extends Thread {
                     query.put("end_time", endTime);
                 }
 
-                Log.d("999999999999777771", mCurBuildCount + " ");
+                //Toast.makeText(mContext, "[계단 미전송] " + mUnsentStairCnt, Toast.LENGTH_SHORT).show();
 
                 final String localTime = DateUtil.currentDate("yyyyMMddHHmmss");
 
@@ -1441,8 +1439,6 @@ public class StepThread extends Thread {
                         .setValue(beaconUuid)
                         .setMainCharacterChanged(isMainChracterChanged)
         );
-
-        Log.d("999999999999777771", "stairUp-broadcastServerResult");
     }
 
     public void updateFloorCount(BeaconUuid beaconUuid){
@@ -1454,8 +1450,6 @@ public class StepThread extends Thread {
                         .setValue(beaconUuid)
                         .setMainCharacterChanged(false)
         );
-
-        Log.d("999999999999777771", "stairUp-broadcastServerResult");
     }
 
     public void requestgetActivityRecords() {

@@ -50,6 +50,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -63,6 +64,7 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -107,6 +109,7 @@ import kr.co.photointerior.kosw.service.noti.NotiService;
 import kr.co.photointerior.kosw.service.noti.RestartService;
 import kr.co.photointerior.kosw.service.receiver.BootStartupReceiver;
 import kr.co.photointerior.kosw.service.stepcounter.StepCounterService;
+import kr.co.photointerior.kosw.ui.dialog.EventDialog;
 import kr.co.photointerior.kosw.ui.fragment.BaseFragment;
 import kr.co.photointerior.kosw.ui.fragment.CityRankFragment;
 import kr.co.photointerior.kosw.ui.fragment.FragmentActivityAnalysis;
@@ -1900,7 +1903,11 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             thread.start();
             app.push = null;
         }
+
+
     }
+
+
 
     private void setBeaconManagerMode(boolean mode) {
         /*KoswApp app = (KoswApp)getApplication();

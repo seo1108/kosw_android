@@ -37,6 +37,7 @@ import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -67,6 +68,7 @@ import java.io.File;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -115,6 +117,7 @@ import kr.co.photointerior.kosw.ui.InfoSettingProfileActivity;
 import kr.co.photointerior.kosw.ui.MainActivity;
 import kr.co.photointerior.kosw.ui.NoticeEventActivity;
 import kr.co.photointerior.kosw.ui.NoticeRankingActivity;
+import kr.co.photointerior.kosw.ui.dialog.EventDialog;
 import kr.co.photointerior.kosw.utils.AUtil;
 import kr.co.photointerior.kosw.utils.DateUtil;
 import kr.co.photointerior.kosw.utils.KUtil;
@@ -616,6 +619,7 @@ public class MainFragment extends BaseFragment {
             requestToServer();
         }
 
+//        requestToServer();
 
         /*if(isMyServiceRunning(StepCounterService.class)) {
             // 자동측정중이면
@@ -624,6 +628,8 @@ public class MainFragment extends BaseFragment {
         }*/
 
         super.onResume();
+
+
     }
 
     @Override
@@ -863,6 +869,8 @@ public class MainFragment extends BaseFragment {
         //showSpinner("");
         Map<String, Object> query = KUtil.getDefaultQueryMap();
         query.put("version", "3");
+
+        Log.d("DDDDDDDDDD", query.get("device") + "___" + query.get("token")+ "___" + query.get("buildCode"));
         Call<MainData> call =
                 new DefaultRestClient<UserService>(getActivity())
                         .getClient(UserService.class)
@@ -889,6 +897,11 @@ public class MainFragment extends BaseFragment {
                             setMainScreenCharacter();
                         }
                         refreshMainNotiTexts(null, data);
+
+                        // 이벤트 팝업
+                        if (null != data.getPopupUrl() && !"".equals(data.getPopupUrl())) {
+                            openEventDialog(data.getPopupUrl());
+                        }
                     } else {
                         toast(data.getResponseMessage());
                     }
@@ -902,6 +915,33 @@ public class MainFragment extends BaseFragment {
             }
         });
     }
+
+    private void openEventDialog(String url) {
+        SimpleDateFormat format = new SimpleDateFormat( "yyyyMMdd");
+        Date time = new Date();
+        String curdate = format.format(time);
+
+        SharedPreferences prefr = mActivity.getSharedPreferences("event", MODE_PRIVATE);
+        String lastopendate = prefr.getString("lastopendate", "0");
+
+        int i_curdate = Integer.parseInt(curdate);
+        int i_lastopendate = Integer.parseInt(lastopendate);
+
+        Log.d("DDDDDDDDD", i_curdate + "___" + i_lastopendate);
+        if (i_curdate > i_lastopendate) {
+            EventDialog dialog = new EventDialog(mActivity, url);
+            dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.MATCH_PARENT);
+            dialog.show();
+        } else {
+            // 여기는 주석처리 필요
+//            EventDialog dialog = new EventDialog(mActivity, url);
+//            dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+//                    WindowManager.LayoutParams.MATCH_PARENT);
+//            dialog.show();
+        }
+    }
+
 
     /**
      * 활동기록 데이터 서버에서 획득 후 처리
