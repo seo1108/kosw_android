@@ -418,6 +418,11 @@ public class InfoSettingProfileActivity extends BaseUserActivity {
             return;
         }
 
+        if (null == nick || nick.length() > 20) {
+            showWarn(R.id.input_warn, R.string.warn_required_check_nick_length);
+            return;
+        }
+
         UserService service = new DefaultRestClient<UserService>(getBaseContext()).getClient(UserService.class);
         Map<String, Object> queryMap = KUtil.getDefaultQueryMap();
         queryMap.put("nick", nick);

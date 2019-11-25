@@ -49,6 +49,7 @@
     <string name="warn_provision_agree">ⓘ 이용약관에 동의해주세요.</string>
     <string name="warn_required_nick">ⓘ 닉네임을 입력해주세요.</string>
     <string name="warn_required_check_nick_dupl">ⓘ 닉네임을 중복 검사를 해주세요.</string>
+    <string name="warn_required_check_nick_length">ⓘ 닉네임을 20자 이내로 해주세요.</string>
     <string name="warn_available_nick">ⓘ 사용 가능한 닉네임입니다.</string>
     <string name="warn_unavailable_nick">ⓘ 사용할 수 없는 닉네임입니다.</string>
     <string name="warn_not_changed_nick">ⓘ 닉네임이 같습니다.</string>
