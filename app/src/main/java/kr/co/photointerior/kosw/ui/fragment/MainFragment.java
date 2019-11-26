@@ -1038,14 +1038,23 @@ public class MainFragment extends BaseFragment {
                             totalLife.setRecordAmount(KUtil.calcLife(total.getAmountToFloat(), total.getStairAmountToFloat()));
                         }
 
-                        if (null != r_rank) {
+                        /*if (null != r_rank) {
                             AppConst.NOTI_RANKS = StringUtil.format(Double.parseDouble(r_rank.getRank()), "#,##0");
                         } else {
                             AppConst.NOTI_RANKS = "-";
                         }
                         AppConst.NOTI_FLOORS = StringUtil.format(total.getAmountToFloat(), "#,##0");
                         AppConst.NOTI_CALS = KUtil.calcCalorie(total.getAmountToFloat(), total.getStairAmountToFloat());
-                        AppConst.NOTI_SECS = KUtil.calcLife(total.getAmountToFloat(), total.getStairAmountToFloat());
+                        AppConst.NOTI_SECS = KUtil.calcLife(total.getAmountToFloat(), total.getStairAmountToFloat());*/
+
+                        if (null != r_rank) {
+                            AppConst.NOTI_RANKS = StringUtil.format(Double.parseDouble(r_rank.getRank()), "#,##0");
+                        } else {
+                            AppConst.NOTI_RANKS = "-";
+                        }
+                        AppConst.NOTI_FLOORS = todayFloor;
+                        AppConst.NOTI_CALS = todayCalories;
+                        AppConst.NOTI_SECS = todayLife;
 
                     } else {
                         totalFloor.setRecordAmount("0");
