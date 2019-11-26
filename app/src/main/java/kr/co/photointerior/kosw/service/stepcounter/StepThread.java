@@ -238,7 +238,7 @@ public class StepThread extends Thread {
         mAltiManager.startMeasure();
         mDirectionManager.startMeasure();
 
-        acquireCPUWakelock();
+        //acquireCPUWakelock();
         /*mTask = new TimerTask() {
             @Override
             public void run() {
