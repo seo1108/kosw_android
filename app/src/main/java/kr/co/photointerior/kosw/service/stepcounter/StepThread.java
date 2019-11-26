@@ -1149,8 +1149,16 @@ public class StepThread extends Thread {
         if (!mStarted && isSleep && !AppConst.IS_STEP_SENSOR_LOADED ) {
 
             AppConst.IS_STEP_SENSOR_LOADED = true;
-            try { Thread.sleep(1000); } catch (Exception ex) { }
-            restartTracking();
+            //try { Thread.sleep(1000); } catch (Exception ex) { }
+            new Handler().postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    restartTracking();
+                }
+            }, 1000);
+
 
         }
 
@@ -1160,8 +1168,14 @@ public class StepThread extends Thread {
         if (!mStarted && isSleep && !AppConst.IS_STEP_SENSOR_LOADED ) {
 
             AppConst.IS_STEP_SENSOR_LOADED = true;
-            try { Thread.sleep(1000); } catch (Exception ex) { }
-            restartTracking();
+            new Handler().postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    restartTracking();
+                }
+            }, 1000);
 
         }
     }
