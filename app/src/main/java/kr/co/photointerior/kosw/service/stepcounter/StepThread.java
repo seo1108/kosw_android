@@ -171,6 +171,13 @@ public class StepThread extends Thread {
 
     private boolean mDebugMode = false;
 
+    private int mMountainStepLimit = 15;
+    private int mMountainHeightLimit = 4;
+    private int mMountainMeasureGap = 4000;
+
+    private int mStairStepLimit = 0;
+    private int mStairMeasureGap = 3000;
+
     public StepThread(Context context){
         mContext = context;
     }
@@ -493,8 +500,8 @@ public class StepThread extends Thread {
                             //getTextView(R.id.txt_m).setText(m);
                         }
 
-                        if ((mSaveStep <= 0)
-                                || (System.currentTimeMillis() - goupTime) < 3000) {
+                        if ((mSaveStep <= mStairStepLimit)
+                                || (System.currentTimeMillis() - goupTime) < mStairMeasureGap) {
 
                             if (mDebugMode)
                             {
@@ -532,8 +539,8 @@ public class StepThread extends Thread {
                             //getTextView(R.id.txt_m).setText(m);
                         }
 
-                        if ((mSaveStep <= 0)
-                                || (System.currentTimeMillis() - goupTime) < 3000) {
+                        if ((mSaveStep <= mStairStepLimit)
+                                || (System.currentTimeMillis() - goupTime) < mStairMeasureGap) {
 
                             if (mDebugMode)
                             {
@@ -693,9 +700,9 @@ public class StepThread extends Thread {
                                 }
 
                                 //if ((mSaveStep <= 5)
-                                if ((mSaveStep <= 10)
-                                    || Math.abs(gapAlitude) > 4
-                                    || (System.currentTimeMillis() - goupTime) < 4000) {
+                                if ((mSaveStep <= mMountainStepLimit)
+                                    || Math.abs(gapAlitude) > mMountainHeightLimit
+                                    || (System.currentTimeMillis() - goupTime) < mMountainMeasureGap) {
 
                                     if (mDebugMode)
                                     {
@@ -769,9 +776,9 @@ public class StepThread extends Thread {
                                 }
 
                                 //if ((mSaveStep <= 5)
-                                if ((mSaveStep <= 10)
-                                        || Math.abs(gapAlitude) > 4
-                                        || (System.currentTimeMillis() - goupTime) < 4000) {
+                                if ((mSaveStep <= mMountainStepLimit)
+                                        || Math.abs(gapAlitude) > mMountainHeightLimit
+                                        || (System.currentTimeMillis() - goupTime) < mMountainMeasureGap) {
 
                                     if (mDebugMode)
                                     {
@@ -817,9 +824,9 @@ public class StepThread extends Thread {
                             }
 
                             //if ((mSaveStep <= 5)
-                            if ((mSaveStep <= 10)
-                                    || Math.abs(gapAlitude) > 4
-                                    || (System.currentTimeMillis() - goupTime) < 4000) {
+                            if ((mSaveStep <= mMountainStepLimit)
+                                    || Math.abs(gapAlitude) > mMountainHeightLimit
+                                    || (System.currentTimeMillis() - goupTime) < mMountainMeasureGap) {
 
                                 if (mDebugMode)
                                 {
@@ -888,9 +895,9 @@ public class StepThread extends Thread {
                             }
 
                             //if ((mSaveStep <= 5)
-                            if ((mSaveStep <= 10)
-                                    || Math.abs(gapAlitude) > 4
-                                    || (System.currentTimeMillis() - goupTime) < 4000) {
+                            if ((mSaveStep <= mMountainStepLimit)
+                                    || Math.abs(gapAlitude) > mMountainHeightLimit
+                                    || (System.currentTimeMillis() - goupTime) < mMountainMeasureGap) {
 
 //                                if (mDebugMode)
 ////                                {
@@ -919,9 +926,9 @@ public class StepThread extends Thread {
                             }
 
                             //if ((mSaveStep <= 5)
-                            if ((mSaveStep <= 10)
-                                    || Math.abs(gapAlitude) > 4
-                                    || (System.currentTimeMillis() - goupTime) < 4000) {
+                            if ((mSaveStep <= mMountainStepLimit)
+                                    || Math.abs(gapAlitude) > mMountainHeightLimit
+                                    || (System.currentTimeMillis() - goupTime) < mMountainMeasureGap) {
 
                                 if (mDebugMode)
                                 {
@@ -1142,7 +1149,7 @@ public class StepThread extends Thread {
         if (!mStarted && isSleep && !AppConst.IS_STEP_SENSOR_LOADED ) {
 
             AppConst.IS_STEP_SENSOR_LOADED = true;
-            //try { Thread.sleep(1000); } catch (Exception ex) { }
+            try { Thread.sleep(1000); } catch (Exception ex) { }
             restartTracking();
 
         }

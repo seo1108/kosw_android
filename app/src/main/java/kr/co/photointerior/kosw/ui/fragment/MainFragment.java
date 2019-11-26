@@ -175,6 +175,8 @@ public class MainFragment extends BaseFragment {
 
     private String mSelectedCafeSeq = "";
 
+    private String mEventUrl = "";
+
     private List<Notice> mNoticeList;
 
     private BroadcastReceiver mTestReceiver = new BroadcastReceiver() {
@@ -788,8 +790,6 @@ public class MainFragment extends BaseFragment {
                         AppUserBase user = DataHolder.instance().getAppUserBase();
                         // 나무심기
 
-                        Log.d("DDDDDDDDDDDDDDDDD", user.getNickName());
-
                         String nick = "";
                         if (user.getNickName().length() > 23) {
                             nick = user.getNickName().substring(0, 20) + "...";
@@ -894,13 +894,15 @@ public class MainFragment extends BaseFragment {
                 if (response.isSuccessful()) {
                     MainData data = response.body();
                     LogUtils.err(TAG, "main data : " + data.string());
-                    Log.d("DDDDDDDDDDDDDD", data.string());
+
                     if (data.isSuccess()) {
                         Pref pref = Pref.instance();
 
                         String charImageFile = pref.getStringValue(PrefKey.CHARACTER_MAIN, "");
-                        if (null != data.getMainCharImageFile()) pref.saveStringValue(PrefKey.CHARACTER_MAIN, data.getMainCharImageFile());
-                        if (null != data.getSubCharImageFile()) pref.saveStringValue(PrefKey.CHARACTER_SUB, data.getSubCharImageFile());
+                        if (null != data.getMainCharImageFile())
+                            pref.saveStringValue(PrefKey.CHARACTER_MAIN, data.getMainCharImageFile());
+                        if (null != data.getSubCharImageFile())
+                            pref.saveStringValue(PrefKey.CHARACTER_SUB, data.getSubCharImageFile());
 
                         // 기존 이미지와 동일 하면 스킵
                         if (null != data.getMainCharImageFile() || !charImageFile.equals(data.getMainCharImageFile())) {
@@ -910,12 +912,44 @@ public class MainFragment extends BaseFragment {
 
                         // 이벤트 팝업
                         if (null != data.getPopupUrl() && !"".equals(data.getPopupUrl())) {
-                            openEventDialog(data.getPopupUrl());
+                            mEventUrl = data.getPopupUrl();
+                        } else {
+                              mEventUrl = "";
                         }
+
+                        //mEventUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdodoSAZ789W4-MeRylNU8NYBnckhHZbTJUZI0U7h4V66ufYQ/viewform";
+
+
+                        // 구글 피트니스 퍼미션 처리
+                        FitnessOptions fitnessOptions =
+                                FitnessOptions.builder()
+                                        .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
+                                        .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
+                                        .build();
+                        if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(mActivity), fitnessOptions)) {
+                            GoogleSignIn.requestPermissions(
+                                    getActivity(),
+                                    REQUEST_OAUTH_REQUEST_CODE,
+                                    GoogleSignIn.getLastSignedInAccount(mActivity),
+                                    fitnessOptions);
+                        } else {
+                            if (!"".equals(mEventUrl)) {
+                                openEventDialog(mEventUrl);
+                            }
+                            readHistoryData();
+                        }
+
+                        //openEventDialog("https://docs.google.com/forms/d/e/1FAIpQLSdodoSAZ789W4-MeRylNU8NYBnckhHZbTJUZI0U7h4V66ufYQ/viewform");
+                        // 이벤트 팝업
+//                        if (null != data.getPopupUrl() && !"".equals(data.getPopupUrl())) {
+//                            openEventDialog(data.getPopupUrl());
+//                        }
                     } else {
                         toast(data.getResponseMessage());
                     }
                 }
+
+
             }
 
             @Override
@@ -924,6 +958,8 @@ public class MainFragment extends BaseFragment {
                 LogUtils.err(TAG, "main data : " + t);
             }
         });
+
+
     }
 
     private void openEventDialog(String url) {
@@ -938,18 +974,17 @@ public class MainFragment extends BaseFragment {
         int i_lastopendate = Integer.parseInt(lastopendate);
 
         Log.d("DDDDDDDDD", i_curdate + "___" + i_lastopendate);
-        if (i_curdate > i_lastopendate) {
+        EventDialog dialog = new EventDialog(mActivity, url);
+        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT);
+        dialog.show();
+
+/*        if (i_curdate > i_lastopendate) {
             EventDialog dialog = new EventDialog(mActivity, url);
             dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
                     WindowManager.LayoutParams.MATCH_PARENT);
             dialog.show();
-        } else {
-            // 여기는 주석처리 필요
-//            EventDialog dialog = new EventDialog(mActivity, url);
-//            dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
-//                    WindowManager.LayoutParams.MATCH_PARENT);
-//            dialog.show();
-        }
+        } */
     }
 
 
@@ -1330,20 +1365,20 @@ public class MainFragment extends BaseFragment {
         // 걸음수
         tv_stepCount = getTextView(R.id.koswStepTextView);
 
-        FitnessOptions fitnessOptions =
-                FitnessOptions.builder()
-                        .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
-                        .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
-                        .build();
-        if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(mActivity), fitnessOptions)) {
-            GoogleSignIn.requestPermissions(
-                    this,
-                    REQUEST_OAUTH_REQUEST_CODE,
-                    GoogleSignIn.getLastSignedInAccount(mActivity),
-                    fitnessOptions);
-        } else {
-            readHistoryData();
-        }
+//        FitnessOptions fitnessOptions =
+//                FitnessOptions.builder()
+//                        .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
+//                        .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
+//                        .build();
+//        if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(mActivity), fitnessOptions)) {
+//            GoogleSignIn.requestPermissions(
+//                    this,
+//                    REQUEST_OAUTH_REQUEST_CODE,
+//                    GoogleSignIn.getLastSignedInAccount(mActivity),
+//                    fitnessOptions);
+//        } else {
+//            readHistoryData();
+//        }
 
         //updateNotification();
 
