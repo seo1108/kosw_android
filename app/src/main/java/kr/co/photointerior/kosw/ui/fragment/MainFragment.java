@@ -973,7 +973,6 @@ public class MainFragment extends BaseFragment {
         int i_curdate = Integer.parseInt(curdate);
         int i_lastopendate = Integer.parseInt(lastopendate);
 
-        Log.d("DDDDDDDDD", i_curdate + "___" + i_lastopendate);
         EventDialog dialog = new EventDialog(mActivity, url);
         dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.MATCH_PARENT);
@@ -1047,9 +1046,13 @@ public class MainFragment extends BaseFragment {
                         AppConst.NOTI_CALS = KUtil.calcCalorie(total.getAmountToFloat(), total.getStairAmountToFloat());
                         AppConst.NOTI_SECS = KUtil.calcLife(total.getAmountToFloat(), total.getStairAmountToFloat());*/
 
-                        if (null != r_rank) {
-                            AppConst.NOTI_RANKS = StringUtil.format(Double.parseDouble(r_rank.getRank()), "#,##0");
-                        } else {
+                        try {
+                            if (null != record.getTodayRank().getRank()) {
+                                AppConst.NOTI_RANKS = StringUtil.format(Double.parseDouble(record.getTodayRank().getRank()), "#,##0");
+                            } else {
+                                AppConst.NOTI_RANKS = "-";
+                            }
+                        } catch (Exception e) {
                             AppConst.NOTI_RANKS = "-";
                         }
                         AppConst.NOTI_FLOORS = todayFloor;
