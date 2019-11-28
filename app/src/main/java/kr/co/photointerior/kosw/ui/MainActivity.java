@@ -271,7 +271,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         //chkGpsService();
 
         AppUserBase user = DataHolder.instance().getAppUserBase();
-        if (user != null) {
+        if (null != user) {
             mCurBuildCount = user.getBuild_floor_amt();
             mIsBuild = user.getIsbuild();
         } else {
@@ -280,7 +280,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             finish();
         }
 
-        if (mIsBuild == null || mIsBuild.equals("")) { // 초기 셋팅은 등산 모드
+        if (null == mIsBuild || mIsBuild.equals("")) { // 초기 셋팅은 등산 모드
             mIsBuild = "N";
         }
 
@@ -344,12 +344,16 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         attachEvents();
         sendFcmToken();
         setInitialData();
-        registerReceiver(mExitReceiver, new IntentFilter(Env.Action.EXIT_ACTION.action()));
-        registerReceiver(mIsAppBackgroundReceiver, new IntentFilter(Env.Action.APP_IS_BACKGROUND_ACTION.action()));
 
-        LocalBroadcastManager.getInstance(this)
-                .registerReceiver(mCharacterChangeReceiver, new IntentFilter(Env.Action.CHARACTER_CHANGED_ACTION.action()));
+        try {
+            registerReceiver(mExitReceiver, new IntentFilter(Env.Action.EXIT_ACTION.action()));
+            registerReceiver(mIsAppBackgroundReceiver, new IntentFilter(Env.Action.APP_IS_BACKGROUND_ACTION.action()));
 
+            LocalBroadcastManager.getInstance(this)
+                    .registerReceiver(mCharacterChangeReceiver, new IntentFilter(Env.Action.CHARACTER_CHANGED_ACTION.action()));
+        } catch (Exception e) {
+
+        }
         /*mStartList.clear();
         for (int i = 0; i < 600; i++) {
             mStartList.add(new MeasureObj());
@@ -420,56 +424,60 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
         //startCalcStairs();
 
-        String gocafemain = getIntent().getStringExtra("_CAFEMAIN_ACTIVITY_");
+        try {
+            String gocafemain = getIntent().getStringExtra("_CAFEMAIN_ACTIVITY_");
 
-        if (null != gocafemain && "GOCAFEMAIN".equals(gocafemain)) {
-            callActivity(CafeMainActivity.class, false);
+            if (null != gocafemain && "GOCAFEMAIN".equals(gocafemain)) {
+                callActivity(CafeMainActivity.class, false);
+            }
+
+
+            SharedPreferences prefr = getSharedPreferences("userInfo", MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefr.edit();
+            if (null != user) {
+                editor.putString("token", user.getUserToken());
+                editor.putInt("beacon_seq", user.getBeacon_seq());
+                editor.putInt("stair_seq", user.getStair_seq());
+                editor.putString("build_seq", user.getBuild_seq());
+                editor.putString("build_name", user.getBuild_name());
+                editor.putInt("cust_seq", user.getCust_seq());
+                editor.putString("cust_name", user.getCust_name());
+                editor.putString("build_code", user.getBuildingCode());
+                editor.putString("country", user.getCountry());
+                editor.putString("city", user.getCity());
+                editor.putInt("curBuildCount", user.getBuild_floor_amt());
+                editor.putInt("user_seq", user.getUser_seq());
+                editor.commit();
+            } else {
+                editor.putString("token", "");
+                editor.putInt("beacon_seq", 0);
+                editor.putInt("stair_seq", 0);
+                editor.putString("build_seq", "");
+                editor.putString("build_name", "");
+                editor.putInt("cust_seq", 0);
+                editor.putString("cust_name", "");
+                editor.putString("build_code", "");
+                editor.putString("country", "");
+                editor.putString("city", "");
+                editor.putInt("curBuildCount", 1000);
+                editor.putInt("user_seq", -1);
+                editor.commit();
+            }
+
+            // 죽지않는 서비스 구현
+            restartService = new RestartService();
+            Intent intent = new Intent(MainActivity.this, NotiService.class);
+
+            IntentFilter intentFilter = new IntentFilter("kr.co.photointerior.kosw.service.noti.NotiService");
+            //브로드 캐스트에 등록
+            registerReceiver(restartService, intentFilter);
+            // 서비스 시작
+            startService(intent);
+
+            AppConst.IS_MAIN_RUNNED = true;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-
-        SharedPreferences prefr = getSharedPreferences("userInfo", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefr.edit();
-        if (null != user) {
-            editor.putString("token", user.getUserToken());
-            editor.putInt("beacon_seq", user.getBeacon_seq());
-            editor.putInt("stair_seq", user.getStair_seq());
-            editor.putString("build_seq", user.getBuild_seq());
-            editor.putString("build_name", user.getBuild_name());
-            editor.putInt("cust_seq", user.getCust_seq());
-            editor.putString("cust_name", user.getCust_name());
-            editor.putString("build_code", user.getBuildingCode());
-            editor.putString("country", user.getCountry());
-            editor.putString("city", user.getCity());
-            editor.putInt("curBuildCount", user.getBuild_floor_amt());
-            editor.putInt("user_seq", user.getUser_seq());
-            editor.commit();
-        } else {
-            editor.putString("token", "");
-            editor.putInt("beacon_seq", 0);
-            editor.putInt("stair_seq", 0);
-            editor.putString("build_seq", "");
-            editor.putString("build_name", "");
-            editor.putInt("cust_seq", 0);
-            editor.putString("cust_name", "");
-            editor.putString("build_code", "");
-            editor.putString("country", "");
-            editor.putString("city", "");
-            editor.putInt("curBuildCount", 1000);
-            editor.putInt("user_seq", -1);
-            editor.commit();
-        }
-
-        // 죽지않는 서비스 구현
-        restartService = new RestartService();
-        Intent intent = new Intent(MainActivity.this, NotiService.class);
-
-        IntentFilter intentFilter = new IntentFilter("kr.co.photointerior.kosw.service.noti.NotiService");
-        //브로드 캐스트에 등록
-        registerReceiver(restartService, intentFilter);
-        // 서비스 시작
-        startService(intent);
-
-        AppConst.IS_MAIN_RUNNED = true;
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {

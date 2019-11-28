@@ -151,6 +151,7 @@ public class SplashActivity extends BaseUserActivity implements EasyPermissions.
 
             @Override
             public void onFailure(Call<AppVersion> call, Throwable t) {
+                Log.d("DDDDDDDDDDDDDD", t.getMessage());
                 toast(R.string.warn_commu_to_server);
                 checkUserIdAndToken();
             }

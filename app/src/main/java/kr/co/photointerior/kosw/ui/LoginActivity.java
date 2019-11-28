@@ -227,7 +227,9 @@ public class LoginActivity extends BaseUserActivity {
         public void onSessionOpenFailed(KakaoException exception) {
             if (exception != null) {
                 Logger.e(exception);
+                //toast("카카오 로그인에 실패하였습니다.");
                 toast("카카오 로그인에 실패하였습니다.");
+                //Toast.makeText(getApplicationContext(), exception.toString(), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -241,6 +243,7 @@ public class LoginActivity extends BaseUserActivity {
                 md.update(signature.toByteArray());
                 String something = new String(Base64.encode(md.digest(), 0));
                 Log.d("keyHash", something);
+                Toast.makeText(getApplicationContext(), something, Toast.LENGTH_LONG).show();
             }
         } catch (Exception e) {
             // TODO Auto-generated catch block
