@@ -1777,10 +1777,12 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         LogUtils.err(TAG, "MainActivity#onDestroy()");
 //        stopService(new Intent(getBaseContext(), BeaconRagingInRegionService.class));
 //        stopService(new Intent(getBaseContext(), StepSensorService.class));
-        unregisterReceiver(mExitReceiver);
-        unregisterReceiver(mIsAppBackgroundReceiver);
-        unregisterReceiver(restartService);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mCharacterChangeReceiver);
+        try {
+            unregisterReceiver(mExitReceiver);
+            unregisterReceiver(mIsAppBackgroundReceiver);
+            unregisterReceiver(restartService);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(mCharacterChangeReceiver);
+        } catch (Exception e) { }
 
  /*       mStarted = false;
         startMeasure(mStarted);

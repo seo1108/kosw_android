@@ -249,13 +249,33 @@ public class MainFragment extends BaseFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        SharedPreferences prefr = mActivity.getSharedPreferences("fitnessauth", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefr.edit();
+        Log.d("DDDDDDDDDD", requestCode + "_" + Activity.RESULT_OK + "_" + requestCode + "_" + REQUEST_OAUTH_REQUEST_CODE);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_OAUTH_REQUEST_CODE) {
+                // 성공시
+                editor.putBoolean("isSuccess", true);
+                editor.putBoolean("isPermission", true);
+                editor.commit();
+
                 readHistoryData();
             }
         } else if (resultCode == 10001) {
+            editor.putBoolean("isSuccess", false);
+            editor.putBoolean("isPermission", false);
+            editor.commit();
+
+            mActivity.displayFragment(Env.FragmentType.HOME);
+        } else {
+            editor.putBoolean("isSuccess", false);
+            editor.putBoolean("isPermission", false);
+            editor.commit();
+            Log.d("DDDDDDDDDDDD33", "__");
             mActivity.displayFragment(Env.FragmentType.HOME);
         }
+
+        Log.d("DDDDDDDDDDDD44", prefr.getBoolean("isSuccess", false) + "__");
     }
 
     @Override
@@ -920,24 +940,46 @@ public class MainFragment extends BaseFragment {
                         //mEventUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdodoSAZ789W4-MeRylNU8NYBnckhHZbTJUZI0U7h4V66ufYQ/viewform";
 
 
-                        // 구글 피트니스 퍼미션 처리
-                        FitnessOptions fitnessOptions =
-                                FitnessOptions.builder()
-                                        .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
-                                        .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
-                                        .build();
-                        if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(mActivity), fitnessOptions)) {
-                            GoogleSignIn.requestPermissions(
-                                    getActivity(),
-                                    REQUEST_OAUTH_REQUEST_CODE,
-                                    GoogleSignIn.getLastSignedInAccount(mActivity),
-                                    fitnessOptions);
-                        } else {
+//                        if (!"".equals(mEventUasdrl)) {
+//                            openEventDialog(mEventUrl);
+//                        }
+
+                        SharedPreferences prefr = mActivity.getSharedPreferences("fitnessauth", MODE_PRIVATE);
+                        Log.d("DDDDDDDDDDDDDDD", prefr.getBoolean("isSuccess", true) + "");
+                        if (prefr.getBoolean("isSuccess", true)) {
+
+                            SharedPreferences.Editor editor = prefr.edit();
+                            editor.putBoolean("isSuccess", false);
+                            editor.commit();
+
+                            // 구글 피트니스 퍼미션 처리
+                            FitnessOptions fitnessOptions =
+                                    FitnessOptions.builder()
+                                            .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
+                                            .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
+                                            .build();
+                            if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(mActivity), fitnessOptions)) {
+                                GoogleSignIn.requestPermissions(
+                                        getActivity(),
+                                        REQUEST_OAUTH_REQUEST_CODE,
+                                        GoogleSignIn.getLastSignedInAccount(mActivity),
+                                        fitnessOptions);
+                            } else {
+                                if (!"".equals(mEventUrl)) {
+                                    openEventDialog(mEventUrl);
+                                }
+                                readHistoryData();
+                            }
+                        } else if (!prefr.getBoolean("isSuccess", true)) {
                             if (!"".equals(mEventUrl)) {
                                 openEventDialog(mEventUrl);
                             }
-                            readHistoryData();
+
+                            try {
+                                readHistoryData();
+                            } catch (Exception e) { }
                         }
+
 
                         //openEventDialog("https://docs.google.com/forms/d/e/1FAIpQLSdodoSAZ789W4-MeRylNU8NYBnckhHZbTJUZI0U7h4V66ufYQ/viewform");
                         // 이벤트 팝업

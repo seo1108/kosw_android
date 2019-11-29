@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Location;
 import android.net.Uri;
@@ -233,6 +234,11 @@ public class SplashActivity extends BaseUserActivity implements EasyPermissions.
         /*String url = Env.Url.URL_API.url() + "api/customer/lookupLogo?buildCode=" + KUtil.getBuildingCode();
         Glide.with(this).load(url).thumbnail(.5f).into(logoView);*/
         Glide.with(this).load(KUtil.getCompanyLogoImgUrl()).thumbnail(.5f).into(logoView);
+
+        SharedPreferences prefr = getSharedPreferences("fitnessauth", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefr.edit();
+        editor.putBoolean("isSuccess", true);
+        editor.commit();
     }
 
     @Override

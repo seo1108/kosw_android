@@ -209,11 +209,15 @@ public class LoginActivity extends BaseUserActivity {
                 Logger.d("profile image: " + response.getKakaoAccount()
                         .getProfileImagePath());
                 redirectMainActivity();*/
-                    String openid = String.valueOf(response.getId());
-                    String nickname = response.getNickname();
-                    String email = response.getKakaoAccount().getEmail();
+                    try {
+                        String openid = String.valueOf(response.getId());
+                        String nickname = response.getNickname();
+                        String email = response.getKakaoAccount().getEmail();
 
-                    tryKakaoLogin(openid, email, nickname);
+                        tryKakaoLogin(openid, email, nickname);
+                    } catch (Exception ex) {
+                        toast("카카오에서 획득한 정보가 부족하여, 로그인할 수 없습니다.");
+                    }
                 }
 
             /*@Override
@@ -228,7 +232,7 @@ public class LoginActivity extends BaseUserActivity {
             if (exception != null) {
                 Logger.e(exception);
                 //toast("카카오 로그인에 실패하였습니다.");
-                toast("카카오 로그인에 실패하였습니다.");
+                toast("카카오 로그인에 실패하였습니다.  " + exception.toString());
                 //Toast.makeText(getApplicationContext(), exception.toString(), Toast.LENGTH_LONG).show();
             }
         }
