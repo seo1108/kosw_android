@@ -1,5 +1,6 @@
 package kr.co.photointerior.kosw.service.stepcounter;
 
+import android.Manifest;
 import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -7,16 +8,19 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Location;
+import android.location.LocationListener;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.PowerManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -66,11 +70,17 @@ import kr.co.photointerior.kosw.utils.LogUtils;
 import kr.co.photointerior.kosw.utils.StringUtil;
 import kr.co.photointerior.kosw.utils.event.BusProvider;
 import kr.co.photointerior.kosw.utils.event.KsEvent;
+
+import android.location.Address;
+import android.location.Location;
+import android.location.LocationManager;
+
 import kr.co.photointerior.kosw.widget.RowActivityRecord;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.content.Context.ACTIVITY_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
 import static android.content.Context.NOTIFICATION_SERVICE;
@@ -123,6 +133,9 @@ public class StepThread extends Thread {
     private AltitudeManager mAltiManager;
     private StepManager mStepManager;
     private DirectionManager mDirectionManager ;
+    // 위경도
+    private LocationManager mLocationManager;
+
     //private
 
     private  boolean isStart = false ;
@@ -169,6 +182,9 @@ public class StepThread extends Thread {
 
     PowerManager.WakeLock wakeLock;
 
+    private boolean hasGPSPermission = false;
+    private Double mPreLat = 0.0, mPreLng = 0.0, mLat, mLng;
+
     private boolean mDebugMode = false;
 
     private int mMountainStepLimit = 15;
@@ -177,6 +193,8 @@ public class StepThread extends Thread {
 
     private int mStairStepLimit = 0;
     private int mStairMeasureGap = 3000;
+
+    private double mDistanceLimit = 15.0;
 
     public StepThread(Context context){
         mContext = context;
@@ -203,6 +221,7 @@ public class StepThread extends Thread {
             handler.removeCallbacks(runnable);
             try {
                 mStepManager.stopMeasure();
+
                 //mStepManagerForService.stopMeasure();
             } catch (Exception e) {
             }
@@ -210,6 +229,7 @@ public class StepThread extends Thread {
             try {
                 if (mAltiManager != null) mAltiManager.stopMeasure();
                 if (mDirectionManager != null) mDirectionManager.stopMeasure();
+                if (mLocationManager != null) mLocationManager.removeUpdates(gpsLocationListener);
             } catch (Exception ex) {
             }
 
@@ -234,9 +254,40 @@ public class StepThread extends Thread {
         mAltiManager = new AltitudeManager(mContext);
         mDirectionManager = new DirectionManager(mContext);
 
+        mLocationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+
         mStepManager.startMeasure();
         mAltiManager.startMeasure();
         mDirectionManager.startMeasure();
+
+        Handler mHandler = new Handler(Looper.getMainLooper());
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // 거리 가져오기 초기화
+                if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    //Toast.makeText(mContext, "no permission", Toast.LENGTH_SHORT).show();
+                    hasGPSPermission = false;
+                } else {
+                    hasGPSPermission = true;
+
+                    String locationProvider = LocationManager.GPS_PROVIDER;
+                    Location currentLocation = mLocationManager.getLastKnownLocation(locationProvider);
+                    if (currentLocation != null) {
+                        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                                1000,
+                                1,
+                                gpsLocationListener);
+                        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                                1000,
+                                1,
+                                gpsLocationListener);
+                    }
+                }
+            }
+        }, 1000);
+
+
 
         //acquireCPUWakelock();
         /*mTask = new TimerTask() {
@@ -308,6 +359,50 @@ public class StepThread extends Thread {
         }
 
         Log.d("999999999999777771", String.valueOf(mStarted) + "__" + mSleepCnt + "_______" + cnt + "___" + mSaveStep + "______" + mStep);
+
+        if (cnt % 48 == 0) {
+            sendDataToServer(1, "notbuilding", "");
+        }
+
+//        if (cnt % 48 == 0) {
+//            try {
+//
+//                if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                    Toast.makeText(mContext, "no permission", Toast.LENGTH_SHORT).show();
+//                    hasGPSPermission = false;
+//                } else {
+//                    hasGPSPermission = true;
+//
+//                    String locationProvider = LocationManager.GPS_PROVIDER;
+//                    Location currentLocation = mLocationManager.getLastKnownLocation(locationProvider);
+//                    if (currentLocation != null) {
+//                        double lng = currentLocation.getLongitude();
+//                        double lat = currentLocation.getLatitude();
+//
+//
+//
+////                        mLat = lat;
+////                        mLng = lng;
+//
+//                        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+//                                1000,
+//                                1,
+//                                gpsLocationListener);
+//                        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+//                                1000,
+//                                1,
+//                                gpsLocationListener);
+//
+//                        //Toast.makeText(mContext, mLat + "__" + mPreLat + "__" + mLng + "__" + mPreLng + "__" + distance(mPreLat, mPreLng, mLat, mLng, "meter"), Toast.LENGTH_SHORT).show();
+//
+////                        distance(mPreLat, mPreLng, mLat, mLng, "meter")
+//                    }
+//                }
+//            } catch (Exception e) {
+//
+//            }
+//
+//        }
 
         if (mDebugMode)
         {
@@ -1244,6 +1339,16 @@ public class StepThread extends Thread {
                     mTrashStep = 0;
                 }
             }
+
+            if ("notbuilding".equals(type)) {
+                double distance = distance(mPreLat, mPreLng, mLat, mLng, "meter");
+                //Toast.makeText(mContext, distance + "meter", Toast.LENGTH_SHORT).show();
+
+                if (mDistanceLimit > distance) {
+                    return;
+                }
+            }
+
             // 5걸음 이상 걷지 않았을 경우, 계단수에서 빼도록 처리
             /*if (mTrashStep < 10) {
                 return;
@@ -1514,6 +1619,65 @@ public class StepThread extends Thread {
         });
     }
 
+//    private double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
+//
+//        double theta = lon1 - lon2;
+//        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+//
+//        dist = Math.acos(dist);
+//        dist = rad2deg(dist);
+//        dist = dist * 60 * 1.1515;
+//
+//        if (unit == "kilometer") {
+//            dist = dist * 1.609344;
+//        } else if(unit == "meter"){
+//            dist = dist * 1609.344;
+//        }
+//
+//        mPreLat = lat2;
+//        mPreLng = lon2;
+//
+//        return (dist);
+//    }
+
+    private double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
+//        double R = 6372.8;
+//        double dLat = Math.toRadians(lat2 - lat1);
+//        double dLon = Math.toRadians(lon2 - lon1);
+//        lat1 = Math.toRadians(lat1);
+//        lat2 = Math.toRadians(lat2);
+//
+//        double a = Math.pow(Math.sin(dLat / 2),2) + Math.pow(Math.sin(dLon / 2),2) * Math.cos(lat1) * Math.cos(lat2);
+//        double c = 2 * Math.asin(Math.sqrt(a));
+//
+//        mPreLat = lat2;
+//        mPreLng = lon2;
+//
+//        return R * c * 1000;
+
+        float[] distance = new float[2];
+
+        Location.distanceBetween( lat1, lon1,
+                lat2, lon2, distance);
+
+        mPreLat = lat2;
+        mPreLng = lon2;
+
+        return distance[0];
+
+        //return (dist);
+    }
+
+
+    // This function converts decimal degrees to radians
+    private static double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+    // This function converts radians to decimal degrees
+    private static double rad2deg(double rad) {
+        return (rad * 180 / Math.PI);
+    }
 
     private static void updateNotification(String ranking, String floor, String cal, String sec) {
 
@@ -1573,6 +1737,31 @@ public class StepThread extends Thread {
         }
         return false;
     }
+
+    final LocationListener gpsLocationListener = new LocationListener() {
+        public void onLocationChanged(Location location) {
+
+            String provider = location.getProvider();
+            double longitude = location.getLongitude();
+            double latitude = location.getLatitude();
+            double altitude = location.getAltitude();
+
+            mLat = latitude;
+            mLng = longitude;
+
+            //Log.d("DDDDDD", mLat + "______" + mLng);
+            //Toast.makeText(mContext, mLat + "______" + mLng, Toast.LENGTH_SHORT).show();
+        }
+
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+
+        public void onProviderEnabled(String provider) {
+        }
+
+        public void onProviderDisabled(String provider) {
+        }
+    };
 
     public void acquireCPUWakelock() {
         PowerManager powerManager = (PowerManager) mContext.getSystemService(POWER_SERVICE);
