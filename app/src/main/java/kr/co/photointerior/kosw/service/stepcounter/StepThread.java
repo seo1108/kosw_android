@@ -360,49 +360,10 @@ public class StepThread extends Thread {
 
         Log.d("999999999999777771", String.valueOf(mStarted) + "__" + mSleepCnt + "_______" + cnt + "___" + mSaveStep + "______" + mStep);
 
-        if (cnt % 48 == 0) {
-            sendDataToServer(1, "notbuilding", "");
-        }
-
 //        if (cnt % 48 == 0) {
-//            try {
-//
-//                if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                    Toast.makeText(mContext, "no permission", Toast.LENGTH_SHORT).show();
-//                    hasGPSPermission = false;
-//                } else {
-//                    hasGPSPermission = true;
-//
-//                    String locationProvider = LocationManager.GPS_PROVIDER;
-//                    Location currentLocation = mLocationManager.getLastKnownLocation(locationProvider);
-//                    if (currentLocation != null) {
-//                        double lng = currentLocation.getLongitude();
-//                        double lat = currentLocation.getLatitude();
-//
-//
-//
-////                        mLat = lat;
-////                        mLng = lng;
-//
-//                        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-//                                1000,
-//                                1,
-//                                gpsLocationListener);
-//                        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-//                                1000,
-//                                1,
-//                                gpsLocationListener);
-//
-//                        //Toast.makeText(mContext, mLat + "__" + mPreLat + "__" + mLng + "__" + mPreLng + "__" + distance(mPreLat, mPreLng, mLat, mLng, "meter"), Toast.LENGTH_SHORT).show();
-//
-////                        distance(mPreLat, mPreLng, mLat, mLng, "meter")
-//                    }
-//                }
-//            } catch (Exception e) {
-//
-//            }
-//
+//            sendDataToServer(1, "notbuilding", "");
 //        }
+
 
         if (mDebugMode)
         {
