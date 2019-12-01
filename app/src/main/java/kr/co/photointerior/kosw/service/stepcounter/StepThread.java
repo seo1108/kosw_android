@@ -182,9 +182,6 @@ public class StepThread extends Thread {
 
     PowerManager.WakeLock wakeLock;
 
-    private boolean hasGPSPermission = false;
-    private Double mPreLat = 0.0, mPreLng = 0.0, mLat, mLng;
-
     private boolean mDebugMode = false;
 
     private int mMountainStepLimit = 15;
@@ -195,6 +192,9 @@ public class StepThread extends Thread {
     private int mStairMeasureGap = 3000;
 
     private double mDistanceLimit = 15.0;
+
+    private boolean hasGPSPermission = false;
+    private Double mPreLat = 0.0, mPreLng = 0.0, mLat, mLng;
 
     public StepThread(Context context){
         mContext = context;
@@ -1302,10 +1302,16 @@ public class StepThread extends Thread {
             }
 
             if ("notbuilding".equals(type)) {
-                double distance = distance(mPreLat, mPreLng, mLat, mLng, "meter");
-                //Toast.makeText(mContext, distance + "meter", Toast.LENGTH_SHORT).show();
 
-                if (mDistanceLimit > distance) {
+                if (hasGPSPermission) {
+
+                    double distance = distance(mPreLat, mPreLng, mLat, mLng, "meter");
+                    //Toast.makeText(mContext, distance + "meter", Toast.LENGTH_SHORT).show();
+
+                    if (mDistanceLimit > distance) {
+                        return;
+                    }
+                } else {
                     return;
                 }
             }
