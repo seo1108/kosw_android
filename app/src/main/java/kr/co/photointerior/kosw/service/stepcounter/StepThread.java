@@ -1314,6 +1314,12 @@ public class StepThread extends Thread {
                 } else {
                     return;
                 }
+            } else {
+                double distance = distance(mPreLat, mPreLng, mLat, mLng, "meter");
+
+                if (mDistanceLimit > distance) {
+                    return;
+                }
             }
 
             // 5걸음 이상 걷지 않았을 경우, 계단수에서 빼도록 처리
