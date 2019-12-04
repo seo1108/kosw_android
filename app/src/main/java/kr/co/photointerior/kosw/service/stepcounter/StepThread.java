@@ -254,12 +254,21 @@ public class StepThread extends Thread {
         mAltiManager = new AltitudeManager(mContext);
         mDirectionManager = new DirectionManager(mContext);
 
-        mLocationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+
 
         mStepManager.startMeasure();
         mAltiManager.startMeasure();
         mDirectionManager.startMeasure();
 
+        /**********************************************************************
+         *
+         *
+         *
+         * GPS 모듈 시작
+         *
+         *
+         **********************************************************************/
+        mLocationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         Handler mHandler = new Handler(Looper.getMainLooper());
         mHandler.postDelayed(new Runnable() {
             @Override
@@ -287,7 +296,14 @@ public class StepThread extends Thread {
             }
         }, 1000);
 
-
+/**********************************************************************
+ *
+ *
+ *
+ * GPS 모듈 끝
+ *
+ *
+ **********************************************************************/
 
         //acquireCPUWakelock();
         /*mTask = new TimerTask() {
@@ -1301,24 +1317,33 @@ public class StepThread extends Thread {
                 }
             }
 
+//            if ("notbuilding".equals(type)) {
+//                return;
+//            }
+
             if ("notbuilding".equals(type)) {
 
                 if (hasGPSPermission) {
 
                     double distance = distance(mPreLat, mPreLng, mLat, mLng, "meter");
-                    //Toast.makeText(mContext, distance + "meter", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, distance + "meter mountain", Toast.LENGTH_SHORT).show();
 
-                    if (mDistanceLimit > distance) {
+                    if (mDistanceLimit < distance) {
+                        Toast.makeText(mContext, distance + "meter mountain return", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 } else {
                     return;
                 }
-            } else {
-                double distance = distance(mPreLat, mPreLng, mLat, mLng, "meter");
+            }
+            else {
+                if (hasGPSPermission) {
+                    double distance = distance(mPreLat, mPreLng, mLat, mLng, "meter");
 
-                if (mDistanceLimit > distance) {
-                    return;
+                    if (mDistanceLimit < distance) {
+                        Toast.makeText(mContext, distance + "meter stair return", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                 }
             }
 
@@ -1614,21 +1639,7 @@ public class StepThread extends Thread {
 //    }
 
     private double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
-//        double R = 6372.8;
-//        double dLat = Math.toRadians(lat2 - lat1);
-//        double dLon = Math.toRadians(lon2 - lon1);
-//        lat1 = Math.toRadians(lat1);
-//        lat2 = Math.toRadians(lat2);
-//
-//        double a = Math.pow(Math.sin(dLat / 2),2) + Math.pow(Math.sin(dLon / 2),2) * Math.cos(lat1) * Math.cos(lat2);
-//        double c = 2 * Math.asin(Math.sqrt(a));
-//
-//        mPreLat = lat2;
-//        mPreLng = lon2;
-//
-//        return R * c * 1000;
-
-        float[] distance = new float[2];
+       float[] distance = new float[2];
 
         Location.distanceBetween( lat1, lon1,
                 lat2, lon2, distance);
@@ -1637,8 +1648,6 @@ public class StepThread extends Thread {
         mPreLng = lon2;
 
         return distance[0];
-
-        //return (dist);
     }
 
 
