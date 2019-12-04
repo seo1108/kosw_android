@@ -191,7 +191,8 @@ public class StepThread extends Thread {
     private int mStairStepLimit = 0;
     private int mStairMeasureGap = 3000;
 
-    private double mDistanceLimit = 15.0;
+    private int mMountainDistanceLimit = 15;
+    private int mStairDistanceLimit = 40;
 
     private boolean hasGPSPermission = false;
     private Double mPreLat = 0.0, mPreLng = 0.0, mLat, mLng;
@@ -296,14 +297,14 @@ public class StepThread extends Thread {
             }
         }, 1000);
 
-/**********************************************************************
- *
- *
- *
- * GPS 모듈 끝
- *
- *
- **********************************************************************/
+        /**********************************************************************
+         *
+         *
+         *
+         * GPS 모듈 끝
+         *
+         *
+         **********************************************************************/
 
         //acquireCPUWakelock();
         /*mTask = new TimerTask() {
@@ -1325,10 +1326,10 @@ public class StepThread extends Thread {
 
                 if (hasGPSPermission) {
 
-                    double distance = distance(mPreLat, mPreLng, mLat, mLng, "meter");
+                    int distance = distance(mPreLat, mPreLng, mLat, mLng, "meter");
                     Toast.makeText(mContext, distance + "meter mountain", Toast.LENGTH_SHORT).show();
 
-                    if (mDistanceLimit < distance) {
+                    if (mMountainDistanceLimit < distance) {
                         Toast.makeText(mContext, distance + "meter mountain return", Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -1336,16 +1337,16 @@ public class StepThread extends Thread {
                     return;
                 }
             }
-            else {
-                if (hasGPSPermission) {
-                    double distance = distance(mPreLat, mPreLng, mLat, mLng, "meter");
-
-                    if (mDistanceLimit < distance) {
-                        Toast.makeText(mContext, distance + "meter stair return", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
-            }
+//            else {
+//                if (hasGPSPermission) {
+//                    int distance = distance(mPreLat, mPreLng, mLat, mLng, "meter");
+//                    Toast.makeText(mContext, distance + "meter stair", Toast.LENGTH_SHORT).show();
+//                    if (mStairDistanceLimit < distance) {
+//                        Toast.makeText(mContext, distance + "meter stair return", Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+//                }
+//            }
 
             // 5걸음 이상 걷지 않았을 경우, 계단수에서 빼도록 처리
             /*if (mTrashStep < 10) {
@@ -1617,38 +1618,38 @@ public class StepThread extends Thread {
         });
     }
 
-//    private double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
-//
-//        double theta = lon1 - lon2;
-//        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
-//
-//        dist = Math.acos(dist);
-//        dist = rad2deg(dist);
-//        dist = dist * 60 * 1.1515;
-//
-//        if (unit == "kilometer") {
-//            dist = dist * 1.609344;
-//        } else if(unit == "meter"){
-//            dist = dist * 1609.344;
-//        }
-//
-//        mPreLat = lat2;
-//        mPreLng = lon2;
-//
-//        return (dist);
-//    }
+    private int distance(double lat1, double lon1, double lat2, double lon2, String unit) {
 
-    private double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
-       float[] distance = new float[2];
+        double theta = lon1 - lon2;
+        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
 
-        Location.distanceBetween( lat1, lon1,
-                lat2, lon2, distance);
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60 * 1.1515;
+
+        if (unit == "kilometer") {
+            dist = dist * 1.609344;
+        } else if(unit == "meter"){
+            dist = dist * 1609.344;
+        }
 
         mPreLat = lat2;
         mPreLng = lon2;
 
-        return distance[0];
+        return ((int) dist);
     }
+
+//    private double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
+//       float[] distance = new float[2];
+//
+//        Location.distanceBetween( lat1, lon1,
+//                lat2, lon2, distance);
+//
+//        mPreLat = lat2;
+//        mPreLng = lon2;
+//
+//        return distance[0];
+//    }
 
 
     // This function converts decimal degrees to radians
