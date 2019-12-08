@@ -230,7 +230,7 @@ public class StepThread extends Thread {
             try {
                 if (mAltiManager != null) mAltiManager.stopMeasure();
                 if (mDirectionManager != null) mDirectionManager.stopMeasure();
-                if (mLocationManager != null) mLocationManager.removeUpdates(gpsLocationListener);
+                //if (mLocationManager != null) mLocationManager.removeUpdates(gpsLocationListener);
             } catch (Exception ex) {
             }
 
@@ -269,33 +269,33 @@ public class StepThread extends Thread {
          *
          *
          **********************************************************************/
-        mLocationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
-        Handler mHandler = new Handler(Looper.getMainLooper());
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // 거리 가져오기 초기화
-                if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    //Toast.makeText(mContext, "no permission", Toast.LENGTH_SHORT).show();
-                    hasGPSPermission = false;
-                } else {
-                    hasGPSPermission = true;
-
-                    String locationProvider = LocationManager.GPS_PROVIDER;
-                    Location currentLocation = mLocationManager.getLastKnownLocation(locationProvider);
-                    if (currentLocation != null) {
-                        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                                1000,
-                                1,
-                                gpsLocationListener);
-                        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                                1000,
-                                1,
-                                gpsLocationListener);
-                    }
-                }
-            }
-        }, 1000);
+//        mLocationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+//        Handler mHandler = new Handler(Looper.getMainLooper());
+//        mHandler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                // 거리 가져오기 초기화
+//                if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                    //Toast.makeText(mContext, "no permission", Toast.LENGTH_SHORT).show();
+//                    hasGPSPermission = false;
+//                } else {
+//                    hasGPSPermission = true;
+//
+//                    String locationProvider = LocationManager.GPS_PROVIDER;
+//                    Location currentLocation = mLocationManager.getLastKnownLocation(locationProvider);
+//                    if (currentLocation != null) {
+//                        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+//                                1000,
+//                                1,
+//                                gpsLocationListener);
+//                        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+//                                1000,
+//                                1,
+//                                gpsLocationListener);
+//                    }
+//                }
+//            }
+//        }, 1000);
 
         /**********************************************************************
          *
@@ -1318,37 +1318,37 @@ public class StepThread extends Thread {
                 }
             }
 
-            mSleepCnt = 0;
-
 //            if ("notbuilding".equals(type)) {
 //                return;
 //            }
 
-            if ("notbuilding".equals(type)) {
+            mSleepCnt = 0;
 
-                if (hasGPSPermission) {
-
-                    int distance = distance(mPreLat, mPreLng, mLat, mLng, "meter");
-                    Toast.makeText(mContext, distance + "meter mountain", Toast.LENGTH_SHORT).show();
-
-                    if (mMountainDistanceLimit < distance) {
-                        Toast.makeText(mContext, distance + "meter mountain return", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                } else {
-                    return;
-                }
-            }
-            else {
-                if (hasGPSPermission) {
-                    int distance = distance(mPreLat, mPreLng, mLat, mLng, "meter");
-                    Toast.makeText(mContext, distance + "meter stair", Toast.LENGTH_SHORT).show();
-                    if (mStairDistanceLimit < distance) {
-                        Toast.makeText(mContext, distance + "meter stair return", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
-            }
+//            if ("notbuilding".equals(type)) {
+//
+//                if (hasGPSPermission) {
+//
+//                    int distance = distance(mPreLat, mPreLng, mLat, mLng, "meter");
+//                    Toast.makeText(mContext, distance + "meter mountain", Toast.LENGTH_SHORT).show();
+//
+//                    if (mMountainDistanceLimit < distance) {
+//                        Toast.makeText(mContext, distance + "meter mountain return", Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+//                } else {
+//                    return;
+//                }
+//            }
+//            else {
+//                if (hasGPSPermission) {
+//                    int distance = distance(mPreLat, mPreLng, mLat, mLng, "meter");
+//                    Toast.makeText(mContext, distance + "meter stair", Toast.LENGTH_SHORT).show();
+//                    if (mStairDistanceLimit < distance) {
+//                        Toast.makeText(mContext, distance + "meter stair return", Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+//                }
+//            }
 
             // 5걸음 이상 걷지 않았을 경우, 계단수에서 빼도록 처리
             /*if (mTrashStep < 10) {
@@ -1500,6 +1500,12 @@ public class StepThread extends Thread {
                     mUnsentStairCnt++;
                     //saveGoUpDataToLocalDb(query, localTime);
                 }
+
+                if ("notbuilding".equals(type)) {
+                    mSaveStep = 0;
+                    initMeasure();
+                }
+
             } catch (Exception e) {
                 Toast.makeText(mContext, e.toString(), Toast.LENGTH_SHORT);
             }
@@ -1641,31 +1647,16 @@ public class StepThread extends Thread {
 //        return ((int) dist);
 //    }
 
-//    private double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
-//       float[] distance = new float[2];
-//
-//        Location.distanceBetween( lat1, lon1,
-//                lat2, lon2, distance);
-//
-//        mPreLat = lat2;
-//        mPreLng = lon2;
-//
-//        return distance[0];
-//    }
-
     private int distance(double lat1, double lon1, double lat2, double lon2, String unit) {
-        double distance;
-        Location locA = new Location("point A");
-        locA.setLatitude(lat1);
-        locA.setLongitude(lon1);
+       float[] distance = new float[2];
 
-        Location locB = new Location("point B");
-        locB.setLatitude(lat2);
-        locB.setLongitude(lon2);
+        Location.distanceBetween( lat1, lon1,
+                lat2, lon2, distance);
 
-        distance = locA.distanceTo(locB);
+        mPreLat = lat2;
+        mPreLng = lon2;
 
-        return (int) distance;
+        return (int) distance[0];
     }
 
 
@@ -1750,7 +1741,7 @@ public class StepThread extends Thread {
             mLng = longitude;
 
             //Log.d("DDDDDD", mLat + "______" + mLng);
-            //Toast.makeText(mContext, mLat + "______" + mLng, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, mLat + "________" + mPreLat + "\n" + mLng + "________" + mPreLng, Toast.LENGTH_SHORT).show();
         }
 
         public void onStatusChanged(String provider, int status, Bundle extras) {

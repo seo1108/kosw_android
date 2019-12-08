@@ -50,6 +50,7 @@ import kr.co.photointerior.kosw.rest.model.DataHolder;
 import kr.co.photointerior.kosw.rest.model.MyInfo;
 import kr.co.photointerior.kosw.rest.model.Notice;
 import kr.co.photointerior.kosw.rest.model.RankInCafe;
+import kr.co.photointerior.kosw.rest.model.ResponseBase;
 import kr.co.photointerior.kosw.ui.row.RowCafeBbs;
 import kr.co.photointerior.kosw.ui.row.RowCafeBbsComment;
 import kr.co.photointerior.kosw.ui.row.RowDotSeparator;
@@ -186,7 +187,11 @@ public class CafeDetailActivity extends BaseActivity {
         txt_member.setText("맴버: " + mCafe.getTotal() + "명");
 
         txt_admin = findViewById(R.id.txt_admin);
-        txt_admin.setText("관리자: " + mCafe.getAdmin());
+        if (null == mCafe.getAdmin() || "".equals(mCafe.getAdmin())) {
+            txt_admin.setVisibility(View.INVISIBLE);
+        } else {
+            txt_admin.setText("관리자: " + mCafe.getAdmin());
+        }
 
         ll_notice  = findViewById(R.id.ll_notice);
         notice_linearlayout = findViewById(R.id.notice_linearlayout);
@@ -277,7 +282,9 @@ public class CafeDetailActivity extends BaseActivity {
                 String cateseqs = "";
                 String additions = "";
 
-                additions = mCafe.getAdditions();
+                if (null != mCafe.getAdditions()) {
+                    additions = mCafe.getAdditions();
+                }
                 if (null != mCate && mCate.size() > 0) {
                     int idx = 0;
                     catenames += "분류(부서)를 선택하세요#@#";
@@ -293,7 +300,7 @@ public class CafeDetailActivity extends BaseActivity {
 
                 if ("".equals(additions) && "".equals(cateseqs)) {
                     // 부서 정보와 추가 정보가 없으면 바로 카페 가입
-                    toast("바로가입");
+                    join();
                 } else {
                     /*Bundle bu = new Bundle();
                     bu.putSerializable("cafeseq", mCafe.getCafeseq());
@@ -520,6 +527,53 @@ public class CafeDetailActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<CafeNoticeList> call, Throwable t) {
+                closeSpinner();
+                LogUtils.err(TAG, t);
+                toast(R.string.warn_server_not_smooth);
+            }
+        });
+    }
+
+    private void join() {
+        showSpinner("");
+        AppUserBase user = DataHolder.instance().getAppUserBase() ;
+        Map<String, Object> query = KUtil.getDefaultQueryMap();
+        query.put("user_seq",user.getUser_seq() );
+        query.put("cafeseq", mCafeseq);
+
+        Call<ResponseBase> call =
+                new DefaultRestClient<CafeService>(this)
+                        .getClient(CafeService.class).join(query);
+
+        call.enqueue(new Callback<ResponseBase>() {
+            @Override
+            public void onResponse(Call<ResponseBase> call, Response<ResponseBase> response) {
+                LogUtils.err(TAG, response.raw().toString());
+                if(response.isSuccessful()){
+                    ResponseBase base = response.body();
+                    if(base.isSuccess()) {
+                        toast(R.string.warn_cafe_success_join);
+                        //finish();
+
+                        Intent intent = new Intent() ;
+                        setResult(RESULT_OK, intent);
+                        finish();
+
+                        /*Bundle bu = new Bundle();
+                        bu.putSerializable("_CAFEMAIN_ACTIVITY_", "GOCAFEMAIN");
+                        callActivity2(MainActivity.class, bu,true);*/
+                    }else{
+                        toast(R.string.warn_cafe_fail_join);
+                    }
+                }else{
+                    toast(R.string.warn_cafe_fail_join);
+                }
+
+                closeSpinner();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBase> call, Throwable t) {
                 closeSpinner();
                 LogUtils.err(TAG, t);
                 toast(R.string.warn_server_not_smooth);

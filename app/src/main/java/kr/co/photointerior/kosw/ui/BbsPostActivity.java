@@ -2,6 +2,9 @@ package kr.co.photointerior.kosw.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -81,7 +84,13 @@ public class BbsPostActivity extends BaseActivity {
         String content = et_content.getText().toString();
 
         if (null == content || "".equals(content)) {
+            closeSpinner();
             toast(R.string.warn_cafe_bbs_content_empty);
+            return;
+        } if (content.length() > 1000) {
+            closeSpinner();
+            toast("글쓰기는 1000자를 넘길 수 없습니다.");
+            et_content.setText(content.substring(0, 1000));
             return;
         }
 
@@ -114,6 +123,8 @@ public class BbsPostActivity extends BaseActivity {
                 }else{
                     toast(R.string.warn_cafe_fail_bbs_write);
                 }
+
+                closeSpinner();
             }
 
             @Override
@@ -131,7 +142,13 @@ public class BbsPostActivity extends BaseActivity {
         String content = et_content.getText().toString();
 
         if (null == content || "".equals(content)) {
+            closeSpinner();
             toast(R.string.warn_cafe_bbs_content_empty);
+            return;
+        } else if (content.length() > 200) {
+            closeSpinner();
+            toast("댓글쓰기는 200자를 넘길 수 없습니다.");
+            et_content.setText(content.substring(0, 200));
             return;
         }
 
@@ -162,15 +179,22 @@ public class BbsPostActivity extends BaseActivity {
                 }else{
                     toast(R.string.warn_cafe_fail_comment_write);
                 }
+
+                closeSpinner();
             }
 
-            @Override
-            public void onFailure(Call<ResponseBase> call, Throwable t) {
-                LogUtils.err(TAG, t);
-                toast(R.string.warn_server_not_smooth);
-            }
-        });
+
+
+    @Override
+    public void onFailure(Call<ResponseBase> call, Throwable t) {
+        LogUtils.err(TAG, t);
+        closeSpinner();
+        toast(R.string.warn_server_not_smooth);
     }
+});
+        }
+
+
 
     @Override
     protected void onStart() {

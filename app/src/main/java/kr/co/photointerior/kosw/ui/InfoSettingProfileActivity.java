@@ -343,12 +343,20 @@ public class InfoSettingProfileActivity extends BaseUserActivity {
             map.put("deptSeq", mProfile.getDepartSeq());
         }
 
+        if (null == map.get("charSeq") || null == map.get("charCode")) {
+            toast("캐릭터 선택을 해주세요.");
+            return;
+        }
+
+        //Log.d("DDDDDD", map.get("charSeq") + "__" + map.get("charCode") + "____" + map.get("deptSeq") + "___" + map.get("nick"));
+
         if (mNickOpen.isChecked()) {
             map.put("show_nickname", "Y");
         }else{
             map.put("show_nickname", "N");
         }
         LogUtils.log("nick change", map);
+
         Call<ResponseBase> call =
                 new DefaultRestClient<UserService>(getBaseContext())
                         .getClient(UserService.class)
@@ -357,8 +365,10 @@ public class InfoSettingProfileActivity extends BaseUserActivity {
             @Override
             public void onResponse(Call<ResponseBase> call, Response<ResponseBase> response) {
                 LogUtils.err(TAG, response.raw().toString());
+
                 if(response.isSuccessful()){
                     ResponseBase result = response.body();
+
                     if(result.isSuccess()){
                         alertSaved(nick);
                     }else{

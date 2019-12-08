@@ -2,6 +2,8 @@ package kr.co.photointerior.kosw.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.ImageView;
 
 import java.util.Map;
@@ -72,7 +74,13 @@ public class CafeNoticePostActivity extends BaseActivity {
         String content = et_content.getText().toString();
 
         if (null == content || "".equals(content)) {
+            closeSpinner();
             toast(R.string.warn_cafe_bbs_content_empty);
+            return;
+        } else if (content.length() > 1000) {
+            closeSpinner();
+            toast("글쓰기는 1000자를 넘길 수 없습니다.");
+            et_content.setText(content.substring(0, 1000));
             return;
         }
 

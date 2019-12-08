@@ -39,10 +39,12 @@
     <string name="warn_depart_error">ⓘ 부서를 찾을 수 없습니다.</string>
     <string name="warn_required_company">ⓘ 회사를 선택해주세요.</string>
     <string name="warn_required_depart">ⓘ 부서를 선택해주세요.</string>
-    <string name="warn_email">ⓘ 이메일 주소를 정확히 입력해주세요..</string>
+    <string name="warn_email">ⓘ 이메일 주소를 정확히 입력해주세요.</string>
     <string name="warn_phone">ⓘ 연락처를 다시 확인해주세요..</string>
     <string name="warn_password">ⓘ 패스워드는 8\-16글자로 입력해주세요.</string>
     <string name="warn_password_mismatch">ⓘ 패스워드가 일치하지 않습니다.</string>
+    <string name="warn_kakao">ⓘ 카카오 로그인에 실패하였습니다.</string>
+    <string name="warn_kakao_insufficient">ⓘ 카카오 로그인에 실패하였습니다. (닉네임, 이메일 정보 부족)</string>
     <string name="warn_name">ⓘ 이름을 입력해주세요.</string>
     <string name="warn_input">ⓘ 내용을 입력해주세요.</string>
     <string name="warn_depart">ⓘ 부서를 선택해주세요.</string>
@@ -107,7 +109,7 @@
     <string name="warn_cafe_fail_notice_delete">공지사항 삭제를 실패하였습니다.\n다시 시도해주세요.</string>
     <string name="warn_cafe_fail_category_edit">분류정보 수정을 실패하였습니다.\n다시 시도해주세요.</string>
     <string name="warn_cafe_bbs_content_empty">작성된 내용이 없습니다.</string>
-    <string name="warn_cafe_fail_comment_write">내용이 너무 길어 저장할 수 없습니다. \n다시 시도해주세요.</string>
+    <string name="warn_cafe_fail_comment_write">댓글 작성을 실패했습니다. \n다시 시도해주세요.</string>
     <string name="warn_cafe_member_fail_kick">회원 강퇴를 실패하였습니다.\n다시 시도해주세요.</string>
     <string name="warn_cafe_out">카페 탈퇴를 실패하였습니다.\n다시 시도해주세요.</string>
     <string name="warn_my_cafe_not_exists">가입한 카페가 없습니다.</string>

@@ -610,6 +610,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                 mSpinnerDialog.dismiss();
             }
             mSpinnerDialog = new ProgressSpinnerDialog(this, msg);
+            mSpinnerDialog.setCancelable(false);
+            mSpinnerDialog.setCanceledOnTouchOutside(false);
             mSpinnerDialog.show();
         }
     }

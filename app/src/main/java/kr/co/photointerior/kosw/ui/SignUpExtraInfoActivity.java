@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 
 import com.bumptech.glide.Glide;
 
@@ -44,6 +45,7 @@ import retrofit2.Response;
 public class SignUpExtraInfoActivity extends BaseActivity {
     private String TAG = LogUtils.makeLogTag(SignUpExtraInfoActivity.class);
     private AppUser mAppUser;
+    private CheckBox mNickOpen;
     private RecyclerView mRecyclerView;
     private CharAdapter mAdapter;
     /** 기본 캐릭터 리스트 */
@@ -69,6 +71,8 @@ public class SignUpExtraInfoActivity extends BaseActivity {
         mRecyclerView.setLayoutManager(
                 new LinearLayoutManager(this,
                         LinearLayoutManager.HORIZONTAL, false));
+
+        mNickOpen = findViewById(R.id.check_privacy_open);
     }
 
     private void setNickName(){
@@ -84,6 +88,16 @@ public class SignUpExtraInfoActivity extends BaseActivity {
         getView(R.id.btn_start).setOnClickListener(listener);
         getView(R.id.btn_next).setOnClickListener(listener);
         getEditText(R.id.input_nickname).setOnEditorActionListener(mEditorAtionListener);
+
+        findViewById(R.id.check_privacy_open).setOnClickListener(v->{
+            if (mNickOpen.isChecked()) {
+                // TODO : CheckBox is checked.
+                mNickOpen.setChecked(true);
+            } else {
+                // TODO : CheckBox is unchecked.
+                mNickOpen.setChecked(false);
+            }
+        });
     }
 
     @Override
@@ -116,6 +130,13 @@ public class SignUpExtraInfoActivity extends BaseActivity {
 
         Map<String, Object> query = mAppUser.createCharacterQueryMap();
         query.put("deptSeq", (mAppUser.getDepart() != null ? mAppUser.getDepart().getDepartSeq() : "null"));
+
+        if (mNickOpen.isChecked()) {
+            query.put("show_nickname", "Y");
+        }else{
+            query.put("show_nickname", "N");
+        }
+
         LogUtils.log(query);
         //query.put("token", "ubwsFctayocWGRPvmQ2q8P1WgwAWRZnHGelQhUllkTx4HPaXkuNU6UW7Zy1nz68l");
         Call<ResponseBase> call =
@@ -213,6 +234,8 @@ public class SignUpExtraInfoActivity extends BaseActivity {
 
     @Override
     protected void setInitialData() {
+        mNickOpen.setChecked(true);
+
         //서버에서 기본 캐릭터 선택
         UserService service = new DefaultRestClient<UserService>(getBaseContext()).getClient(UserService.class);
         Call<AppUserBase> call = service.getDefaultCharacter(KUtil.getDefaultQueryMap());

@@ -216,7 +216,8 @@ public class LoginActivity extends BaseUserActivity {
 
                         tryKakaoLogin(openid, email, nickname);
                     } catch (Exception ex) {
-                        toast("카카오에서 획득한 정보가 부족하여, 로그인할 수 없습니다.");
+                        //toast("카카오에서 획득한 정보가 부족하여, 로그인할 수 없습니다.");
+                        showWarn(R.id.input_warn, R.string.warn_kakao_insufficient);
                     }
                 }
 
@@ -232,7 +233,8 @@ public class LoginActivity extends BaseUserActivity {
             if (exception != null) {
                 Logger.e(exception);
                 //toast("카카오 로그인에 실패하였습니다.");
-                toast("카카오 로그인에 실패하였습니다.  " + exception.toString());
+                //toast("카카오 로그인에 실패하였습니다.  " + exception.toString());
+                showWarn(R.id.input_warn, R.string.warn_kakao);
                 //Toast.makeText(getApplicationContext(), exception.toString(), Toast.LENGTH_LONG).show();
             }
         }

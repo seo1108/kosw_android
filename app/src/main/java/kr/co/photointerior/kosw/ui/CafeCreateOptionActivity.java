@@ -208,6 +208,7 @@ public class CafeCreateOptionActivity extends BaseActivity {
 
     @Multipart
     private void createCafe() {
+        showSpinner("");
         // 카페명
         String cafename = mCafename;
         // 카페설명
@@ -221,9 +222,18 @@ public class CafeCreateOptionActivity extends BaseActivity {
         // 로고 파일명
         String file = "";
 
+        boolean lengthLimit = false;
+
         additions = et_cate_user_title.getText().toString();
 
         category = et_cate_title.getText().toString();
+
+        if (null != additions && additions.length() > 50) {
+            closeSpinner();
+            toast("사용자추가 분류명은 50자를 넘길 수 없습니다.");
+            et_cate_user_title.setText(additions.substring(0, 50));
+            return;
+        }
 
 
         for (int i = 0; i < mCategoryIndex; i++) {
@@ -232,6 +242,11 @@ public class CafeCreateOptionActivity extends BaseActivity {
             if (null != et) {
                 if (et.isShown()) {
                     if (null != et.getText().toString() && !"".equals(et.getText().toString().trim())) {
+                        if (et.getText().toString().length() > 50) {
+                            lengthLimit = true;
+                        }
+
+
                         if ("".equals(category)) {
                             if (i == 0) {
                                 category += et.getText().toString();
@@ -247,8 +262,14 @@ public class CafeCreateOptionActivity extends BaseActivity {
             }
         }
 
+        if (lengthLimit) {
+            closeSpinner();
+            toast("부서명은 50자를 넘길 수 없습니다.");
+            return;
+        }
 
-        showSpinner("");
+
+
         AppUserBase user = DataHolder.instance().getAppUserBase() ;
         Map<String, Object> query = KUtil.getDefaultQueryMap();
         query.put("user_seq",user.getUser_seq() );
