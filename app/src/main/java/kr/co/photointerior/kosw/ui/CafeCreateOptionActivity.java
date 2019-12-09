@@ -307,19 +307,25 @@ public class CafeCreateOptionActivity extends BaseActivity {
                     if (base.isSuccess()) {
                         // 카페 생성 성공시
                         toast(R.string.cafe_create_success);
-
+                        closeSpinner();
                         Bundle bu = new Bundle();
                         bu.putSerializable("_CAFEMAIN_ACTIVITY_", "GOCAFEMAIN");
 
                         callActivity2(MainActivity.class, bu,true);
+
+
                     } else {
                         toast(R.string.warn_cafe_fail);
+
+                        closeSpinner();
                     }
                 } else {
                     toast(R.string.warn_cafe_fail);
+
+                    closeSpinner();
                 }
 
-                closeSpinner();
+
             }
 
             @Override
