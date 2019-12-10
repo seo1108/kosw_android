@@ -488,8 +488,8 @@ public class StepThread extends Thread {
 
         if (!isContinue) {
             // 90도(135?) 에서 180도(190으로 버퍼를 둠)로 변경
-            //if (mDir > 135 && Math.abs(gapAlitude) > 1.5  ) {
-            if (mDir > 190 && Math.abs(gapAlitude) > 1.5) {
+            if (mDir > 135 && Math.abs(gapAlitude) > 1.5  ) {
+            //if (mDir > 190 && Math.abs(gapAlitude) > 1.5) {
                 // 자동측정일 경우, 7초 이내 측정이면  카운트 하지 않음 엘리베이터 사용자 걸음
                 // 수동측정은 2초
                 long curTime = System.currentTimeMillis();
