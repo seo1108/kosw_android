@@ -595,7 +595,7 @@ public class StepThread extends Thread {
                             }
 
                             //mSleepCnt = mMaxSleepCnt;
-                            //initMeasure();
+                            initMeasure();
                             return;
                         }
                         goupTime = System.currentTimeMillis() ;
@@ -633,7 +633,7 @@ public class StepThread extends Thread {
                             }
 
                             //mSleepCnt = mMaxSleepCnt;
-                            //initMeasure();
+                            initMeasure();
                             return;
                         }
                         goupTime = System.currentTimeMillis() ;
