@@ -104,7 +104,7 @@ public class CafeJoinActivity extends BaseActivity {
         });
         btn_join = findViewById(R.id.btn_join);
         btn_join.setOnClickListener(v->{
-            if (mNames.size() > 1) {
+            if (null != mNames && mNames.size() > 1) {
                 if (mDeptSpinner.getSelectedItemPosition() == 0) {
                     toast(R.string.txt_cafe_category_select);
                 } else if (!mDeptSpinner.isShown() && "".equals(txt_additions.getText().toString())) {

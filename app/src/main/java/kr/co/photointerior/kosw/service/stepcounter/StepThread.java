@@ -594,9 +594,8 @@ public class StepThread extends Thread {
                                 }
                             }
 
-                            //mSleepCnt++ ;
-                            mSleepCnt = mMaxSleepCnt;
-                            initMeasure();
+                            //mSleepCnt = mMaxSleepCnt;
+                            //initMeasure();
                             return;
                         }
                         goupTime = System.currentTimeMillis() ;
@@ -633,9 +632,8 @@ public class StepThread extends Thread {
                                 }
                             }
 
-                            //mSleepCnt++ ;
-                            mSleepCnt = mMaxSleepCnt;
-                            initMeasure();
+                            //mSleepCnt = mMaxSleepCnt;
+                            //initMeasure();
                             return;
                         }
                         goupTime = System.currentTimeMillis() ;
@@ -1323,11 +1321,12 @@ public class StepThread extends Thread {
                 }
             }
 
+            mSleepCnt = 0;
+
 //            if ("notbuilding".equals(type)) {
 //                return;
 //            }
 
-            mSleepCnt = 0;
 
 //            if ("notbuilding".equals(type)) {
 //
