@@ -35,7 +35,9 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -937,7 +939,7 @@ public class MainFragment extends BaseFragment {
                               mEventUrl = "";
                         }
 
-                        //mEventUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdodoSAZ789W4-MeRylNU8NYBnckhHZbTJUZI0U7h4V66ufYQ/viewform";
+//                        mEventUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdodoSAZ789W4-MeRylNU8NYBnckhHZbTJUZI0U7h4V66ufYQ/viewform";
 
 
 //                        if (!"".equals(mEventUasdrl)) {
@@ -1015,17 +1017,12 @@ public class MainFragment extends BaseFragment {
         int i_curdate = Integer.parseInt(curdate);
         int i_lastopendate = Integer.parseInt(lastopendate);
 
-        EventDialog dialog = new EventDialog(mActivity, url);
-        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.MATCH_PARENT);
-        dialog.show();
-
-/*        if (i_curdate > i_lastopendate) {
+        if (i_curdate > i_lastopendate) {
             EventDialog dialog = new EventDialog(mActivity, url);
-            dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
-                    WindowManager.LayoutParams.MATCH_PARENT);
+//            dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+//                    WindowManager.LayoutParams.MATCH_PARENT);
             dialog.show();
-        } */
+        }
     }
 
 
