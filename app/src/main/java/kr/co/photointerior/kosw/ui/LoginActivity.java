@@ -210,11 +210,22 @@ public class LoginActivity extends BaseUserActivity {
                         .getProfileImagePath());
                 redirectMainActivity();*/
                     try {
-                        String openid = String.valueOf(response.getId());
-                        String nickname = response.getNickname();
-                        String email = response.getKakaoAccount().getEmail();
+                        Long l_id = response.getId();
+                        if (null == response) {
+                            showWarn(R.id.input_warn, R.string.warn_kakao_insufficient);
+                        } else if (null == l_id) {
+                            showWarn(R.id.input_warn, R.string.warn_kakao_insufficient);
+                        } else if (null == response.getNickname()) {
+                            showWarn(R.id.input_warn, R.string.warn_kakao_insufficient);
+                        } else if (null == response.getKakaoAccount().getEmail()) {
+                            showWarn(R.id.input_warn, R.string.warn_kakao_insufficient);
+                        } else {
+                            String openid = String.valueOf(response.getId());
+                            String nickname = response.getNickname();
+                            String email = response.getKakaoAccount().getEmail();
 
-                        tryKakaoLogin(openid, email, nickname);
+                            tryKakaoLogin(openid, email, nickname);
+                        }
                     } catch (Exception ex) {
                         //toast("카카오에서 획득한 정보가 부족하여, 로그인할 수 없습니다.");
                         showWarn(R.id.input_warn, R.string.warn_kakao_insufficient);
