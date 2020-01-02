@@ -81,7 +81,7 @@ public class CafeCreateOptionActivity extends BaseActivity {
     private AppUser mAppUser;
 
     private ImageView img_logo, add_cate_btn;
-    private KoswButton btn_change, btn_make_cafe;
+    private KoswButton btn_change, btn_make_cafe, btn_make_cafe_inactive;
     private LinearLayout category_linearlayout;
     private KoswEditText et_cate_title, et_cate_user_title;
     private ImageView btn_back;
@@ -186,9 +186,13 @@ public class CafeCreateOptionActivity extends BaseActivity {
         btn_make_cafe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btn_make_cafe.setVisibility(View.GONE);
+                btn_make_cafe_inactive.setVisibility(View.VISIBLE);
                 createCafe();
             }
         });
+
+        btn_make_cafe_inactive = findViewById(R.id.btn_make_cafe_inactive);
 
 
         btn_back = findViewById(R.id.btn_back);
@@ -316,12 +320,14 @@ public class CafeCreateOptionActivity extends BaseActivity {
 
                     } else {
                         toast(R.string.warn_cafe_fail);
-
+                        btn_make_cafe.setVisibility(View.VISIBLE);
+                        btn_make_cafe_inactive.setVisibility(View.GONE);
                         closeSpinner();
                     }
                 } else {
                     toast(R.string.warn_cafe_fail);
-
+                    btn_make_cafe.setVisibility(View.VISIBLE);
+                    btn_make_cafe_inactive.setVisibility(View.GONE);
                     closeSpinner();
                 }
 

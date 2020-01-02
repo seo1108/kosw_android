@@ -398,6 +398,17 @@ public class StepThread extends Thread {
         }
 
         if (cnt >= 10 * 30 )  {
+            // 30초마다 미전송 데이터 재전송하도록 처리
+            SharedPreferences pref = mContext.getSharedPreferences("unsent", MODE_PRIVATE);
+            int unsent = pref.getInt("unsent", 0);
+
+           // Toast.makeText(mContext, "[미전송] " + unsent, Toast.LENGTH_SHORT).show();
+
+            if (unsent > 0) {
+                sendDataToServer(unsent, "unsent", "");
+            }
+
+
             if (mDebugMode)
             {
                 Toast.makeText(mContext, "30초 초기화", Toast.LENGTH_SHORT).show();
@@ -1308,6 +1319,9 @@ public class StepThread extends Thread {
      */
 
     private void sendDataToServer(int goupAmt, String type, String measure) {
+        SharedPreferences pref = mContext.getSharedPreferences("unsent", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+
         try {
             if (mDebugMode) {
                 if ("notbuilding".equals(type)) {
@@ -1436,7 +1450,8 @@ public class StepThread extends Thread {
                 query.put("cust_name", prefr.getString("cust_name", ""));
                 query.put("build_code", prefr.getString("build_code", ""));
                 query.put("godo", mAltitude);
-                query.put("goup_amt", goupAmt+mUnsentStairCnt);
+                //query.put("goup_amt", goupAmt+mUnsentStairCnt);
+                query.put("goup_amt", goupAmt);
                 query.put("curBuildCount", mCurBuildCount);
                 query.put("buildCount", mBuildCount);
                 query.put("isbuild", mIsBuild);
@@ -1474,9 +1489,18 @@ public class StepThread extends Thread {
                                 if (uuid != null && uuid.isSuccess()) {
                                     //broadcastServerResult(uuid);
                                     updateFloorCount(uuid);
-                                    mUnsentStairCnt = 0;
+                                    if ("unsent".equals(type)) {
+                                        mUnsentStairCnt = 0;
+                                        editor.putInt("unsent", mUnsentStairCnt);
+                                        editor.commit();
+                                    }
+//                                    else {
+////                                        mUnsentStairCnt = pref.getInt("unsent", 0);
+////                                    }
                                 } else {
                                     mUnsentStairCnt++;
+                                    editor.putInt("unsent", mUnsentStairCnt);
+                                    editor.commit();
                                     //saveGoUpDataToLocalDb(query, localTime);
                                 }
                                 //sendBeaconLog(beaconUuid, floorDiff, "go up ", goupSentTime);//층간이동 전송 성공하면 로그 전송
@@ -1490,6 +1514,8 @@ public class StepThread extends Thread {
 
                             } else {
                                 mUnsentStairCnt++;
+                                editor.putInt("unsent", mUnsentStairCnt);
+                                editor.commit();
                                 //saveGoUpDataToLocalDb(query, localTime);
                             }
                         }
@@ -1497,11 +1523,15 @@ public class StepThread extends Thread {
                         @Override
                         public void onFailure(Call<BeaconUuid> call, Throwable t) {
                             mUnsentStairCnt++;
+                            editor.putInt("unsent", mUnsentStairCnt);
+                            editor.commit();
                             //saveGoUpDataToLocalDb(query, localTime);
                         }
                     });
                 } else {
                     mUnsentStairCnt++;
+                    editor.putInt("unsent", mUnsentStairCnt);
+                    editor.commit();
                     //saveGoUpDataToLocalDb(query, localTime);
                 }
 
@@ -1512,9 +1542,15 @@ public class StepThread extends Thread {
 
             } catch (Exception e) {
                 Toast.makeText(mContext, e.toString(), Toast.LENGTH_SHORT);
+                mUnsentStairCnt++;
+
+                editor.putInt("unsent", mUnsentStairCnt);
+                editor.commit();
             }
         }catch (Exception ex) {
-
+            mUnsentStairCnt++;
+            editor.putInt("unsent", mUnsentStairCnt);
+            editor.commit();
         }
     }
 

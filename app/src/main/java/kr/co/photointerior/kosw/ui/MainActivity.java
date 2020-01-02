@@ -1163,54 +1163,28 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 call.enqueue(new Callback<BeaconUuid>() {
                     @Override
                     public void onResponse(Call<BeaconUuid> call, Response<BeaconUuid> response) {
-                        /*
-                        if (isReddot) {
-                            mReddotStack.clear();
-                        }
-                        */
-                        LogUtils.e(TAG, "success-data response raw:" + response.raw().toString());
                         if (response.isSuccessful()) {
-                            LogUtils.e(TAG, "success-data response body:" + response.body().string());
-                            mTv_log.setText("success-data ");
-
                             BeaconUuid uuid = response.body();
                             if (uuid != null && uuid.isSuccess()) {
                                 broadcastServerResult(uuid);
-                                mTv_log.setText("broadcastServer ");
 
+                                SharedPreferences pref = getSharedPreferences("unsent", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = pref.edit();
+                                editor.putInt("unsent", 0);
+                                editor.commit();
                             } else {
-                                mTv_log.setText("broadcast fail_data ");
-
-                                saveGoUpDataToLocalDb(query, localTime);
                             }
-                            //sendBeaconLog(beaconUuid, floorDiff, "go up ", goupSentTime);//층간이동 전송 성공하면 로그 전송
                         } else {
-                            mTv_log.setText(" fail_data ");
-
-                            saveGoUpDataToLocalDb(query, localTime);
                         }
                     }
 
                     @Override
                     public void onFailure(Call<BeaconUuid> call, Throwable t) {
-                        /*
-                        if (isReddot) {
-                            mReddotStack.clear();
-                        }
-                        */
-                        saveGoUpDataToLocalDb(query, localTime);
-                        //sendServiceLog("goup_err:" + Log.getStackTraceString(t));
-                        mTv_log.setText("save error ");
-
                     }
                 });
             } else {
-                saveGoUpDataToLocalDb(query, localTime);
             }
         } catch (Exception e) {
-
-            mTv_log.setText("logic error ");
-            sendServiceLog("goup_err:" + Log.getStackTraceString(e));
         }
     }
 

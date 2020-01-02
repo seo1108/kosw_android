@@ -345,4 +345,21 @@
         android:textSize="@dimen/sp_16"
         android:layout_alignParentBottom="true"
         app:layout_constraintTop_toBottomOf="@+id/sv" />
+
+    <kr.co.photointerior.kosw.widget.KoswButton
+        android:id="@+id/btn_make_cafe_inactive"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/button_border_1a1a1a"
+        android:text="@string/txt_make_cafe_ing"
+        android:textColor="@color/text_btn_click"
+        android:textSize="@dimen/sp_16"
+        android:layout_alignParentBottom="true"
+        app:layout_constraintTop_toBottomOf="@+id/sv"
+        android:visibility="gone"/>
 </RelativeLayout>
