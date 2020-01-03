@@ -1541,7 +1541,7 @@ public class StepThread extends Thread {
                 }
 
             } catch (Exception e) {
-                Toast.makeText(mContext, e.toString(), Toast.LENGTH_SHORT);
+                //Toast.makeText(mContext, e.toString(), Toast.LENGTH_SHORT);
                 mUnsentStairCnt++;
 
                 editor.putInt("unsent", mUnsentStairCnt);
