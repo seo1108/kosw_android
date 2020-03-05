@@ -1323,6 +1323,14 @@ public class StepThread extends Thread {
         SharedPreferences.Editor editor = pref.edit();
 
         try {
+            // 등산 오르기 측정시, 리턴
+            if ("notbuilding".equals(type)) {
+                mSleepCnt = 0;
+                initMeasure();
+                return;
+            }
+
+
             if (mDebugMode) {
                 if ("notbuilding".equals(type)) {
                     Toast.makeText(mContext, "[등산 오르기] " + measure, Toast.LENGTH_SHORT).show();
