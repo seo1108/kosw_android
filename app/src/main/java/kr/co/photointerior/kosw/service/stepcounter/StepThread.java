@@ -16,10 +16,12 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.PowerManager;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
@@ -1743,9 +1745,9 @@ public class StepThread extends Thread {
             NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
             notificationManager.notify(AppConst.NOTIFICATION_ID, builder.build());
 
-            Toast.makeText(mContext, "상태바1", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(mContext, "상태바1", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(mContext, "상태바2", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(mContext, "상태바2", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -1761,6 +1763,7 @@ public class StepThread extends Thread {
         return false;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
     public boolean isAppOnForeground() {
         ActivityManager activityManager = (ActivityManager) mContext.getSystemService(ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();

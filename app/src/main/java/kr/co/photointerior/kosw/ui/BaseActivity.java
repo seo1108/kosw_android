@@ -23,6 +23,7 @@ import android.os.PowerManager;
 import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
@@ -389,6 +390,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param bundle Activity를 호출할 때 넘겨줄 데이터
      * @param finishCaller 호출한 Activity를 종료할지 여부
      */
+    @RequiresApi(api = Build.VERSION_CODES.ECLAIR)
     public void callActivity(Class<?> clz, @Nullable Bundle bundle, boolean finishCaller){
         Intent it = new Intent(getBaseContext(), clz);
         if( bundle != null ){

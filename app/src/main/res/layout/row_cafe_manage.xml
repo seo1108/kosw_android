@@ -62,7 +62,7 @@
         android:id="@+id/box_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/top_btn_box"
+
         android:layout_marginTop="15dp"
         android:background="@drawable/button_border_bottom_cccccc"
         app:layout_constraintEnd_toEndOf="parent"

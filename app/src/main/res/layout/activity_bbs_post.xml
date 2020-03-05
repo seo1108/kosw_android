@@ -84,8 +84,7 @@
         android:layout_marginTop="70dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/title_signup">
+        android:orientation="vertical">
 
         <kr.co.photointerior.kosw.widget.KoswEditText
             android:id="@+id/et_content"
