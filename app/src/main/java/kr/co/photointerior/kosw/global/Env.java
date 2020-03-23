@@ -171,6 +171,8 @@ public class Env {
         ACTIVITY_ANALYSIS(500),
         /** 개인 랭킹 */
         RANKING_INDIVIDUAL(600),
+        /** 개인 랭킹 */
+        RANKING_WALK_INDIVIDUAL(602),
         /** 그룹 랭킹 */
         RANKING_GROUP(601),
         /** 그룹 랭킹 */

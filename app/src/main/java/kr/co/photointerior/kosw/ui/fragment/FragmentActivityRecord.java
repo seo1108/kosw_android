@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -67,6 +68,9 @@ public class FragmentActivityRecord extends BaseFragment {
     @Override
     public void requestToServer() {
         Map<String, Object> query = KUtil.getDefaultQueryMap();
+        Log.d("TTTTTTTTTTTTTTTTTT", query.get("token").toString());
+        Log.d("TTTTTTTTTTTTTTTTTT", query.get("device").toString());
+        Log.d("TTTTTTTTTTTTTTTTTT", query.get("buildCode").toString());
         Call<ActivityRecord> call =
                 new DefaultRestClient<UserService>(mActivity).getClient(UserService.class)
                     .getActivityRecords(query);
@@ -105,12 +109,14 @@ public class FragmentActivityRecord extends BaseFragment {
     private void setActivityData(){
         TextView period = getView(R.id.txt_activity_period);
         RowActivityRecord totalFloor = getView(R.id.row_record_floor);
+        RowActivityRecord totalWalk = getView(R.id.row_record_walk);
         RowActivityRecord totalCalorie = getView(R.id.row_record_calorie);
         RowActivityRecord totalLife = getView(R.id.row_record_life);
         Record total = mActivityRecord.getTotalRecord();
         LogUtils.err(TAG, "total : " + total.string());
         period.setText(total.getStartDate().concat("~").concat(total.getEndDate()));
         totalFloor.setRecordAmount(StringUtil.format(total.getAmountToFloat(), "#,##0"));
+        totalWalk.setRecordAmount(StringUtil.format(total.getWalkAmountToFloat(), "#,##0"));
         totalCalorie.setRecordAmount(KUtil.calcCalorie(total.getAmountToFloat(), total.getStairAmountToFloat()));
         totalLife.setRecordAmount(KUtil.calcLife(total.getAmountToFloat(), total.getStairAmountToFloat()));
     }
@@ -174,16 +180,20 @@ public class FragmentActivityRecord extends BaseFragment {
                 holder.floor.setText(StringUtil.format(item.getStair_amtToFloat(), "#,##0"));
                 holder.calorie.setText(KUtil.calcCalorieDefault(item.getStair_amtToFloat()) );
                 holder.life.setText(KUtil.calcLifeDefault(item.getStair_amtToFloat()) );
+
+                holder.ll_walk.setVisibility(View.GONE);
             } else {
                 Record item = mList.get(position - clubCount);
                 if(position == clubCount ) {
                     holder.title.setText("매일평균");
                 }else if(position== clubCount + 1){
-                    holder.title.setText("최고기록 ".concat(item.getDate("yyyy.MM.dd")));
+                    holder.title.setText("최고기록 (".concat(item.getDate("yyyy.MM.dd") + "/" + item.getWalkDate("yyyy.MM.dd")) + ")");
                 }else{
                     holder.title.setText(item.getDate("yyyy.MM.dd"));
                 }
+
                 holder.floor.setText(StringUtil.format(item.getAmountToFloat(), "#,##0"));
+                holder.walk.setText(StringUtil.format(item.getWalkAmountToFloat(), "#,##0"));
                 holder.calorie.setText(KUtil.calcCalorie(item.getAmountToFloat(), item.getStairAmountToFloat()));
                 holder.life.setText(KUtil.calcLife(item.getAmountToFloat(), item.getStairAmountToFloat()));
             }
@@ -211,8 +221,10 @@ public class FragmentActivityRecord extends BaseFragment {
             private View topLine;
             private TextView title;
             private TextView floor;
+            private TextView walk;
             private TextView calorie;
             private TextView life;
+            private LinearLayout ll_walk;
 
             RowHolder(View view){
                 super(view);
@@ -223,8 +235,10 @@ public class FragmentActivityRecord extends BaseFragment {
                 topLine = itemView.findViewById(R.id.top_line);
                 title = itemView.findViewById(R.id.txt_title);
                 floor = itemView.findViewById(R.id.amt_floor);
+                walk = itemView.findViewById(R.id.amt_walk);
                 calorie = itemView.findViewById(R.id.amt_calorie);
                 life = itemView.findViewById(R.id.amt_health);
+                ll_walk = itemView.findViewById(R.id.ll_walk);
             }
         }
     }

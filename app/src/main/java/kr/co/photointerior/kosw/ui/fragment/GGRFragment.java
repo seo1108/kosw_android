@@ -44,6 +44,7 @@ public class GGRFragment extends BaseFragment {
 
     private int[] mBtnResId = {
       R.id.btn1101,
+      R.id.btn1104,
       R.id.btn1102,
       R.id.btn1103
     };
@@ -138,6 +139,11 @@ public class GGRFragment extends BaseFragment {
                 ggrList = mGGRList.getGoldList();
             }
         }
+        if (mSelectedBtnId == R.id.btn1104) {
+            if (mGGRList != null && mGGRList.getWalkList() != null) {
+                ggrList = mGGRList.getWalkList();
+            }
+        }
         if (mSelectedBtnId == R.id.btn1102) {
             if (mGGRList != null && mGGRList.getGreenList() != null) {
                 ggrList = mGGRList.getGreenList();
@@ -194,7 +200,11 @@ public class GGRFragment extends BaseFragment {
                 Double sec = Double.valueOf(ggrRow.getAct_sec()) / 10000.0 ;
                 holder.tv1103.setText(StringUtil.format( sec ,"#,##0.00") +"초/층");
             } else{
-                holder.tv1103.setText(StringUtil.format( Double.valueOf(ggrRow.getAct_amt()),"#,##0") +"F");
+                if (mSelectedBtnId != R.id.btn1104 ) {
+                    holder.tv1103.setText(StringUtil.format(Double.valueOf(ggrRow.getAct_amt()), "#,##0") + "F");
+                } else {
+                    holder.tv1103.setText(StringUtil.format(Double.valueOf(ggrRow.getAct_amt()), "#,##0") + "걸음");
+                }
             }
         }
 

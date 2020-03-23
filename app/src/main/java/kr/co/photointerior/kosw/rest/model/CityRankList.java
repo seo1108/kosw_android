@@ -16,6 +16,8 @@ public class CityRankList extends ResponseBase {
     private List<CityRank> aList;
     @SerializedName("K")
     private List<CityRank> kList;
+    @SerializedName("WALK")
+    private List<CityRank> walkList;
 
     public List<CityRank> getwList() {
         return wList;
@@ -39,5 +41,13 @@ public class CityRankList extends ResponseBase {
 
     public void setkList(List<CityRank> kList) {
         this.kList = kList;
+    }
+
+    public List<CityRank> getWalkList() {
+        return walkList;
+    }
+
+    public void setWalkList(List<CityRank> walkList) {
+        this.walkList = walkList;
     }
 }

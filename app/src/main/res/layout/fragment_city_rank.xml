@@ -11,8 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_40"
         android:orientation="horizontal"
-        android:visibility="gone"
-        android:weightSum="3">
+        android:weightSum="2">
 
         <Button
             android:id="@+id/btn1101"
@@ -24,7 +23,8 @@
             android:text="@string/txt_city_ranking_world"
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/sp_15"
-            android:textStyle="bold"/>
+            android:visibility="gone"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/btn1102"
@@ -37,6 +37,7 @@
             android:text="@string/txt_city_ranking_asia"
             android:textColor="@color/color_545454"
             android:textSize="@dimen/sp_15"
+            android:visibility="gone"
             android:textStyle="bold"/>
 
         <Button
@@ -48,6 +49,32 @@
             android:background="@color/color_cccccc"
             android:gravity="center"
             android:text="@string/txt_city_rankingr_korea"
+            android:textColor="@color/color_545454"
+            android:visibility="gone"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold"/>
+
+        <Button
+            android:id="@+id/btn1104"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/color_1a1a1a"
+            android:gravity="center"
+            android:text="@string/txt_ggr_gold"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btn1105"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="1dp"
+            android:layout_weight="1"
+            android:background="@color/color_cccccc"
+            android:gravity="center"
+            android:text="@string/txt_ggr_walk"
             android:textColor="@color/color_545454"
             android:textSize="@dimen/sp_15"
             android:textStyle="bold"/>
@@ -62,7 +89,7 @@
         android:layout_marginRight="@dimen/dp_14"
         android:background="@drawable/button_border_bottom_cccccc"
         android:orientation="horizontal"
-        android:weightSum="4">
+        >
 
         <kr.co.photointerior.kosw.widget.KoswTextView
             android:id="@+id/tv2101"
@@ -89,7 +116,7 @@
 
         <kr.co.photointerior.kosw.widget.KoswTextView
             android:id="@+id/tv2103"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.8"
             android:gravity="center"
@@ -107,7 +134,7 @@
             android:text="국가명"
             android:textAlignment="center"
             android:textSize="15sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
     </LinearLayout>
 

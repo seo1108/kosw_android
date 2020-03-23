@@ -178,6 +178,14 @@ public interface UserService {
     Call<ActivityRecord> getRankingPrivate(@QueryMap Map<String, Object> queryMap);
 
     /**
+     * 개인랭킹
+     * @param queryMap
+     * @return
+     */
+    @POST("api/user/rankingWalkPrivate")
+    Call<ActivityRecord> getRankingWalkPrivate(@QueryMap Map<String, Object> queryMap);
+
+    /**
      * 그룹랭킹
      * @param queryMap
      * @return

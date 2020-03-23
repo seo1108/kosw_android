@@ -48,5 +48,6 @@ public enum PrefKey {
     OPEN_ID,
     LOGIN_TYPE,
     /**백그라운드 실행 여부 Flag*/
-    AUTO_TRACKING_FLAG
+    AUTO_TRACKING_FLAG,
+    USER_SEQ
 }

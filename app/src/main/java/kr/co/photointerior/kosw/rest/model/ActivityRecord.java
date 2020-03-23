@@ -36,10 +36,15 @@ public class ActivityRecord extends ResponseBase {
     /** 개인 활동 분석 */
     @SerializedName("analysis_data")
     private List<Record> analysisRecords;
+    @SerializedName("analysis_walk_data")
+    private List<Record> analysisWalkRecords;
     @SerializedName("analysis_ranking")
     private String analysisRanking;
     @SerializedName("analysis_total")
     private String analysisTotal;
+    @SerializedName("analysis_walk_total")
+    private String analysisWalkTotal;
+
 
     /** 개인 랭킹 */
     @SerializedName("todayRank")
@@ -130,6 +135,14 @@ public class ActivityRecord extends ResponseBase {
         this.analysisRecords = analysisRecords;
     }
 
+    public List<Record> getAnalysisWalkRecords() {
+        return analysisWalkRecords;
+    }
+
+    public void setAnalysisWalkRecords(List<Record> analysisWalkRecords) {
+        this.analysisWalkRecords = analysisWalkRecords;
+    }
+
     /**
      * 분석 랭킹
      * @return
@@ -157,6 +170,16 @@ public class ActivityRecord extends ResponseBase {
     }
     public void setAnalysisTotal(String analysisTotal) {
         this.analysisTotal = analysisTotal;
+    }
+
+    public String getAnalysisWalkTotal() {
+        return analysisWalkTotal;
+    }
+    public int getAnalysisWalkTotalToInt(){
+        return StringUtil.isEmptyOrWhiteSpace(getAnalysisWalkTotal()) ? 0 : Float.valueOf(getAnalysisWalkTotal()).intValue();
+    }
+    public void setAnalysisWalkTotal(String analysisWalkTotal) {
+        this.analysisWalkTotal = analysisWalkTotal;
     }
 
     public Record getTodayRank() {

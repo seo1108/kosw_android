@@ -71,8 +71,8 @@ public class ServiceThread extends Thread {
     private static final int REQUEST_OAUTH_REQUEST_CODE = 1;
     private static String todayFloor = "0";
     private static String todayStep = "0";
-
-
+    int mWalkinfInfoCnt = 0;
+    int mServiceCnt = 0;
 
     public ServiceThread(Context context){
         mContext = context;
@@ -89,9 +89,6 @@ public class ServiceThread extends Thread {
         while(isRun){
 
             try{
-                int mServiceCnt = 0;
-                int mWalkinfInfoCnt = 0;
-
                 boolean isback = isAppOnForeground();
 
                 Log.d("DDDDDDDDDDDDDDDDD", "isFore : " + isback);
@@ -115,23 +112,39 @@ public class ServiceThread extends Thread {
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Env.Action.APP_IS_BACKGROUND_ACTION.action()));
                 }*/
 
-                // 1시간에 한번씩 전송체크
-                if (mWalkinfInfoCnt > 6) {
+                // 5분에 한번씩 전송체크
+                DateFormat d_dateFormat = new SimpleDateFormat("yyyyMMdd");
+                Calendar cal = Calendar.getInstance();
+                Date now = new Date();
+
+                cal.setTime(now);
+                String today_date = d_dateFormat.format(cal.getTime());
+
+                SharedPreferences prefr = mContext.getSharedPreferences("saveWalkInfo", MODE_PRIVATE);
+                String lastedate = prefr.getString("lastSendDate", "");
+                Log.d("TTTTTTTTTTTTTTTTTTTTT", "SEND WALK DATA CHECK : " + today_date + "___" + lastedate);
+
+                if (mWalkinfInfoCnt > 0) {
                     //requestToServer();
                     // 어제걸음수 전송된 데이터가 없다면 전송
-                    DateFormat d_dateFormat = new SimpleDateFormat("yyyyMMdd");
+                    /*DateFormat d_dateFormat = new SimpleDateFormat("yyyyMMdd");
                     Calendar cal = Calendar.getInstance();
                     Date now = new Date();
                     cal.setTime(now);
-                    String today_date = d_dateFormat.format(cal.getTime());
+                    String today_date = d_dateFormat.format(cal.getTime());*/
 
-                    SharedPreferences prefr = mContext.getSharedPreferences("saveWalkInfo", MODE_PRIVATE);
+                    //prefr = mContext.getSharedPreferences("saveWalkInfo", MODE_PRIVATE);
                     String lastSendDate = prefr.getString("lastSendDate", "");
 
                     if (!today_date.equals(lastSendDate)) {
+                        Log.d("TTTTTTTTTTTTTTTTTTTTT", "SEND");
                         readYesterdayHistoryData();
+
+                        mWalkinfInfoCnt = 0;
                     }
-                    mWalkinfInfoCnt = 0;
+
+
+                    Log.d("DDDDDDDDDDDDDDDDD", "isFore : " + isback);
                 }
 
                 mServiceCnt++;
@@ -161,12 +174,14 @@ public class ServiceThread extends Thread {
 
     public static void saveWalkStep(String date, int walk_count) {
         try {
+            Log.d("TTTTTTTTTTTTTTTTTTTTT", "SEND WALK DATA : " + date + " " + walk_count);
             Map<String, Object> query = KUtil.getDefaultQueryMap();
-            AppUserBase user = DataHolder.instance().getAppUserBase();
+            int user_seq = Pref.instance().getIntValue(PrefKey.USER_SEQ, 0);
+            Log.d("TTTTTTTTTTTTTTTTTTTTT", "USER_SEQ : " + String.valueOf(user_seq));
 
-            if (null == user) return;
+            if (user_seq == 0) return;
 
-            query.put("user_seq", user.getUser_seq());
+            query.put("user_seq", String.valueOf(user_seq));
             query.put("walk_date", date);
             query.put("walk_count", walk_count);
 
@@ -192,13 +207,16 @@ public class ServiceThread extends Thread {
                             SharedPreferences.Editor editor = prefr.edit();
                             editor.putString("lastSendDate", today_date);
                             editor.commit();
+                            Log.d("TTTTTTTTTTTTTTTTTTTTT", "SUCCESS");
                         } else {
+                            Log.d("TTTTTTTTTTTTTTTTTTTTT", "FALIED");
                         }
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBase> call, Throwable t) {
+                    Log.d("TTTTTTTTTTTTTTTTTTTTT", t.toString());
                 }
             });
         } catch (Exception ex) {
@@ -365,6 +383,7 @@ public class ServiceThread extends Thread {
                         new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
+                                Log.d("TTTTTTTTTTTTTTTTTTTTT", e.toString());
                             }
                         });
     }
@@ -431,7 +450,7 @@ public class ServiceThread extends Thread {
 
     // [START parse_dataset]
     private static void dumpYesterdayDataSet(DataSet dataSet) {
-        Log.d("99999999999999", "[99] Data returned for Data type: " + dataSet.getDataType().getName());
+        Log.d("TTTTTTTTTTTTTTTTTTTTT", "[99] Data returned for Data type: " + dataSet.getDataType().getName());
         DateFormat dateFormat = getTimeInstance();
         DateFormat d_dateFormat = new SimpleDateFormat("yyyyMMdd");
         Calendar cal = Calendar.getInstance();
@@ -444,6 +463,7 @@ public class ServiceThread extends Thread {
                 try {
                     saveWalkStep(s_date, Integer.parseInt(dp.getValue(field).toString()));
                 } catch (Exception ex) {
+                    Log.d("TTTTTTTTTTTTTTTTTTTTT", ex.toString());
                 }
 
             }

@@ -142,16 +142,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_below="@+id/menu_analysis"
-                android:layout_marginEnd="@dimen/dp_14"
                 android:layout_marginStart="@dimen/dp_14"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="@dimen/dp_14"
                 app:menuTitle="@string/txt_ranking_private"
+                app:menuTitleColor="@color/color_1a1a1a" />
+
+            <kr.co.photointerior.kosw.widget.MenuRow
+                android:id="@+id/menu_ranking_walk_private"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_below="@+id/menu_ranking_private"
+                android:layout_marginStart="@dimen/dp_14"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="@dimen/dp_14"
+                app:menuTitle="@string/txt_ranking_walk_private"
                 app:menuTitleColor="@color/color_1a1a1a" />
 
             <kr.co.photointerior.kosw.widget.MenuRow
                 android:id="@+id/menu_ranking_group"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
-                android:layout_below="@+id/menu_ranking_private"
+                android:layout_below="@+id/menu_ranking_walk_private"
                 android:layout_marginEnd="@dimen/dp_14"
                 android:layout_marginStart="@dimen/dp_14"
                 app:menuTitle="@string/txt_ranking_group"
@@ -189,6 +201,16 @@
                 app:menuTitle="@string/txt_cafe"
                 app:menuTitleColor="@color/color_1a1a1a" />
 
+            <kr.co.photointerior.kosw.widget.MenuRow
+                android:id="@+id/menu_plus_friend"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_below="@+id/menu_cafe"
+                android:layout_marginStart="@dimen/dp_14"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="@dimen/dp_14"
+                app:menuTitle="@string/txt_kakao_plus_friend"
+                app:menuTitleColor="@color/color_1a1a1a" />
             <!--<LinearLayout
                 android:id="@+id/ll_cafe"
                 android:layout_width="match_parent"

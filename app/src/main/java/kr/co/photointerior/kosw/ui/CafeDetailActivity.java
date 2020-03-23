@@ -231,18 +231,33 @@ public class CafeDetailActivity extends BaseActivity {
                     spinner.setVisibility(View.VISIBLE);
                     Category cate = (Category) parent.getSelectedItem();
                     mSelectedSpinnerItem = cate.getId();
+                    // 계단
                     if ("1".equals(mSelectedSpinnerItem)) {
                         spinner_category.setVisibility(View.GONE);
                         getCafeRankingList();
-                    } else if ("2".equals(mSelectedSpinnerItem)) {
+                    } else if ("3".equals(mSelectedSpinnerItem)) {
                         spinner_category.setVisibility(View.GONE);
                         getCafeRankingByCategortyList();
-                    } else if ("3".equals(mSelectedSpinnerItem)) {
+                    } else if ("5".equals(mSelectedSpinnerItem)) {
                         if (null != mCate && mCate.size() > 0) {
                             spinner_category.setVisibility(View.VISIBLE);
                         }
 
                         getCafeRankingByCategoryIndividualList();
+                    }
+                    // 걸음
+                    else if ("2".equals(mSelectedSpinnerItem)) {
+                        spinner_category.setVisibility(View.GONE);
+                        getCafeRankingListWalk();
+                    } else if ("4".equals(mSelectedSpinnerItem)) {
+                        spinner_category.setVisibility(View.GONE);
+                        getCafeRankingByCategortyListWalk();
+                    } else if ("6".equals(mSelectedSpinnerItem)) {
+                        if (null != mCate && mCate.size() > 0) {
+                            spinner_category.setVisibility(View.VISIBLE);
+                        }
+
+                        getCafeRankingByCategoryIndividualListWalk();
                     }
                 } else {
                     spinner.setVisibility(View.GONE);
@@ -378,8 +393,11 @@ public class CafeDetailActivity extends BaseActivity {
         ArrayList<Category> categoryList = new ArrayList<>();
 
         categoryList.add(new Category("1", getString(R.string.cafe_rank_individual)));
-        categoryList.add(new Category("2", getString(R.string.cafe_rank_category)));
-        categoryList.add(new Category("3", getString(R.string.cafe_rank_cate_indi)));
+        categoryList.add(new Category("2", getString(R.string.cafe_rank_walk_individual)));
+        categoryList.add(new Category("3", getString(R.string.cafe_rank_category)));
+        categoryList.add(new Category("4", getString(R.string.cafe_rank_walk_category)));
+        categoryList.add(new Category("5", getString(R.string.cafe_rank_cate_indi)));
+        categoryList.add(new Category("6", getString(R.string.cafe_rank_walk_cate_indi)));
 
         ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, categoryList);
         spinner.setAdapter(adapter);
@@ -645,6 +663,55 @@ public class CafeDetailActivity extends BaseActivity {
 
     }
 
+    private void getCafeRankingListWalk() {
+        showSpinner("");
+        AppUserBase user = DataHolder.instance().getAppUserBase() ;
+        Map<String, Object> query = KUtil.getDefaultQueryMap();
+        query.put("user_seq",user.getUser_seq() );
+        query.put("cafeseq", mCafeseq);
+        query.put("period", mBtnType);
+
+        Call<CafeRankingList> call =
+                new DefaultRestClient<CafeService>(this)
+                        .getClient(CafeService.class).rankingIndividualWalk(query);
+        call.enqueue(new Callback<CafeRankingList>() {
+            @Override
+            public void onResponse(Call<CafeRankingList> call, Response<CafeRankingList> response) {
+                closeSpinner();
+                LogUtils.err(TAG, response.toString());
+                if (response.isSuccessful()) {
+                    if (null != mAdapter) {
+                        mAdapter.clear();
+                    }
+
+                    if (null == response.body().getList() || response.body().getList().size() == 0) {
+                        toast(R.string.warn_cafe_rank_not_exists);
+                    } else {
+                        mList = response.body().getList();
+                        if (null != response.body().getMine()) {
+                            RankInCafe rankMine = response.body().getMine();
+                            rankMine.setIsmine("Y");
+                            mList.add(0, response.body().getMine());
+                        }
+
+                        mAdapter = new RankingAdapter(getApplicationContext(), mList);
+                        mRecyclerView.setAdapter(mAdapter);
+                        mRecyclerView.setNestedScrollingEnabled(false);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CafeRankingList> call, Throwable t) {
+                closeSpinner();
+                LogUtils.err(TAG, t);
+                toast(R.string.warn_server_not_smooth);
+            }
+        });
+
+    }
+
     private void getCafeRankingByCategortyList() {
         showSpinner("");
         AppUserBase user = DataHolder.instance().getAppUserBase() ;
@@ -700,6 +767,61 @@ public class CafeDetailActivity extends BaseActivity {
 
     }
 
+    private void getCafeRankingByCategortyListWalk() {
+        showSpinner("");
+        AppUserBase user = DataHolder.instance().getAppUserBase() ;
+        Map<String, Object> query = KUtil.getDefaultQueryMap();
+        query.put("cafeseq", mCafeseq);
+        query.put("period", mBtnType);
+
+        // 임시 하드코딩 (확인필요)
+        query.put("cateseq", "999");
+
+        Call<CafeRankingList> call =
+                new DefaultRestClient<CafeService>(this)
+                        .getClient(CafeService.class).rankingByCategoryWalk(query);
+        call.enqueue(new Callback<CafeRankingList>() {
+            @Override
+            public void onResponse(Call<CafeRankingList> call, Response<CafeRankingList> response) {
+                closeSpinner();
+                LogUtils.err(TAG, response.toString());
+                if (response.isSuccessful()) {
+                    if (null != mAdapter) {
+                        mAdapter.clear();
+                    }
+
+                    if (null == response.body().getList() || response.body().getList().size() == 0) {
+                        toast(R.string.warn_cafe_rank_not_exists);
+                    } else {
+                        mList = response.body().getList();
+
+                        if (null != mMyInfo) {
+                            for (int idx = 0; idx < mList.size(); idx++) {
+                                if (null != mMyInfo.getCatename() && null != mList.get(idx).getCatename() && mMyInfo.getCatename().equals(mList.get(idx).getCatename())) {
+                                    mList.get(idx).setIsmine("Y");
+                                    mList.add(0, mList.get(idx));
+                                    break;
+                                }
+                            }
+                        }
+                        mAdapter = new RankingAdapter(getApplicationContext(), mList);
+                        mRecyclerView.setAdapter(mAdapter);
+                        mRecyclerView.setNestedScrollingEnabled(false);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CafeRankingList> call, Throwable t) {
+                closeSpinner();
+                LogUtils.err(TAG, t);
+                toast(R.string.warn_server_not_smooth);
+            }
+        });
+
+    }
+
     private void getCafeRankingByCategoryIndividualList() {
         showSpinner("");
         AppUserBase user = DataHolder.instance().getAppUserBase() ;
@@ -712,6 +834,56 @@ public class CafeDetailActivity extends BaseActivity {
         Call<CafeRankingList> call =
                 new DefaultRestClient<CafeService>(this)
                         .getClient(CafeService.class).rankingIndividualByCategory(query);
+        call.enqueue(new Callback<CafeRankingList>() {
+            @Override
+            public void onResponse(Call<CafeRankingList> call, Response<CafeRankingList> response) {
+                closeSpinner();
+                LogUtils.err(TAG, response.toString());
+                if (response.isSuccessful()) {
+                    if (null != mAdapter) {
+                        mAdapter.clear();
+                    }
+
+                    if (null == response.body().getList() || response.body().getList().size() == 0) {
+                        toast(R.string.warn_cafe_rank_not_exists);
+                    } else {
+                        mList = response.body().getList();
+                        if (null != response.body().getMine()) {
+                            RankInCafe rankMine = response.body().getMine();
+                            rankMine.setIsmine("Y");
+                            mList.add(0, response.body().getMine());
+                        }
+
+                        mAdapter = new RankingAdapter(getApplicationContext(), mList);
+                        mRecyclerView.setAdapter(mAdapter);
+                        mRecyclerView.setNestedScrollingEnabled(false);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CafeRankingList> call, Throwable t) {
+                closeSpinner();
+                LogUtils.err(TAG, t);
+                toast(R.string.warn_server_not_smooth);
+            }
+        });
+
+    }
+
+    private void getCafeRankingByCategoryIndividualListWalk() {
+        showSpinner("");
+        AppUserBase user = DataHolder.instance().getAppUserBase() ;
+        Map<String, Object> query = KUtil.getDefaultQueryMap();
+        query.put("user_seq",user.getUser_seq() );
+        query.put("cafeseq", mCafeseq);
+        query.put("cateseq", mSelectedCategorySpinnerItem);
+        query.put("period", mBtnType);
+
+        Call<CafeRankingList> call =
+                new DefaultRestClient<CafeService>(this)
+                        .getClient(CafeService.class).rankingIndividualByCategoryWalk(query);
         call.enqueue(new Callback<CafeRankingList>() {
             @Override
             public void onResponse(Call<CafeRankingList> call, Response<CafeRankingList> response) {
@@ -959,28 +1131,46 @@ public class CafeDetailActivity extends BaseActivity {
             mBtnType = "D";
             if ("1".equals(mSelectedSpinnerItem)) {
                 getCafeRankingList();
-            } else if ("2".equals(mSelectedSpinnerItem)) {
-                getCafeRankingByCategortyList();
             } else if ("3".equals(mSelectedSpinnerItem)) {
+                getCafeRankingByCategortyList();
+            } else if ("5".equals(mSelectedSpinnerItem)) {
                 getCafeRankingByCategoryIndividualList();
+            } else if ("2".equals(mSelectedSpinnerItem)) {
+                getCafeRankingListWalk();
+            } else if ("4".equals(mSelectedSpinnerItem)) {
+                getCafeRankingByCategortyListWalk();
+            } else if ("6".equals(mSelectedSpinnerItem)) {
+                getCafeRankingByCategoryIndividualListWalk();
             }
         } else if(mSelectedBtnId == R.id.btn_weekly){
             mBtnType = "W";
             if ("1".equals(mSelectedSpinnerItem)) {
                 getCafeRankingList();
-            } else if ("2".equals(mSelectedSpinnerItem)) {
-                getCafeRankingByCategortyList();
             } else if ("3".equals(mSelectedSpinnerItem)) {
+                getCafeRankingByCategortyList();
+            } else if ("5".equals(mSelectedSpinnerItem)) {
                 getCafeRankingByCategoryIndividualList();
+            } else if ("2".equals(mSelectedSpinnerItem)) {
+                getCafeRankingListWalk();
+            } else if ("4".equals(mSelectedSpinnerItem)) {
+                getCafeRankingByCategortyListWalk();
+            } else if ("6".equals(mSelectedSpinnerItem)) {
+                getCafeRankingByCategoryIndividualListWalk();
             }
         } else if(mSelectedBtnId == R.id.btn_monthly){
             mBtnType = "M";
             if ("1".equals(mSelectedSpinnerItem)) {
                 getCafeRankingList();
-            } else if ("2".equals(mSelectedSpinnerItem)) {
-                getCafeRankingByCategortyList();
             } else if ("3".equals(mSelectedSpinnerItem)) {
+                getCafeRankingByCategortyList();
+            } else if ("5".equals(mSelectedSpinnerItem)) {
                 getCafeRankingByCategoryIndividualList();
+            } else if ("2".equals(mSelectedSpinnerItem)) {
+                getCafeRankingListWalk();
+            } else if ("4".equals(mSelectedSpinnerItem)) {
+                getCafeRankingByCategortyListWalk();
+            } else if ("6".equals(mSelectedSpinnerItem)) {
+                getCafeRankingByCategoryIndividualListWalk();
             }
         } else if(mSelectedBtnId == R.id.btn_notice) {
             mBtnType = "N";
@@ -1160,7 +1350,13 @@ public class CafeDetailActivity extends BaseActivity {
             } else {
                 holder.departName.setText("");
             }
-            holder.recordAmount.setText(act_amt + " F");
+
+            if ("1".equals(mSelectedSpinnerItem) || "3".equals(mSelectedSpinnerItem) || "5".equals(mSelectedSpinnerItem)) {
+                holder.recordAmount.setText(act_amt + " F");
+            } else {
+                holder.recordAmount.setText(act_amt + " 걸음");
+            }
+
 
             if (position == 0 && null != item.getIsmine() && "Y".equals(item.getIsmine())) {
                 setTextBackground(holder);

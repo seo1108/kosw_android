@@ -244,9 +244,11 @@
     <string name="txt_today_step">오늘의 걸음수</string>
     <string name="txt_activity_gps">건물 선택하기</string>
     <string name="txt_activity_record">활동기록</string>
-    <string name="txt_analysis">주∙월별 분석</string>
+    <string name="txt_analysis">주∙월별 분석 (계단/걸음)</string>
     <string name="txt_analysis_1">분석</string>
-    <string name="txt_ranking_private">개인랭킹</string>
+    <string name="txt_ranking_private">개인랭킹 (계단)</string>
+    <string name="txt_ranking_walk_private">개인랭킹 (걸음)</string>
+    <string name="txt_kakao_plus_friend">계단왕 플러스 친구</string>
     <string name="txt_ranking_group">카페랭킹</string>
     <string name="txt_notice">공지∙이벤트</string>
     <string name="txt_cafe">카페</string>
@@ -308,6 +310,7 @@
     <string name="txt_health">건강수명</string>
     <string name="txt_ranking">랭킹</string>
     <string name="txt_total_floor">전체층수</string>
+    <string name="txt_total_walk">전체걸음수</string>
     <string name="txt_avg_daily">매일평균</string>
     <string name="txt_high_score">최고기록</string>
     <string name="txt_daily">일간</string>
@@ -316,6 +319,8 @@
     <string name="txt_all">전체</string>
     <string name="txt_weekly_guide">주를 선택하세요.</string>
     <string name="txt_monthly_guide">월을 선택하세요.</string>
+    <string name="txt_floor_per_week">층수</string>
+    <string name="txt_walk_per_week">걸음수</string>
 
     <string name="txt_info_setting">정보설정</string>
     <string name="txt_change_profile">프로필 변경</string>
@@ -370,9 +375,13 @@
     <string name="rank_individual_1">부서 내 개인랭킹</string>
     <string name="rank_individual_2">전체 사용자 내 개인랭킹</string>
 
-    <string name="cafe_rank_individual">계단 개인 랭킹</string>
-    <string name="cafe_rank_category">분류랭킹</string>
-    <string name="cafe_rank_cate_indi">분류 내 개인 랭킹</string>
+    <string name="cafe_rank_individual">개인 랭킹 (계단)</string>
+    <string name="cafe_rank_category">분류 랭킹 (계단)</string>
+    <string name="cafe_rank_cate_indi">분류 내 개인 랭킹 (계단)</string>
+
+    <string name="cafe_rank_walk_individual">개인 랭킹 (걸음)</string>
+    <string name="cafe_rank_walk_category">분류 랭킹 (걸음)</string>
+    <string name="cafe_rank_walk_cate_indi">분류 내 개인 랭킹 (걸음)</string>
 
     <string name="rank_group_0">회사 내 부서 랭킹</string>
     <string name="rank_group_1">전제 사용자 내 회사 랭킹</string>
@@ -381,13 +390,14 @@
     <string name="pause_timeover">계단 이용 측정시간(5분)이 지났습니다.</string>
 
 
-    <string name="txt_ggr">계단왕 HISTORY</string>
+    <string name="txt_ggr">계단왕 HISTORY (계단/걸음)</string>
     <string name="txt_ggr_gold">계단왕</string>
+    <string name="txt_ggr_walk">걸음왕</string>
     <string name="txt_ggr_green">스프린터</string>
     <string name="txt_ggr_red">KOM</string>
 
 
-    <string name="txt_city_ranking">명예의 전당</string>
+    <string name="txt_city_ranking">명예의 전당 (계단/걸음)</string>
     <string name="txt_city_ranking_world">월드챔피언</string>
     <string name="txt_city_ranking_asia">아시아챔피언</string>
     <string name="txt_city_rankingr_korea">한국챔피언</string>

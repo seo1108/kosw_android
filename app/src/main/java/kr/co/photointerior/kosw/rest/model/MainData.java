@@ -81,6 +81,9 @@ public class MainData extends ResponseBase {
     @SerializedName("popupUrl")
     private String popupUrl;
 
+    @SerializedName("user_seq")
+    private String userSeq;
+
     public String getIsbuild() {
         return isbuild;
     }
@@ -263,6 +266,14 @@ public class MainData extends ResponseBase {
 
     public void setPopupUrl(String popupUrl) {
         this.popupUrl = popupUrl;
+    }
+
+    public String getUserSeq() {
+        return userSeq;
+    }
+
+    public void setUserSeq(String userSeq) {
+        this.userSeq = userSeq;
     }
 
     @Override

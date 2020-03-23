@@ -16,6 +16,8 @@ public class GGRList extends ResponseBase {
     private List<GGRRow> greenList;
     @SerializedName("RED")
     private List<GGRRow> redList;
+    @SerializedName("WALK")
+    private List<GGRRow> walkList;
 
     public List<GGRRow> getGoldList() {
         return goldList;
@@ -39,5 +41,13 @@ public class GGRList extends ResponseBase {
 
     public void setRedList(List<GGRRow> redList) {
         this.redList = redList;
+    }
+
+    public List<GGRRow> getWalkList() {
+        return walkList;
+    }
+
+    public void setWalkList(List<GGRRow> walkList) {
+        this.walkList = walkList;
     }
 }

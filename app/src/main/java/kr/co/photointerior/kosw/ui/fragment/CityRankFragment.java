@@ -40,9 +40,11 @@ public class CityRankFragment extends BaseFragment {
     private final String TAG = LogUtils.makeLogTag(CityRankFragment.class);
 
     private int[] mBtnResId = {
-            R.id.btn1101,
+            /*R.id.btn1101,
             R.id.btn1102,
-            R.id.btn1103
+            R.id.btn1103*/
+            R.id.btn1104,
+            R.id.btn1105
     };
 
     private int mSelectedBtnId = mBtnResId[0];
@@ -50,6 +52,8 @@ public class CityRankFragment extends BaseFragment {
     private RecyclerView mGGRRecyclerView;
     private GGRAdapter mGGRAdapter;
     private CityRankList mGGRList ;
+
+    private TextView tv2103, tv2104;
 
     public static BaseFragment newInstance(BaseActivity context){
         CityRankFragment frag = new CityRankFragment();
@@ -70,6 +74,8 @@ public class CityRankFragment extends BaseFragment {
         mGGRRecyclerView = getView(R.id.rv1101);
         mGGRRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
 
+        tv2103 = getView(R.id.tv2103);
+        tv2104 = getView(R.id.tv2104);
     }
 
     @Override
@@ -145,6 +151,22 @@ public class CityRankFragment extends BaseFragment {
                 ggrList = mGGRList.getkList();
             }
         }
+        if (mSelectedBtnId == R.id.btn1104) {
+            if (mGGRList != null && mGGRList.getwList() != null) {
+                ggrList = mGGRList.getkList();
+
+                tv2103.setText("층 수");
+                tv2104.setVisibility(View.VISIBLE);
+            }
+        }
+        if (mSelectedBtnId == R.id.btn1105) {
+            if (mGGRList != null && mGGRList.getWalkList() != null) {
+                ggrList = mGGRList.getWalkList();
+
+                tv2103.setText("걸음수");
+                tv2104.setVisibility(View.GONE);
+            }
+        }
         mGGRAdapter = new CityRankFragment.GGRAdapter(mActivity, ggrList,null,isKOM);
         mGGRRecyclerView.setAdapter(mGGRAdapter);
     }
@@ -186,10 +208,16 @@ public class CityRankFragment extends BaseFragment {
             String actDate =  ggrRow.getAct_date() ;
             holder.tv1101.setText(actDate.substring(0,4) + "." + actDate.substring(4,6) + "." + actDate.substring(6,8) );
             holder.tv1102.setText(ggrRow.getNickname());
-            holder.tv1103.setText(StringUtil.format( Double.valueOf(ggrRow.getAct_amt()),"#,##0") +"F");
+            if (mSelectedBtnId == R.id.btn1104 ) {
+                holder.tv1103.setText(StringUtil.format(Double.valueOf(ggrRow.getAct_amt()), "#,##0") + "F");
+            } else if (mSelectedBtnId == R.id.btn1105 ) {
+                holder.tv1103.setText(StringUtil.format(Double.valueOf(ggrRow.getAct_amt()), "#,##0") + "걸음");
+            }
 
             if (mSelectedBtnId == R.id.btn1103) {
                 holder.tv1104.setText(ggrRow.getCity());
+            } else if (mSelectedBtnId == R.id.btn1105 ) {
+                holder.tv1104.setVisibility(View.GONE);
             } else {
                 holder.tv1104.setText(ggrRow.getCountry());
             }

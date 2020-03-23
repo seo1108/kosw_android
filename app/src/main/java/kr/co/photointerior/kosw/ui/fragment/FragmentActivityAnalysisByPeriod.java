@@ -62,8 +62,8 @@ public class FragmentActivityAnalysisByPeriod extends BaseFragment implements It
     private View mSpinnerListBox;
     private PeriodType mPeriodType = PeriodType.WEEKLY;
     private ActivityRecord mActivityRecord;
-    private RowActivityRecord[] mSummaries = new RowActivityRecord[3];
-    private BarChart mBarChart;
+    private RowActivityRecord[] mSummaries = new RowActivityRecord[4];
+    private BarChart mBarChart, mBarWalkChart;
     public static FragmentActivityAnalysisByPeriod newInstance(
             BaseActivity activity, List<ActivityPeriod> spinnerList, PeriodType periodType){
         FragmentActivityAnalysisByPeriod frag = new FragmentActivityAnalysisByPeriod();
@@ -87,9 +87,11 @@ public class FragmentActivityAnalysisByPeriod extends BaseFragment implements It
         mSpinnerListBox = getView(R.id.drop_list_box);
         mSpinnerText = getView(R.id.txt_spinner);
         mSummaries[0] = getView(R.id.row_record_calorie);
-        mSummaries[1] = getView(R.id.row_record_life);
-        mSummaries[2] = getView(R.id.row_record_ranking);
+        mSummaries[1] = getView(R.id.row_record_walk);
+        mSummaries[2] = getView(R.id.row_record_life);
+        mSummaries[3] = getView(R.id.row_record_ranking);
         mBarChart = getView(R.id.bar_chart);
+        mBarWalkChart = getView(R.id.bar_walk_chart);
     }
 
     @Override
@@ -122,6 +124,9 @@ public class FragmentActivityAnalysisByPeriod extends BaseFragment implements It
         Map<String, Object> query = KUtil.getDefaultQueryMap();
         query.put("period", mPeriodType.getValue());
         query.put("baseDate", mSelectedSpinner.getBaseDate());
+
+        Log.d("TTTTTTTTTTTT", mPeriodType.getValue());
+        Log.d("TTTTTTTTTTTT", mSelectedSpinner.getBaseDate());
 
         Call<ActivityRecord> call = new DefaultRestClient<UserService>(mActivity).getClient(UserService.class)
                 .getAnalysisData(query);
@@ -176,10 +181,14 @@ public class FragmentActivityAnalysisByPeriod extends BaseFragment implements It
                 mActivityRecord.getAnalysisTotalToInt() + ""
         );
         mSummaries[1].setRecordAmount(
-                KUtil.calcCalorieDefault(mActivityRecord.getAnalysisTotalToInt()));
+                mActivityRecord.getAnalysisWalkTotalToInt() + ""
+        );
         mSummaries[2].setRecordAmount(
+                KUtil.calcCalorieDefault(mActivityRecord.getAnalysisTotalToInt()));
+        mSummaries[3].setRecordAmount(
                   KUtil.calcLifeDefault(mActivityRecord.getAnalysisTotalToInt()));
         drawChart();
+        drawWalkChart();
     }
 
     private int[] mWeeklyBarColor = {
@@ -332,6 +341,124 @@ public class FragmentActivityAnalysisByPeriod extends BaseFragment implements It
 
         mBarChart.invalidate();
         mBarChart.notifyDataSetChanged();
+    }
+
+    private void drawWalkChart(){
+        String[] xTexts;
+        if(PeriodType.WEEKLY.equals(mPeriodType)){
+            xTexts = mActivity.getResources().getStringArray(R.array.week_days);
+        }else{
+            LogUtils.err(TAG, "analysis record size=" + mActivityRecord.getAnalysisWalkRecords().size());
+            xTexts = new String[mActivityRecord.getAnalysisWalkRecords().size()];
+            for(int i = 0; i < xTexts.length ; i++){
+                xTexts[i] = String.valueOf(i+1);
+            }
+        }
+
+        mBarWalkChart.setDrawBarShadow(false);
+        mBarWalkChart.setDrawValueAboveBar(true);
+
+        mBarWalkChart.getDescription().setEnabled(false);
+
+        // if more than 60 entries are displayed in the chart, no values will be drawn
+        mBarWalkChart.setMaxVisibleValueCount(60);
+
+        mBarWalkChart.setPinchZoom(false);
+        mBarWalkChart.setDrawGridBackground(false);
+        mBarWalkChart.setHighlightPerTapEnabled(false);
+
+        XAxis xAxis = mBarWalkChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+        xAxis.setGranularity(1f); // only intervals of 1 day
+        xAxis.setLabelCount(xTexts.length);
+        xAxis.setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+
+                int index = (int)value;
+                LogUtils.err(TAG, "x value=" + value + ", index=" + index);
+                if(index >= xTexts.length){
+                    return "";
+                }
+                return xTexts[index];
+            }
+        });
+        //YAxis leftAxis = mBarChart.getAxisLeft();
+
+        YAxis leftAxis = mBarWalkChart.getAxisLeft();
+        leftAxis.setLabelCount(10, false);
+        leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+        leftAxis.setSpaceTop(15f);
+        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+        leftAxis.setEnabled(false);
+
+        YAxis rightAxis = mBarWalkChart.getAxisRight();
+        rightAxis.setEnabled(false);
+
+        Legend l = mBarWalkChart.getLegend();
+        l.setEnabled(false);
+
+        float start = 0f;
+
+        List<Record> stepValues = mActivityRecord.getAnalysisWalkRecords();
+        List<BarEntry> yVals1 = new ArrayList<>();
+        boolean hasChartValue = hasChartValues(stepValues);
+        if(hasChartValue) {
+            for (int i = (int) start; i < stepValues.size(); i++) {
+                yVals1.add(new BarEntry(i, stepValues.get(i).getAmountToFloat()));
+            }
+        }else{
+            for (int i = (int) start; i < stepValues.size(); i++) {
+                yVals1.add(new BarEntry(i, 100f));
+            }
+        }
+
+        BarDataSet set1 = new BarDataSet(yVals1, "period analysis");
+        set1.setValueFormatter(new IValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+                if(value > 0.0f && hasChartValue) {
+                    return StringUtil.format(value, "#,##0");
+                }
+                return "";
+            }
+        });
+        if(PeriodType.WEEKLY.equals(mPeriodType)) {
+            set1.setValueTextColors(mXValuecolor);//값 텍스트 칼라
+        }else{
+            //set1.setValueTextColors(ColorTemplate.VORDIPLOM_COLORS);//값 텍스트 칼라
+        }
+
+        set1.setDrawIcons(false);
+        set1.setHighlightEnabled(false);
+        //set1.setColor(Color.rgb(159, 206, 239));
+        //set1.setColor(Color.rgb(55, 163, 210));
+        if(PeriodType.WEEKLY.equals(mPeriodType)) {
+            if(hasChartValue) {
+                set1.setColors(mWeeklyBarColor);
+            }else{
+                set1.setColors(mWeeklyBarColorNoElement);
+            }
+        }else{
+            if(hasChartValue) {
+                List<Integer> monthColors = getMonthlyColors(stepValues);
+                set1.setColors(monthColors);
+            }else{
+                set1.setColor(getResources().getColor(R.color.color_cccccc));
+            }
+        }
+        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+        dataSets.add(set1);
+
+        BarData data = new BarData(dataSets);
+        data.setValueTextSize(10f);
+        data.setBarWidth(0.9f);
+
+        mBarWalkChart.setData(data);
+
+        mBarWalkChart.invalidate();
+        mBarWalkChart.notifyDataSetChanged();
     }
 
     private List<Integer> getMonthlyColors(List<Record> values){

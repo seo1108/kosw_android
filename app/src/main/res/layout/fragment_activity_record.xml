@@ -37,10 +37,23 @@
             app:recordUnit="F" />
 
         <kr.co.photointerior.kosw.widget.RowActivityRecord
-            android:id="@+id/row_record_calorie"
+            android:id="@+id/row_record_walk"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_42"
             android:layout_below="@+id/row_record_floor"
+            android:layout_marginTop="-4dp"
+            app:recordAmt="0"
+            app:recordAmtColor="@color/tab_text_color_selected"
+            app:recordIcon="@drawable/ic_step"
+            app:recordTitle="@string/txt_total_walk"
+            app:recordUnit="걸음" />
+
+        <kr.co.photointerior.kosw.widget.RowActivityRecord
+            android:id="@+id/row_record_calorie"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_42"
+            android:layout_below="@+id/row_record_walk"
+            android:layout_marginTop="3dp"
             app:recordAmt="0"
             app:recordAmtColor="@color/color_ed4524"
             app:recordIcon="@drawable/ic_my_calorie"

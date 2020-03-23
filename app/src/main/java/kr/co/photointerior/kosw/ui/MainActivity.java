@@ -116,6 +116,7 @@ import kr.co.photointerior.kosw.ui.fragment.FragmentActivityAnalysis;
 import kr.co.photointerior.kosw.ui.fragment.FragmentActivityRecord;
 import kr.co.photointerior.kosw.ui.fragment.FragmentRankingGroup;
 import kr.co.photointerior.kosw.ui.fragment.FragmentRankingIndividual;
+import kr.co.photointerior.kosw.ui.fragment.FragmentRankingWalkIndividual;
 import kr.co.photointerior.kosw.ui.fragment.GGRFragment;
 import kr.co.photointerior.kosw.ui.fragment.MainFragment;
 import kr.co.photointerior.kosw.utils.AUtil;
@@ -178,6 +179,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             R.id.menu_activity_record,
             R.id.menu_analysis,
             R.id.menu_ranking_private,
+            R.id.menu_ranking_walk_private,
             R.id.menu_ranking_group,
             R.id.menu_ggr,
             R.id.menu_city_ranking,
@@ -188,7 +190,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             R.id.menu_join_cafe,*/
             R.id.menu_signcafe,
             R.id.menu_help,
-            R.id.menu_altitude
+            R.id.menu_altitude,
+            R.id.menu_plus_friend
 
     };
     private String mHomeTitle;
@@ -446,7 +449,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 editor.putString("country", user.getCountry());
                 editor.putString("city", user.getCity());
                 editor.putInt("curBuildCount", user.getBuild_floor_amt());
-                editor.putInt("user_seq", user.getUser_seq());
+                editor.putInt("user_seq", Pref.instance().getIntValue(PrefKey.USER_SEQ, -1));
                 editor.commit();
             } else {
                 editor.putString("token", "");
@@ -1518,6 +1521,10 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 //toast("랭킹-" + Env.FragmentType.RANKING_INDIVIDUAL);
                 displayFragment(Env.FragmentType.RANKING_INDIVIDUAL);
                 break;
+            case R.id.menu_ranking_walk_private://개인랭킹
+                //toast("랭킹-" + Env.FragmentType.RANKING_WALK_INDIVIDUAL);
+                displayFragment(Env.FragmentType.RANKING_WALK_INDIVIDUAL);
+                break;
             case R.id.menu_ranking_group://그룹랭킹
                 //toast("랭킹-" + Env.FragmentType.RANKING_GROUP);
                 displayFragment(Env.FragmentType.RANKING_GROUP);
@@ -1539,6 +1546,11 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 } else {
                     getLinearLayout(R.id.ll_cafe).setVisibility(View.VISIBLE);
                 }*/
+                break;
+            case R.id.menu_plus_friend:
+                Bundle bu = new Bundle();
+                bu.putSerializable("url", "https://pf.kakao.com/_xhYYJT");
+                callActivity(WebviewActivity.class, bu,false);
                 break;
            /* case R.id.menu_make_cafe://카페 개설하기
                 //callActivity(MakeCafeActivity.class, false);
@@ -1589,6 +1601,10 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             case 600://RANKING_INDIVIDUAL
                 fragment = FragmentRankingIndividual.newInstance(this);
                 title = getString(R.string.txt_ranking_private);
+                break;
+            case 602://RANKING_INDIVIDUAL
+                fragment = FragmentRankingWalkIndividual.newInstance(this);
+                title = getString(R.string.txt_ranking_walk_private);
                 break;
             case 601://RANKING_GROUP
                 AppUserBase user = DataHolder.instance().getAppUserBase();

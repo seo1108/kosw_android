@@ -3,5 +3,6 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">kingofthestairs.com</domain>
         <domain includeSubdomains="true">stairsking.co.kr</domain>
+        <domain includeSubdomains="true">pf.kakao.com</domain>
     </domain-config>
 </network-security-config>

@@ -16,8 +16,12 @@ public class Record extends ResponseBase {
     private String name;
     @SerializedName("record_amount")
     private String amount;
+    @SerializedName("record_walk_amount")
+    private String walkAmount;
     @SerializedName("record_date")
     private String date;
+    @SerializedName("record_walk_date")
+    private String walkDate;
     @SerializedName("week_name")
     private String weekName;
     @SerializedName("start_date")
@@ -28,7 +32,6 @@ public class Record extends ResponseBase {
     private String stairAmount;
     @SerializedName("toady_ranking")
     private String todayRanking;
-
     @SerializedName("act_amt")
     private String act_amt;
     @SerializedName("user_seq")
@@ -56,6 +59,18 @@ public class Record extends ResponseBase {
         this.amount = amount;
     }
 
+    public String getWalkAmount() {
+        return walkAmount;
+    }
+
+    public float getWalkAmountToFloat(){
+        return Float.parseFloat(StringUtil.isEmptyOrWhiteSpace(getWalkAmount()) ? "0" : getWalkAmount());
+    }
+
+    public void setWalkAmount(String walkAmount) {
+        this.walkAmount = walkAmount;
+    }
+
     public String getDate() {
         return date;
     }
@@ -73,6 +88,21 @@ public class Record extends ResponseBase {
     }
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getWalkDate() {
+        return walkDate;
+    }
+
+    public String getWalkDate(String fmt){
+        if(StringUtil.isEmptyOrWhiteSpace(getDate())){
+            return "";
+        }
+        return DateUtil.formatDate("yyyyMMdd", getWalkDate(), fmt);
+    }
+
+    public void setWalkDate(String walkDate) {
+        this.walkDate = walkDate;
     }
 
     public String getWeekName() {

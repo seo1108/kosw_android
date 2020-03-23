@@ -94,6 +94,14 @@ public interface CafeService {
     Call<CafeRankingList> rankingIndividual(@QueryMap Map<String, Object> queryMap);
 
     /**
+     * 카페 개인랭킹
+     * @param queryMap
+     * @return
+     */
+    @POST("api/cafe/rankingIndividualWalk")
+    Call<CafeRankingList> rankingIndividualWalk(@QueryMap Map<String, Object> queryMap);
+
+    /**
      * 카페 분류랭킹
      * @param queryMap
      * @return
@@ -102,12 +110,28 @@ public interface CafeService {
     Call<CafeRankingList> rankingByCategory(@QueryMap Map<String, Object> queryMap);
 
     /**
+     * 카페 분류랭킹
+     * @param queryMap
+     * @return
+     */
+    @POST("api/cafe/rankingByCategoryWalk")
+    Call<CafeRankingList> rankingByCategoryWalk(@QueryMap Map<String, Object> queryMap);
+
+    /**
      * 카페 분류내 개인랭킹
      * @param queryMap
      * @return
      */
     @POST("api/cafe/rankingIndividualByCategory")
     Call<CafeRankingList> rankingIndividualByCategory(@QueryMap Map<String, Object> queryMap);
+
+    /**
+     * 카페 분류내 개인랭킹
+     * @param queryMap
+     * @return
+     */
+    @POST("api/cafe/rankingIndividualByCategoryWalk")
+    Call<CafeRankingList> rankingIndividualByCategoryWalk(@QueryMap Map<String, Object> queryMap);
 
     /**
      * 카페 게시판 리스트

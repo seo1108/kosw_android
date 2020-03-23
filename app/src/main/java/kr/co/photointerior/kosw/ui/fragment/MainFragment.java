@@ -919,6 +919,9 @@ public class MainFragment extends BaseFragment {
 
                     if (data.isSuccess()) {
                         Pref pref = Pref.instance();
+                        Pref.instance().saveIntValue(PrefKey.USER_SEQ, Integer.parseInt(data.getUserSeq()));
+                        Log.d("TTTTTTTTTTTTTTTTT", data.getUserSeq());
+                        Log.d("TTTTTTTTTTTTTTTTT", "" + Pref.instance().getIntValue(PrefKey.USER_SEQ, 0));
 
                         String charImageFile = pref.getStringValue(PrefKey.CHARACTER_MAIN, "");
                         if (null != data.getMainCharImageFile())
