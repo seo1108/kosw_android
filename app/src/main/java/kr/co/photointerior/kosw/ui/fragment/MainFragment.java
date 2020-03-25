@@ -106,6 +106,7 @@ import kr.co.photointerior.kosw.rest.model.Notice;
 import kr.co.photointerior.kosw.rest.model.Profile;
 import kr.co.photointerior.kosw.rest.model.RankInCafe;
 import kr.co.photointerior.kosw.rest.model.Record;
+import kr.co.photointerior.kosw.rest.model.ResponseBase;
 import kr.co.photointerior.kosw.service.fcm.Push;
 import kr.co.photointerior.kosw.service.noti.NotiService;
 import kr.co.photointerior.kosw.service.noti.NotificationChannelSupport;
@@ -149,6 +150,7 @@ import static java.text.DateFormat.getTimeInstance;
 public class MainFragment extends BaseFragment {
     // implements SensorEventListener, StepListener {
     private String TAG = LogUtils.makeLogTag(MainFragment.class);
+    private static Context context = null;
     private BeaconUuid mToadyInfo;
     private Bbs mMainNotice;
     private Bbs mCustomerNotice;
@@ -219,6 +221,7 @@ public class MainFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        context = getActivity();
         mActivity = (MainActivity) getActivity();
         followingWorksAfterInflateView();
         mActivity.changeColors();
@@ -1009,6 +1012,54 @@ public class MainFragment extends BaseFragment {
 
     }
 
+    public static void saveWalkStep(int walk_count) {
+        try {
+            Log.d("TTTTTTTTTTTTTTTTTTTTT", "SEND WALK DATA : " + walk_count);
+            Map<String, Object> query = KUtil.getDefaultQueryMap();
+            int user_seq = Pref.instance().getIntValue(PrefKey.USER_SEQ, 0);
+            Log.d("TTTTTTTTTTTTTTTTTTTTT", "USER_SEQ : " + String.valueOf(user_seq));
+
+            if (user_seq == 0) return;
+
+            DateFormat dateFormat = getTimeInstance();
+            DateFormat d_dateFormat = new SimpleDateFormat("yyyyMMdd");
+            Calendar cal = Calendar.getInstance();
+            Date now = new Date();
+            cal.setTime(now);
+            String date = d_dateFormat.format(cal.getTime());
+
+            query.put("user_seq", String.valueOf(user_seq));
+            query.put("walk_date", date);
+            query.put("walk_count", walk_count);
+
+            Call<ResponseBase> call =
+                    new DefaultRestClient<UserService>(context)
+                            .getClient(UserService.class)
+                            .saveWalkStep(query);
+            call.enqueue(new Callback<ResponseBase>() {
+                @Override
+                public void onResponse(Call<ResponseBase> call, Response<ResponseBase> response) {
+
+                    if (response.isSuccessful()) {
+                        ResponseBase data = response.body();
+                        if (data.isSuccess()) {
+
+                        } else {
+
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBase> call, Throwable t) {
+                    Log.d("TTTTTTTTTTTTTTTTTTTTT", t.toString());
+                }
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     private void openEventDialog(String url) {
         SimpleDateFormat format = new SimpleDateFormat( "yyyyMMdd");
         Date time = new Date();
@@ -1034,6 +1085,7 @@ public class MainFragment extends BaseFragment {
      */
     public void requestgetActivityRecords() {
         RowActivityRecord totalFloor = getView(R.id.row_record_floor);
+        RowActivityRecord totalWalk = getView(R.id.row_record_walk);
         RowActivityRecord totalCalorie = getView(R.id.row_record_calorie);
         RowActivityRecord totalLife = getView(R.id.row_record_life);
 
@@ -1054,12 +1106,14 @@ public class MainFragment extends BaseFragment {
 
                         String todayDate = DateUtil.currentDate("yyyyMMdd");
                         String todayFloor = "0";
+                        String todayWalk = "0";
                         String todayCalories = "0";
                         String todayLife = "0";
 
                         if (null == dailyRecords || dailyRecords.size() > 0) {
                             if (todayDate.equals(dailyRecords.get(0).getDate())) {
                                 todayFloor = StringUtil.format(dailyRecords.get(0).getAmountToFloat(), "#,##0");
+                                todayWalk = StringUtil.format(dailyRecords.get(0).getWalkAmountToFloat(), "#,##0");
                                 todayCalories = KUtil.calcCalorie(dailyRecords.get(0).getAmountToFloat(), dailyRecords.get(0).getStairAmountToFloat());
                                 todayLife = KUtil.calcLife(dailyRecords.get(0).getAmountToFloat(), dailyRecords.get(0).getStairAmountToFloat());
                             }
@@ -1077,6 +1131,12 @@ public class MainFragment extends BaseFragment {
                             totalFloor.setRecordAmount(StringUtil.format(total.getAmountToFloat(), "#,##0"));
                             totalCalorie.setRecordAmount(KUtil.calcCalorie(total.getAmountToFloat(), total.getStairAmountToFloat()));
                             totalLife.setRecordAmount(KUtil.calcLife(total.getAmountToFloat(), total.getStairAmountToFloat()));
+                        }
+
+                        if (!"0".equals(todayWalk)) {
+                            totalWalk.setRecordAmount(todayWalk + " | " + StringUtil.format(total.getWalkAmountToFloat(), "#,##0"));
+                        } else {
+                            totalWalk.setRecordAmount(StringUtil.format(total.getWalkAmountToFloat(), "#,##0"));
                         }
 
                         /*if (null != r_rank) {
@@ -1599,6 +1659,8 @@ public class MainFragment extends BaseFragment {
             for (Field field : dp.getDataType().getFields()) {
                 tv_stepCount.setText("오늘의 걸음수 : " + dp.getValue(field));
                 stepCount = dp.getValue(field).toString();
+
+                saveWalkStep(Integer.parseInt(dp.getValue(field).toString()));
             }
         }
 

@@ -395,6 +395,67 @@
                     android:paddingTop="15dp"
                     android:orientation="vertical">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_44"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:background="@drawable/button_border_bottom_cccccc"
+                        android:gravity="center_vertical|center"
+                        android:orientation="horizontal">
+                        <!-- 개인, 그룹랭킹 1,2,3위 이외와 제일 상단 내 랭킹 row -->
+                        <TextView
+                            android:id="@+id/tv_ranking"
+                            android:layout_width="42dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dp_6"
+                            android:gravity="center"
+                            android:text="랭킹"
+                            android:textColor="@color/color_1a1a1a"
+                            android:textSize="@dimen/sp_15"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:weightSum="1">
+
+                            <TextView
+                                android:id="@+id/tv_name"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight=".5"
+                                android:gravity="center"
+                                android:text="닉네임"
+                                android:textColor="@color/color_1a1a1a"
+                                android:textSize="@dimen/sp_15"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_depart"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight=".5"
+                                android:gravity="center"
+                                android:text="분류"
+                                android:textColor="@color/color_1a1a1a"
+                                android:textSize="@dimen/sp_15"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tv_amount"
+                            android:layout_width="@dimen/dp_120"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/dp_6"
+                            android:gravity="center_vertical|right"
+                            android:text="층수"
+                            android:textColor="@color/color_1a1a1a"
+                            android:textSize="@dimen/sp_15"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycler_view"

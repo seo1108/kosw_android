@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -182,6 +183,7 @@ public class FragmentActivityRecord extends BaseFragment {
                 holder.life.setText(KUtil.calcLifeDefault(item.getStair_amtToFloat()) );
 
                 holder.ll_walk.setVisibility(View.GONE);
+                holder.iv_walk.setVisibility(View.GONE);
             } else {
                 Record item = mList.get(position - clubCount);
                 if(position == clubCount ) {
@@ -225,6 +227,7 @@ public class FragmentActivityRecord extends BaseFragment {
             private TextView calorie;
             private TextView life;
             private LinearLayout ll_walk;
+            private ImageView iv_walk;
 
             RowHolder(View view){
                 super(view);
@@ -239,6 +242,7 @@ public class FragmentActivityRecord extends BaseFragment {
                 calorie = itemView.findViewById(R.id.amt_calorie);
                 life = itemView.findViewById(R.id.amt_health);
                 ll_walk = itemView.findViewById(R.id.ll_walk);
+                iv_walk = itemView.findViewById(R.id.icon_walk);
             }
         }
     }

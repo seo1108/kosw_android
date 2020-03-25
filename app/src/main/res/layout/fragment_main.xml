@@ -462,7 +462,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/box_character"
-            android:paddingBottom="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_4"
             android:background="@color/colorWhite">
 
             <kr.co.photointerior.kosw.widget.RowActivityRecord
@@ -476,10 +476,21 @@
                 app:recordUnit="F" />
 
             <kr.co.photointerior.kosw.widget.RowActivityRecord
-                android:id="@+id/row_record_calorie"
+                android:id="@+id/row_record_walk"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_42"
                 android:layout_below="@+id/row_record_floor"
+                app:recordAmt="0"
+                app:recordAmtColor="@color/tab_text_color_selected"
+                app:recordIcon="@drawable/ic_step"
+                app:recordTitle="@string/txt_total_walk"
+                app:recordUnit="걸음" />
+
+            <kr.co.photointerior.kosw.widget.RowActivityRecord
+                android:id="@+id/row_record_calorie"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_42"
+                android:layout_below="@+id/row_record_walk"
                 app:recordAmt="0"
                 app:recordAmtColor="@color/color_1ec700"
                 app:recordIcon="@drawable/ic_calorie"

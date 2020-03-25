@@ -91,6 +91,7 @@ public class CafeDetailActivity extends BaseActivity {
     private String mCafeseq = "";
     private String mCafekey = "";
     private List<CafeSubCategory> mCate;
+    private TextView tv_ranking, tv_name, tv_depart, tv_amount;
 
     private RecyclerView mRecyclerView;
     private RankingAdapter mAdapter;
@@ -199,6 +200,11 @@ public class CafeDetailActivity extends BaseActivity {
 
         spinner = findViewById(R.id.spinner);
         spinner_category = findViewById(R.id.spinner_category);
+
+        tv_ranking  = findViewById(R.id.tv_ranking);
+        tv_name = findViewById(R.id.tv_name);
+        tv_depart = findViewById(R.id.tv_depart);
+        tv_amount = findViewById(R.id.tv_amount);
 
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(
@@ -1338,14 +1344,14 @@ public class CafeDetailActivity extends BaseActivity {
             holder.ranking.setText(rank);
 
             // 분류내 랭킹일 경우, 닉네임 부분에 부서 표시
-            if (!"2".equals(mSelectedSpinnerItem)) {
+            if (!"3".equals(mSelectedSpinnerItem) && !"4".equals(mSelectedSpinnerItem)) {
                 holder.nickname.setText(nickname);
             } else {
                 holder.nickname.setText(catename);
             }
 
             // 분류내 랭킹일 경우, 분류 부분 미표기해야함
-            if (!"2".equals(mSelectedSpinnerItem)) {
+            if (!"3".equals(mSelectedSpinnerItem) && !"4".equals(mSelectedSpinnerItem)) {
                 holder.departName.setText(catename);
             } else {
                 holder.departName.setText("");
@@ -1353,8 +1359,25 @@ public class CafeDetailActivity extends BaseActivity {
 
             if ("1".equals(mSelectedSpinnerItem) || "3".equals(mSelectedSpinnerItem) || "5".equals(mSelectedSpinnerItem)) {
                 holder.recordAmount.setText(act_amt + " F");
+                tv_amount.setText("층수");
             } else {
                 holder.recordAmount.setText(act_amt + " 걸음");
+                tv_amount.setText("걸음수");
+            }
+
+            if ("1".equals(mSelectedSpinnerItem) || "2".equals(mSelectedSpinnerItem)) {
+                tv_ranking.setText("랭킹");
+                tv_name.setText("닉네임");
+                tv_depart.setText("분류");
+
+            } else if ("3".equals(mSelectedSpinnerItem) || "4".equals(mSelectedSpinnerItem)) {
+                tv_ranking.setText("랭킹");
+                tv_name.setText("분류");
+                tv_depart.setText("");
+            } else if ("5".equals(mSelectedSpinnerItem) || "6".equals(mSelectedSpinnerItem)) {
+                tv_ranking.setText("랭킹");
+                tv_name.setText("닉네임");
+                tv_depart.setText("분류");
             }
 
 
