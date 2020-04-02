@@ -1548,9 +1548,11 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 }*/
                 break;
             case R.id.menu_plus_friend:
-                Bundle bu = new Bundle();
+                /*Bundle bu = new Bundle();
                 bu.putSerializable("url", "https://pf.kakao.com/_xhYYJT");
-                callActivity(WebviewActivity.class, bu,false);
+                callActivity(WebviewActivity.class, bu,false);*/
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://pf.kakao.com/_xhYYJT"));
+                startActivity(intent);
                 break;
            /* case R.id.menu_make_cafe://카페 개설하기
                 //callActivity(MakeCafeActivity.class, false);
