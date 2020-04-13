@@ -13,12 +13,16 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -963,40 +967,59 @@ public class MainFragment extends BaseFragment {
 //                            openEventDialog(mEventUrl);
 //                        }
 
+
                         SharedPreferences prefr = mActivity.getSharedPreferences("fitnessauth", MODE_PRIVATE);
                         Log.d("DDDDDDDDDDDDDDD", prefr.getBoolean("isSuccess", true) + "");
-                        if (prefr.getBoolean("isSuccess", true)) {
 
-                            SharedPreferences.Editor editor = prefr.edit();
-                            editor.putBoolean("isSuccess", false);
-                            editor.commit();
+                        if (getInstallPackage("com.google.android.apps.fitness")) {
+                            tv_stepCount.setOnClickListener(null);
+                            if (prefr.getBoolean("isSuccess", true)) {
 
-                            // 구글 피트니스 퍼미션 처리
-                            FitnessOptions fitnessOptions =
-                                    FitnessOptions.builder()
-                                            .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
-                                            .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
-                                            .build();
-                            if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(mActivity), fitnessOptions)) {
-                                GoogleSignIn.requestPermissions(
-                                        getActivity(),
-                                        REQUEST_OAUTH_REQUEST_CODE,
-                                        GoogleSignIn.getLastSignedInAccount(mActivity),
-                                        fitnessOptions);
-                            } else {
+                                SharedPreferences.Editor editor = prefr.edit();
+                                editor.putBoolean("isSuccess", false);
+                                editor.commit();
+
+                                // 구글 피트니스 퍼미션 처리
+                                FitnessOptions fitnessOptions =
+                                        FitnessOptions.builder()
+                                                .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
+                                                .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
+                                                .build();
+                                if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(mActivity), fitnessOptions)) {
+                                    GoogleSignIn.requestPermissions(
+                                            getActivity(),
+                                            REQUEST_OAUTH_REQUEST_CODE,
+                                            GoogleSignIn.getLastSignedInAccount(mActivity),
+                                            fitnessOptions);
+                                } else {
+                                    if (!"".equals(mEventUrl)) {
+                                        openEventDialog(mEventUrl);
+                                    }
+                                    readHistoryData();
+                                }
+                            } else if (!prefr.getBoolean("isSuccess", true)) {
                                 if (!"".equals(mEventUrl)) {
                                     openEventDialog(mEventUrl);
                                 }
-                                readHistoryData();
+
+                                try {
+                                    readHistoryData();
+                                } catch (Exception e) {
+                                }
                             }
-                        } else if (!prefr.getBoolean("isSuccess", true)) {
+                        }
+                        else
+                        {
+                            tv_stepCount.setText(getResources().getString(R.string.txt_fitness_guide));
+                            tv_stepCount.setOnClickListener(v->{
+                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://pf.kakao.com/_xhYYJT"));
+                                startActivity(intent);
+                            });
+
+
                             if (!"".equals(mEventUrl)) {
                                 openEventDialog(mEventUrl);
                             }
-
-                            try {
-                                readHistoryData();
-                            } catch (Exception e) { }
                         }
 
 
@@ -1022,6 +1045,26 @@ public class MainFragment extends BaseFragment {
 
 
     }
+
+    public boolean getInstallPackage(String packagename){
+
+        String mpackagename = packagename;
+
+        try {
+            PackageManager pm = getActivity().getPackageManager();
+            PackageInfo pi = pm.getPackageInfo(mpackagename.trim(), PackageManager.GET_META_DATA);
+            ApplicationInfo appInfo = pi.applicationInfo;
+            // 패키지가 있을 경우.
+            Log.d(TAG,"Enabled value = " + appInfo.enabled);
+            return true;
+        }
+        catch (PackageManager.NameNotFoundException e)
+        {
+            Log.d(TAG,"패키지가 설치 되어 있지 않습니다.");
+            return false;
+        }
+    }
+
 
     public static void saveWalkStep(int walk_count) {
         try {

@@ -540,7 +540,7 @@ public class CafeDetailActivity extends BaseActivity {
                     //LogUtils.err(TAG, "profile=" + profile.string());
                     if (noticelist.isSuccess()) {
                         if (isFirstLoad) {
-                            if (null == mType || "".equals(mType) || "BOARD".equals(mType)) {
+                            if (null == mType || "".equals(mType)) {
                                 mNoticeList = noticelist.getNotice();
 
                                 if (null != mNoticeList && mNoticeList.size() > 0) {
@@ -560,7 +560,16 @@ public class CafeDetailActivity extends BaseActivity {
 
                                 isFirstLoad = false;
                                 return;
-                            } else if ("DAILY".equals(mType)) {
+                            } else if ("BOARD".equals(mType))
+                            {
+                                Bundle bu = new Bundle();
+                                bu.putSerializable("cafeseq", mCafeseq);
+                                callActivity(CafeNoticeActivity.class, bu, false);
+
+                                isFirstLoad = false;
+                                return;
+                            }
+                            else if ("DAILY".equals(mType)) {
                                 toggleBtn(mBtnResId[1]);
 
                                 isFirstLoad = false;
@@ -578,23 +587,24 @@ public class CafeDetailActivity extends BaseActivity {
                             }
 
 
-                        }
-
-                        mNoticeList = noticelist.getNotice();
-
-                        if (null != mNoticeList && mNoticeList.size() > 0) {
-                            txt_notice_date.setText("[공지] " + mNoticeList.get(0).getRegdate());
-                            txt_notice.setText(mNoticeList.get(0).getContents());
-                            ll_notice_detail.setOnClickListener(v -> {
-                                // 공지사항 액티비티로 이동
-                                Bundle bu = new Bundle();
-                                bu.putSerializable("cafeseq", mCafeseq);
-                                callActivity(CafeNoticeActivity.class, bu, false);
-                            });
                         } else {
-                            ll_notice_detail.setVisibility(View.GONE);
-                            txt_notice_date.setVisibility(View.GONE);
-                            txt_notice.setVisibility(View.GONE);
+
+                            mNoticeList = noticelist.getNotice();
+
+                            if (null != mNoticeList && mNoticeList.size() > 0) {
+                                txt_notice_date.setText("[공지] " + mNoticeList.get(0).getRegdate());
+                                txt_notice.setText(mNoticeList.get(0).getContents());
+                                ll_notice_detail.setOnClickListener(v -> {
+                                    // 공지사항 액티비티로 이동
+                                    Bundle bu = new Bundle();
+                                    bu.putSerializable("cafeseq", mCafeseq);
+                                    callActivity(CafeNoticeActivity.class, bu, false);
+                                });
+                            } else {
+                                ll_notice_detail.setVisibility(View.GONE);
+                                txt_notice_date.setVisibility(View.GONE);
+                                txt_notice.setVisibility(View.GONE);
+                            }
                         }
                     } else {
                     }

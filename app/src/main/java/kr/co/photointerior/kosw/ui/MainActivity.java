@@ -1521,6 +1521,16 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 mFinishFlag = true;
                 finish();
                 break;
+            case R.id.menu_cafe_name:
+                onBackPressed();
+
+                Bundle bu4 = new Bundle();
+                bu4.putSerializable("TYPE", "");
+                bu4.putSerializable("cafeseq", prefr.getString("cafeseq", ""));
+
+                callActivity(CafeDetailActivity.class, bu4,false);
+
+                break;
             case R.id.menu_cafe_board:
                 onBackPressed();
 
@@ -2026,8 +2036,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
                         MenuRow mr = getView(R.id.menu_cafe_name);
 
-                        mr.setMenuTitle("[ " + cafedetail.getCafe().getCafename() + " ]");
-                        mr.setMenuTitleColor(getResources().getColor(R.color.colorPrimary));
+                        mr.setMenuTitle("[ " + cafedetail.getCafe().getCafename() + " ]", getResources().getString(R.string.txt_cafe_connect));
+                        mr.setMenuTitleColor(getResources().getColor(R.color.tab_text_color_selected));
                     } else {
                         getView(R.id.menu_cafe_name).setVisibility(View.GONE);
                         getView(R.id.menu_cafe_board).setVisibility(View.GONE);

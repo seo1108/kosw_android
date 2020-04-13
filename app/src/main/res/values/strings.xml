@@ -273,6 +273,7 @@
     <string name="txt_cafe_daily">카페 일간 랭킹</string>
     <string name="txt_cafe_weekly">카페 주간 랭킹</string>
     <string name="txt_cafe_monthly">카페 월간 랭킹</string>
+    <string name="txt_fitness_guide">오늘의 걸음수 표시 방법 안내(터치)</string>
 
     <string name="txt_cafe_config">카페 정보 설정</string>
     <string name="txt_my_cafe_manage">내 카페 관리</string>

@@ -3,7 +3,16 @@ package kr.co.photointerior.kosw.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.annotation.Nullable;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -102,6 +111,15 @@ public class MenuRow extends RelativeLayout {
     public void setMenuTitle(String title) {
         this.mTitle.setText(title);
     }
+
+    public void setMenuTitle(String title, String spannable) {
+        Spannable spanText = new SpannableString(title + " " + spannable);
+        spanText.setSpan(new StyleSpan(Typeface.BOLD), 0, title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spanText.setSpan(new ForegroundColorSpan(Color.BLACK), title.length(), spanText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        this.mTitle.setText(spanText, TextView.BufferType.SPANNABLE);
+    }
+
     public void setMenuTitleColor(int color){
         this.mTitle.setTextColor(color);
     }
