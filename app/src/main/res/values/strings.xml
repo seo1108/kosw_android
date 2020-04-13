@@ -248,7 +248,7 @@
     <string name="txt_analysis_1">분석</string>
     <string name="txt_ranking_private">개인랭킹 (계단)</string>
     <string name="txt_ranking_walk_private">개인랭킹 (걸음)</string>
-    <string name="txt_kakao_plus_friend">계단왕 플러스 친구</string>
+    <string name="txt_kakao_plus_friend">계단왕 카카오톡채널</string>
     <string name="txt_ranking_group">카페랭킹</string>
     <string name="txt_notice">공지∙이벤트</string>
     <string name="txt_cafe">카페</string>
@@ -268,6 +268,11 @@
     <string name="txt_cafe_find_member">회원 찾기</string>
     <string name="txt_cafe_unregist">카페 탈퇴하기</string>
     <string name="txt_info_edit">정보 수정하기</string>
+    <string name="txt_cafe_connect">카페 접속중</string>
+    <string name="txt_cafe_board">카페 게시판</string>
+    <string name="txt_cafe_daily">카페 일간 랭킹</string>
+    <string name="txt_cafe_weekly">카페 주간 랭킹</string>
+    <string name="txt_cafe_monthly">카페 월간 랭킹</string>
 
     <string name="txt_cafe_config">카페 정보 설정</string>
     <string name="txt_my_cafe_manage">내 카페 관리</string>

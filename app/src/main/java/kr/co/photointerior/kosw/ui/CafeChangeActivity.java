@@ -49,6 +49,7 @@ public class CafeChangeActivity extends BaseUserActivity {
     private List<Cafe> mCafeList = new ArrayList<>();
 
     private String mSelectedCafeSeq = "";
+    private String mSelectedCafeName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +108,7 @@ public class CafeChangeActivity extends BaseUserActivity {
         SharedPreferences prefr = getSharedPreferences("lastSelectedCafe", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefr.edit();
         editor.putString("cafeseq", mSelectedCafeSeq);
+        editor.putString("cafename", mSelectedCafeName);
         editor.commit();
 
         finish();
@@ -148,6 +150,7 @@ public class CafeChangeActivity extends BaseUserActivity {
                         if (!isSelected) {
                             mCafeList.get(0).setSelected(true);
                             mSelectedCafeSeq = mCafeList.get(0).getCafeseq();
+                            mSelectedCafeName = mCafeList.get(0).getCafename();
                         }
 
                         findViews();
@@ -198,6 +201,7 @@ public class CafeChangeActivity extends BaseUserActivity {
             if(item.isSelected()){
                 holder.tvCafename.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 mSelectedCafeSeq = item.getCafeseq();
+                mSelectedCafeName = item.getCafename();
             }else{
                 holder.tvCafename.setBackgroundColor(getResources().getColor(R.color.colorWhite));
             }

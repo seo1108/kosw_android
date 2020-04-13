@@ -79,6 +79,11 @@ public class MenuRow extends RelativeLayout {
             mIconRight.setVisibility(View.INVISIBLE);
         }
 
+        boolean hideBackground = typedArray.getBoolean(R.styleable.MenuRow_menuBackgroundHide, false);
+        if(hideBackground){
+            mBox.setBackground(null);
+        }
+
         typedArray.recycle();
     }
 

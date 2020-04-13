@@ -406,7 +406,7 @@
                         <!-- 개인, 그룹랭킹 1,2,3위 이외와 제일 상단 내 랭킹 row -->
                         <TextView
                             android:id="@+id/tv_ranking"
-                            android:layout_width="42dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/dp_6"
                             android:gravity="center"

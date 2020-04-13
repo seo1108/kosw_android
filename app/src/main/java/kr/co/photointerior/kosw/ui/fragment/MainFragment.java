@@ -129,6 +129,7 @@ import kr.co.photointerior.kosw.utils.LogUtils;
 import kr.co.photointerior.kosw.utils.StringUtil;
 import kr.co.photointerior.kosw.utils.event.BusProvider;
 import kr.co.photointerior.kosw.utils.event.KsEvent;
+import kr.co.photointerior.kosw.widget.MenuRow;
 import kr.co.photointerior.kosw.widget.RowActivityRecord;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -178,6 +179,7 @@ public class MainFragment extends BaseFragment {
     protected Toolbar mToolBar;
 
     private String mSelectedCafeSeq = "";
+    private String mSelectedCafename = "";
 
     private String mEventUrl = "";
 
@@ -527,6 +529,13 @@ public class MainFragment extends BaseFragment {
                                         logo = mCMList.getCafelist().get(0).getLogo();
 
                                         mSelectedCafeSeq = mCMList.getCafelist().get(0).getCafeseq();
+                                        mSelectedCafename = mCMList.getCafelist().get(0).getCafename();
+
+                                        SharedPreferences prefr = getActivity().getSharedPreferences("lastSelectedCafe", MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = prefr.edit();
+                                        editor.putString("cafeseq", mSelectedCafeSeq);
+                                        editor.putString("cafename", mSelectedCafename);
+                                        editor.commit();
                                     }
                                 }
 
@@ -541,6 +550,8 @@ public class MainFragment extends BaseFragment {
                                     img_logo.setVisibility(View.GONE);
                                     title.setVisibility(View.VISIBLE);
                                     title.setText(cafename);
+
+
                                 }
                             }
 
@@ -1357,6 +1368,7 @@ public class MainFragment extends BaseFragment {
 
                             // 프래그먼트 리플래쉬
                             mSelectedCafeSeq = "";
+                            mSelectedCafename = "";
                             mActivity.displayFragment(Env.FragmentType.HOME);
                         }
 

@@ -109,7 +109,7 @@
             <kr.co.photointerior.kosw.widget.MenuRow
                 android:id="@+id/menu_activity_gps"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="42dp"
                 android:layout_marginEnd="@dimen/dp_14"
                 android:layout_marginStart="@dimen/dp_14"
                 android:layout_marginTop="@dimen/dp_34"
@@ -117,20 +117,95 @@
                 app:menuTitleColor="@color/color_1a1a1a"
                 android:visibility="gone"/>
 
+
+            <kr.co.photointerior.kosw.widget.MenuRow
+                android:id="@+id/menu_cafe_name"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_below="@+id/menu_activity_gps"
+                android:layout_marginEnd="@dimen/dp_14"
+                android:layout_marginStart="@dimen/dp_14"
+                app:menuTitle="@string/txt_cafe_connect"
+                app:menuTitleColor="@color/color_1a1a1a"
+                app:menuIconRightHide="true"/>
+
+            <kr.co.photointerior.kosw.widget.MenuRow
+                android:id="@+id/menu_cafe_board"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_below="@+id/menu_cafe_name"
+                android:layout_marginEnd="@dimen/dp_14"
+                android:layout_marginStart="@dimen/dp_14"
+                app:menuTitle="@string/txt_cafe_board"
+                app:menuTitleColor="@color/color_1a1a1a" />
+
+            <kr.co.photointerior.kosw.widget.MenuRow
+                android:id="@+id/menu_cafe_daily"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_below="@+id/menu_cafe_board"
+                android:layout_marginEnd="@dimen/dp_14"
+                android:layout_marginStart="@dimen/dp_14"
+                app:menuTitle="@string/txt_cafe_daily"
+                app:menuTitleColor="@color/color_1a1a1a" />
+
+            <kr.co.photointerior.kosw.widget.MenuRow
+                android:id="@+id/menu_cafe_weekly"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_below="@+id/menu_cafe_daily"
+                android:layout_marginStart="@dimen/dp_14"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="@dimen/dp_14"
+                app:menuTitle="@string/txt_cafe_weekly"
+                app:menuTitleColor="@color/color_1a1a1a" />
+
+            <kr.co.photointerior.kosw.widget.MenuRow
+                android:id="@+id/menu_cafe_monthly"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_below="@+id/menu_cafe_weekly"
+                android:layout_marginEnd="@dimen/dp_14"
+                android:layout_marginStart="@dimen/dp_14"
+                app:menuTitle="@string/txt_cafe_monthly"
+                app:menuTitleColor="@color/color_1a1a1a"
+                app:menuBackgroundHide="true"/>
+
+            <View
+                android:id="@+id/seperator_1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/menu_cafe_monthly"/>
+
+            <View
+                android:id="@+id/seperator_2"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:background="@color/colorPrimary"
+                android:layout_below="@+id/seperator_1"/>
+
+            <View
+                android:id="@+id/seperator_3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/seperator_2"/>
+
             <kr.co.photointerior.kosw.widget.MenuRow
                 android:id="@+id/menu_activity_record"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_below="@+id/menu_activity_gps"
+                android:layout_height="42dp"
+                android:layout_below="@+id/seperator_3"
                 android:layout_marginEnd="@dimen/dp_14"
                 android:layout_marginStart="@dimen/dp_14"
                 app:menuTitle="@string/txt_activity_record"
                 app:menuTitleColor="@color/color_1a1a1a" />
 
+
+
             <kr.co.photointerior.kosw.widget.MenuRow
                 android:id="@+id/menu_analysis"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="42dp"
                 android:layout_below="@+id/menu_activity_record"
                 android:layout_marginEnd="@dimen/dp_14"
                 android:layout_marginStart="@dimen/dp_14"
@@ -140,7 +215,7 @@
             <kr.co.photointerior.kosw.widget.MenuRow
                 android:id="@+id/menu_ranking_private"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="42dp"
                 android:layout_below="@+id/menu_analysis"
                 android:layout_marginStart="@dimen/dp_14"
                 android:layout_marginTop="1dp"
@@ -151,7 +226,7 @@
             <kr.co.photointerior.kosw.widget.MenuRow
                 android:id="@+id/menu_ranking_walk_private"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="42dp"
                 android:layout_below="@+id/menu_ranking_private"
                 android:layout_marginStart="@dimen/dp_14"
                 android:layout_marginTop="1dp"
@@ -162,7 +237,7 @@
             <kr.co.photointerior.kosw.widget.MenuRow
                 android:id="@+id/menu_ranking_group"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="42dp"
                 android:layout_below="@+id/menu_ranking_walk_private"
                 android:layout_marginEnd="@dimen/dp_14"
                 android:layout_marginStart="@dimen/dp_14"
@@ -173,7 +248,7 @@
             <kr.co.photointerior.kosw.widget.MenuRow
                 android:id="@+id/menu_ggr"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="42dp"
                 android:layout_below="@+id/menu_ranking_group"
                 android:layout_marginEnd="@dimen/dp_14"
                 android:layout_marginStart="@dimen/dp_14"
@@ -183,7 +258,7 @@
             <kr.co.photointerior.kosw.widget.MenuRow
                 android:id="@+id/menu_city_ranking"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="42dp"
                 android:layout_below="@+id/menu_ggr"
                 android:layout_marginEnd="@dimen/dp_14"
                 android:layout_marginStart="@dimen/dp_14"
@@ -193,7 +268,7 @@
             <kr.co.photointerior.kosw.widget.MenuRow
                 android:id="@+id/menu_cafe"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="42dp"
                 android:layout_below="@+id/menu_city_ranking"
                 android:layout_marginStart="@dimen/dp_14"
                 android:layout_marginTop="0dp"
@@ -204,7 +279,7 @@
             <kr.co.photointerior.kosw.widget.MenuRow
                 android:id="@+id/menu_plus_friend"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="42dp"
                 android:layout_below="@+id/menu_cafe"
                 android:layout_marginStart="@dimen/dp_14"
                 android:layout_marginTop="0dp"
@@ -222,7 +297,7 @@
             <kr.co.photointerior.kosw.widget.MenuRow
                 android:id="@+id/menu_cafe_list"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="42dp"
                 android:layout_marginStart="@dimen/dp_44"
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="@dimen/dp_14"
@@ -232,7 +307,7 @@
             <kr.co.photointerior.kosw.widget.MenuRow
                 android:id="@+id/menu_my_cafe"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="42dp"
                 android:layout_marginStart="@dimen/dp_44"
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="@dimen/dp_14"
@@ -242,7 +317,7 @@
                 <kr.co.photointerior.kosw.widget.MenuRow
                     android:id="@+id/menu_make_cafe"
                     android:layout_width="match_parent"
-                    android:layout_height="52dp"
+                    android:layout_height="42dp"
                     android:layout_marginStart="@dimen/dp_44"
                     android:layout_marginTop="0dp"
                     android:layout_marginEnd="@dimen/dp_14"
@@ -252,7 +327,7 @@
                 <kr.co.photointerior.kosw.widget.MenuRow
                     android:id="@+id/menu_join_cafe"
                     android:layout_width="match_parent"
-                    android:layout_height="52dp"
+                    android:layout_height="42dp"
                     android:layout_marginStart="@dimen/dp_44"
                     android:layout_marginTop="0dp"
                     android:layout_marginEnd="@dimen/dp_14"
@@ -263,7 +338,7 @@
             <kr.co.photointerior.kosw.widget.MenuRow
                 android:id="@+id/menu_signcafe"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="42dp"
                 android:layout_below="@+id/menu_cafe"
                 android:layout_marginEnd="@dimen/dp_14"
                 android:layout_marginStart="@dimen/dp_14"
@@ -274,7 +349,7 @@
             <kr.co.photointerior.kosw.widget.MenuRow
                 android:id="@+id/menu_help"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="42dp"
                 android:layout_below="@+id/menu_signcafe"
                 android:layout_marginEnd="@dimen/dp_14"
                 android:layout_marginStart="@dimen/dp_14"
@@ -285,7 +360,7 @@
             <kr.co.photointerior.kosw.widget.MenuRow
                 android:id="@+id/menu_provision"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="42dp"
                 android:layout_below="@+id/menu_help"
                 android:layout_marginEnd="@dimen/dp_14"
                 android:layout_marginStart="@dimen/dp_14"
@@ -294,7 +369,7 @@
             <kr.co.photointerior.kosw.widget.MenuRow
                 android:id="@+id/menu_beacon"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="42dp"
                 android:layout_below="@+id/menu_signcafe"
                 android:layout_marginEnd="@dimen/dp_14"
                 android:layout_marginStart="@dimen/dp_14"
@@ -306,7 +381,7 @@
             <kr.co.photointerior.kosw.widget.MenuRow
                 android:id="@+id/menu_altitude"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="42dp"
                 android:layout_below="@+id/menu_help"
                 android:layout_marginEnd="@dimen/dp_14"
                 android:layout_marginStart="@dimen/dp_14"

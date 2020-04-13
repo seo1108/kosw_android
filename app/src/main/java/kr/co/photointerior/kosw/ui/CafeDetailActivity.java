@@ -86,7 +86,7 @@ public class CafeDetailActivity extends BaseActivity {
     private KoswButton btn_join_cafe;
     private AppCompatSpinner spinner, spinner_category;
     private ImageView btn_back, img_post, btn_config;
-    private LinearLayout ll_notice, notice_linearlayout, ll_notice_detail;
+    private LinearLayout ll_notice, notice_linearlayout, ll_notice_detail, ll_recycler;
     private NestedScrollView sv;
     private String mCafeseq = "";
     private String mCafekey = "";
@@ -113,6 +113,9 @@ public class CafeDetailActivity extends BaseActivity {
     private String isAdmin = "N";
     private String mMyCatename = "";
 
+    private String mType = "";
+    private boolean isFirstLoad = true;
+
     @Override
     protected  void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,6 +123,7 @@ public class CafeDetailActivity extends BaseActivity {
 
         mCafeseq = getIntent().getStringExtra("cafeseq");
         mCafekey = getIntent().getStringExtra("cafekey");
+        mType = getIntent().getStringExtra("TYPE");
 
         getCafeDetail();
     }
@@ -129,11 +133,19 @@ public class CafeDetailActivity extends BaseActivity {
         String confirm = mCafe.getConfirm();
         String join = mCafe.getIsjoin();
 
+        ll_recycler = findViewById(R.id.ll_recycler);
+
         ll_ranking = findViewById(R.id.ll_ranking);
 
         sv = findViewById(R.id.sv);
 
         btn_config = findViewById(R.id.btn_config);
+
+        if ("Y".equals(isAdmin)) {
+            btn_config.setVisibility(View.VISIBLE);
+        } else {
+            btn_config.setVisibility(View.GONE);
+        }
 
         tv_title = findViewById(R.id.tv_title);
         tv_title.setText(mCafe.getCafename());
@@ -488,7 +500,7 @@ public class CafeDetailActivity extends BaseActivity {
                         setSpinner();
                         setSpinnerCategory();
                         attachEvents();
-                        setInitialData();
+                        //setInitialData();
 
                         getCafeNotice();
                     } else {
@@ -527,12 +539,53 @@ public class CafeDetailActivity extends BaseActivity {
                     CafeNoticeList noticelist = response.body();
                     //LogUtils.err(TAG, "profile=" + profile.string());
                     if (noticelist.isSuccess()) {
+                        if (isFirstLoad) {
+                            if (null == mType || "".equals(mType) || "BOARD".equals(mType)) {
+                                mNoticeList = noticelist.getNotice();
+
+                                if (null != mNoticeList && mNoticeList.size() > 0) {
+                                    txt_notice_date.setText("[공지] " + mNoticeList.get(0).getRegdate());
+                                    txt_notice.setText(mNoticeList.get(0).getContents());
+                                    ll_notice_detail.setOnClickListener(v -> {
+                                        // 공지사항 액티비티로 이동
+                                        Bundle bu = new Bundle();
+                                        bu.putSerializable("cafeseq", mCafeseq);
+                                        callActivity(CafeNoticeActivity.class, bu, false);
+                                    });
+                                } else {
+                                    ll_notice_detail.setVisibility(View.GONE);
+                                    txt_notice_date.setVisibility(View.GONE);
+                                    txt_notice.setVisibility(View.GONE);
+                                }
+
+                                isFirstLoad = false;
+                                return;
+                            } else if ("DAILY".equals(mType)) {
+                                toggleBtn(mBtnResId[1]);
+
+                                isFirstLoad = false;
+                                return;
+                            } else if ("WEEKLY".equals(mType)) {
+                                toggleBtn(mBtnResId[2]);
+
+                                isFirstLoad = false;
+                                return;
+                            } else if ("MONTHLY".equals(mType)) {
+                                toggleBtn(mBtnResId[3]);
+
+                                isFirstLoad = false;
+                                return;
+                            }
+
+
+                        }
+
                         mNoticeList = noticelist.getNotice();
 
                         if (null != mNoticeList && mNoticeList.size() > 0) {
                             txt_notice_date.setText("[공지] " + mNoticeList.get(0).getRegdate());
                             txt_notice.setText(mNoticeList.get(0).getContents());
-                            ll_notice_detail.setOnClickListener(v->{
+                            ll_notice_detail.setOnClickListener(v -> {
                                 // 공지사항 액티비티로 이동
                                 Bundle bu = new Bundle();
                                 bu.putSerializable("cafeseq", mCafeseq);
@@ -1134,6 +1187,7 @@ public class CafeDetailActivity extends BaseActivity {
             }
         }
         if(mSelectedBtnId == R.id.btn_daily){
+            ll_recycler.setVisibility(View.VISIBLE);
             mBtnType = "D";
             if ("1".equals(mSelectedSpinnerItem)) {
                 getCafeRankingList();
@@ -1149,6 +1203,7 @@ public class CafeDetailActivity extends BaseActivity {
                 getCafeRankingByCategoryIndividualListWalk();
             }
         } else if(mSelectedBtnId == R.id.btn_weekly){
+            ll_recycler.setVisibility(View.VISIBLE);
             mBtnType = "W";
             if ("1".equals(mSelectedSpinnerItem)) {
                 getCafeRankingList();
@@ -1164,6 +1219,7 @@ public class CafeDetailActivity extends BaseActivity {
                 getCafeRankingByCategoryIndividualListWalk();
             }
         } else if(mSelectedBtnId == R.id.btn_monthly){
+            ll_recycler.setVisibility(View.VISIBLE);
             mBtnType = "M";
             if ("1".equals(mSelectedSpinnerItem)) {
                 getCafeRankingList();
@@ -1179,6 +1235,7 @@ public class CafeDetailActivity extends BaseActivity {
                 getCafeRankingByCategoryIndividualListWalk();
             }
         } else if(mSelectedBtnId == R.id.btn_notice) {
+            ll_recycler.setVisibility(View.GONE);
             mBtnType = "N";
             getCafeBBS();
             spinner_category.setVisibility(View.GONE);

@@ -45,6 +45,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -86,11 +91,13 @@ import kr.co.photointerior.kosw.pref.Pref;
 import kr.co.photointerior.kosw.pref.PrefKey;
 import kr.co.photointerior.kosw.rest.DefaultRestClient;
 import kr.co.photointerior.kosw.rest.api.App;
+import kr.co.photointerior.kosw.rest.api.CafeService;
 import kr.co.photointerior.kosw.rest.api.UserService;
 import kr.co.photointerior.kosw.rest.model.AppUser;
 import kr.co.photointerior.kosw.rest.model.AppUserBase;
 import kr.co.photointerior.kosw.rest.model.BeaconUuid;
 import kr.co.photointerior.kosw.rest.model.Building;
+import kr.co.photointerior.kosw.rest.model.CafeDetail;
 import kr.co.photointerior.kosw.rest.model.DataHolder;
 import kr.co.photointerior.kosw.rest.model.Place;
 import kr.co.photointerior.kosw.rest.model.Profile;
@@ -129,6 +136,7 @@ import kr.co.photointerior.kosw.utils.StringUtil;
 import kr.co.photointerior.kosw.utils.event.BusProvider;
 import kr.co.photointerior.kosw.utils.event.KsEvent;
 import kr.co.photointerior.kosw.widget.CircleImageView;
+import kr.co.photointerior.kosw.widget.MenuRow;
 import me.leolin.shortcutbadger.ShortcutBadger;
 import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
@@ -176,6 +184,11 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     private BaseFragment mFragmentCurrent;
     private int[] mMenuIds = {
             R.id.menu_activity_gps,
+            R.id.menu_cafe_name,
+            R.id.menu_cafe_board,
+            R.id.menu_cafe_daily,
+            R.id.menu_cafe_weekly,
+            R.id.menu_cafe_monthly,
             R.id.menu_activity_record,
             R.id.menu_analysis,
             R.id.menu_ranking_private,
@@ -1439,6 +1452,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     @Override
     public void performClick(View view) {
         int id = view.getId();
+        SharedPreferences prefr = getSharedPreferences("lastSelectedCafe", MODE_PRIVATE);
         switch (id) {
             case R.id.btn_navi_close://drawer close
                 onBackPressed();
@@ -1507,8 +1521,50 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 mFinishFlag = true;
                 finish();
                 break;
+            case R.id.menu_cafe_board:
+                onBackPressed();
+
+                Bundle bu = new Bundle();
+                bu.putSerializable("TYPE", "BOARD");
+                bu.putSerializable("cafeseq", prefr.getString("cafeseq", ""));
+
+                callActivity(CafeDetailActivity.class, bu,false);
+
+                break;
+            case R.id.menu_cafe_daily:
+                onBackPressed();
+
+                Bundle bu1 = new Bundle();
+                bu1.putSerializable("TYPE", "DAILY");
+                bu1.putSerializable("cafeseq", prefr.getString("cafeseq", ""));
+
+                callActivity(CafeDetailActivity.class, bu1,false);
+
+                break;
+            case R.id.menu_cafe_weekly:
+                onBackPressed();
+
+                Bundle bu2 = new Bundle();
+                bu2.putSerializable("TYPE", "WEEKLY");
+                bu2.putSerializable("cafeseq", prefr.getString("cafeseq", ""));
+
+                callActivity(CafeDetailActivity.class, bu2,false);
+
+                break;
+            case R.id.menu_cafe_monthly:
+                onBackPressed();
+
+                Bundle bu3 = new Bundle();
+                bu3.putSerializable("TYPE", "MONTHLY");
+                bu3.putSerializable("cafeseq", prefr.getString("cafeseq", ""));
+
+                callActivity(CafeDetailActivity.class, bu3,false);
+
+                break;
             case R.id.btn_setting://개인정보 설정
                 //displayFragment(Env.FragmentType.INFO_SETTING);
+                onBackPressed();
+
                 callActivity(InfoSettingActivity.class, false);
                 break;
             case R.id.menu_activity_record://활동기록
@@ -1540,6 +1596,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 break;*/
 
             case R.id.menu_cafe: //카페
+                onBackPressed();
+
                 callActivity(CafeMainActivity.class, false);
                 /*if (getLinearLayout(R.id.ll_cafe).isShown()) {
                     getLinearLayout(R.id.ll_cafe).setVisibility(View.GONE);
@@ -1548,6 +1606,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 }*/
                 break;
             case R.id.menu_plus_friend:
+                onBackPressed();
+
                 /*Bundle bu = new Bundle();
                 bu.putSerializable("url", "https://pf.kakao.com/_xhYYJT");
                 callActivity(WebviewActivity.class, bu,false);*/
@@ -1855,7 +1915,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         changeColors();
         mToolBar.setBackgroundColor(getCompanyColor());*/
 
-
+        getCafeDetail();
         updateCharacter();
         //fireMainRefreshEvent();
         setBeaconManagerMode(false);
@@ -1909,6 +1969,91 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
     }
 
+    private void getCafeDetail() {
+        showSpinner("");
+        AppUserBase user = DataHolder.instance().getAppUserBase() ;
+        Map<String, Object> query = KUtil.getDefaultQueryMap();
+        try {
+            query.put("user_seq", user.getUser_seq());
+        } catch (Exception ex) {
+            SharedPreferences prefr = getSharedPreferences("userInfo", MODE_PRIVATE);
+            query.put("user_seq", prefr.getInt("user_seq", -1));
+        }
+
+        SharedPreferences prefr = getSharedPreferences("lastSelectedCafe", MODE_PRIVATE);
+        String mCafeseq = prefr.getString("cafeseq", "");
+
+
+        if (null != mCafeseq && !"".equals(mCafeseq)) {
+            query.put("cafeseq", mCafeseq);
+        }
+        else {
+            // 메뉴 hide 처리
+            getView(R.id.menu_cafe_name).setVisibility(View.GONE);
+            getView(R.id.menu_cafe_board).setVisibility(View.GONE);
+            getView(R.id.menu_cafe_daily).setVisibility(View.GONE);
+            getView(R.id.menu_cafe_weekly).setVisibility(View.GONE);
+            getView(R.id.menu_cafe_monthly).setVisibility(View.GONE);
+            getView(R.id.seperator_1).setVisibility(View.GONE);
+            getView(R.id.seperator_2).setVisibility(View.GONE);
+            getView(R.id.seperator_3).setVisibility(View.GONE);
+            closeSpinner();
+            return;
+        }
+
+
+        Call<CafeDetail> call =
+                new DefaultRestClient<CafeService>(this)
+                        .getClient(CafeService.class).detail(query);
+
+        call.enqueue(new Callback<CafeDetail>() {
+            @Override
+            public void onResponse(Call<CafeDetail> call, Response<CafeDetail> response) {
+                closeSpinner();
+                LogUtils.err(TAG, response.toString());
+                if (response.isSuccessful()) {
+                    CafeDetail cafedetail = response.body();
+                    //LogUtils.err(TAG, "profile=" + profile.string());
+                    if (cafedetail.isSuccess()) {
+                        getView(R.id.menu_cafe_name).setVisibility(View.VISIBLE);
+                        getView(R.id.menu_cafe_board).setVisibility(View.VISIBLE);
+                        getView(R.id.menu_cafe_daily).setVisibility(View.VISIBLE);
+                        getView(R.id.menu_cafe_weekly).setVisibility(View.VISIBLE);
+                        getView(R.id.menu_cafe_monthly).setVisibility(View.VISIBLE);
+                        getView(R.id.seperator_1).setVisibility(View.VISIBLE);
+                        getView(R.id.seperator_2).setVisibility(View.VISIBLE);
+                        getView(R.id.seperator_3).setVisibility(View.VISIBLE);
+
+                        MenuRow mr = getView(R.id.menu_cafe_name);
+
+                        mr.setMenuTitle("[ " + cafedetail.getCafe().getCafename() + " ]");
+                        mr.setMenuTitleColor(getResources().getColor(R.color.colorPrimary));
+                    } else {
+                        getView(R.id.menu_cafe_name).setVisibility(View.GONE);
+                        getView(R.id.menu_cafe_board).setVisibility(View.GONE);
+                        getView(R.id.menu_cafe_daily).setVisibility(View.GONE);
+                        getView(R.id.menu_cafe_weekly).setVisibility(View.GONE);
+                        getView(R.id.menu_cafe_monthly).setVisibility(View.GONE);
+                        getView(R.id.seperator_1).setVisibility(View.GONE);
+                        getView(R.id.seperator_2).setVisibility(View.GONE);
+                        getView(R.id.seperator_3).setVisibility(View.GONE);
+                    }
+                }
+
+                if (!"0000".equals(response.body().getResponseCode())) {
+                    toast(response.body().getResponseMessage());
+                    finish();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CafeDetail> call, Throwable t) {
+                closeSpinner();
+                LogUtils.err(TAG, t);
+                toast(R.string.warn_server_not_smooth);
+            }
+        });
+    }
 
 
     private void setBeaconManagerMode(boolean mode) {
