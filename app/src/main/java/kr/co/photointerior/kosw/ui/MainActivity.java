@@ -98,6 +98,7 @@ import kr.co.photointerior.kosw.rest.model.AppUserBase;
 import kr.co.photointerior.kosw.rest.model.BeaconUuid;
 import kr.co.photointerior.kosw.rest.model.Building;
 import kr.co.photointerior.kosw.rest.model.CafeDetail;
+import kr.co.photointerior.kosw.rest.model.CafeMainList;
 import kr.co.photointerior.kosw.rest.model.DataHolder;
 import kr.co.photointerior.kosw.rest.model.Place;
 import kr.co.photointerior.kosw.rest.model.Profile;
@@ -1990,8 +1991,12 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             query.put("user_seq", prefr.getInt("user_seq", -1));
         }
 
+        Log.d("GGGGGGGGGGGGGGGGGGG", user.getUser_seq() + "");
+
         SharedPreferences prefr = getSharedPreferences("lastSelectedCafe", MODE_PRIVATE);
         String mCafeseq = prefr.getString("cafeseq", "");
+
+        Log.d("GGGGGGGGGGGGGGGGGGG", mCafeseq + "_");
 
 
         if (null != mCafeseq && !"".equals(mCafeseq)) {
@@ -2007,6 +2012,9 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             getView(R.id.seperator_1).setVisibility(View.GONE);
             getView(R.id.seperator_2).setVisibility(View.GONE);
             getView(R.id.seperator_3).setVisibility(View.GONE);
+
+            getUserCafeMainList();
+
             closeSpinner();
             return;
         }
@@ -2062,6 +2070,57 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 LogUtils.err(TAG, t);
                 toast(R.string.warn_server_not_smooth);
             }
+        });
+    }
+
+    private void getUserCafeMainList() {
+        showSpinner("");
+        AppUserBase user = DataHolder.instance().getAppUserBase() ;
+        Map<String, Object> query = KUtil.getDefaultQueryMap();
+        query.put("user_seq",user.getUser_seq() );
+        Call<CafeMainList> call =
+                new DefaultRestClient<CafeService>(getApplicationContext())
+                        .getClient(CafeService.class).selectMyCafeList(query);
+        call.enqueue(new Callback<CafeMainList>() {
+            @Override
+            public void onResponse(Call<CafeMainList> call, Response<CafeMainList> response) {
+                closeSpinner();
+                LogUtils.err(TAG, response.toString());
+
+                if (response.isSuccessful()) {
+                    CafeMainList cafelist = response.body();
+
+                    if (cafelist.isSuccess()) {
+                        if (null != cafelist.getCafelist()) {
+                            CafeMainList mCMList = cafelist;
+
+                            if (null == mCMList || mCMList.getCafelist().size() == 0) {
+                                return;
+                            } else {
+                                SharedPreferences prefr = getSharedPreferences("lastSelectedCafe", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = prefr.edit();
+                                editor.putString("cafeseq", mCMList.getCafelist().get(0).getCafeseq());
+                                editor.commit();
+
+                                getCafeDetail();
+                            }
+                        } else {
+                        }
+                    } else {
+                    }
+                } else {
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<CafeMainList> call, Throwable t) {
+                closeSpinner();
+                LogUtils.err(TAG, t);
+            }
+
+
         });
     }
 
