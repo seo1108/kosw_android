@@ -270,6 +270,9 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
     private  ViewGroup mRootView ;
 
+    private boolean isCheck = false;
+
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -1743,7 +1746,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
                 // 백그라운드 색상 변경
                 SharedPreferences prefr = getSharedPreferences("backgroundColor", MODE_PRIVATE);
                 int initColor = prefr.getInt("backgroundColor", -99);
-                Log.d("DDDDDDDDDDDDD", initColor + "");
+
                 if (initColor != -99) {
                     int bglist[] = DataHolder.instance().getBgColors() ;
                     Pref.instance().saveIntValue (PrefKey.COMPANY_COLOR_NUM,initColor);
@@ -2013,7 +2016,9 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             getView(R.id.seperator_2).setVisibility(View.GONE);
             getView(R.id.seperator_3).setVisibility(View.GONE);
 
-            getUserCafeMainList();
+            if (!isCheck) {
+                getUserCafeMainList();
+            }
 
             closeSpinner();
             return;
@@ -2075,6 +2080,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
     private void getUserCafeMainList() {
         showSpinner("");
+        isCheck = true;
         AppUserBase user = DataHolder.instance().getAppUserBase() ;
         Map<String, Object> query = KUtil.getDefaultQueryMap();
         query.put("user_seq",user.getUser_seq() );
