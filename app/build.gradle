@@ -15,8 +15,8 @@ android {
         applicationId "kr.co.photointerior.kosw.app"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 41001
-        versionName "4.1.1"
+        versionCode 42000
+        versionName "4.2.0"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
