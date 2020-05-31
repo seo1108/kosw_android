@@ -608,7 +608,15 @@ public class CafeDetailActivity extends BaseActivity {
                         }
                     } else {
                     }
+
+
                 } else {
+                }
+
+                if ("Y".equals(isAdmin)) {
+                    btn_config.setVisibility(View.VISIBLE);
+                } else {
+                    btn_config.setVisibility(View.GONE);
                 }
             }
 
@@ -1077,23 +1085,23 @@ public class CafeDetailActivity extends BaseActivity {
                                 if ("1".equals(mCafe.getIsjoin())) {
                                     bbs_config.setVisibility(View.VISIBLE);
                                     bbs_config.setOnClickListener(v -> {
-                                        // 게시글 상세
-                                        Intent intent = new Intent(getApplicationContext(), BbsDetailActivity.class);
-                                        intent.putExtra("bbsseq", bbsseq);
-                                        intent.putExtra("content", bbscontent);
-                                        intent.putExtra("isAdmin", isAdmin);
-                                        bbsType = "BBS";
+                                    // 게시글 상세
+                                    Intent intent = new Intent(getApplicationContext(), BbsDetailActivity.class);
+                                    intent.putExtra("bbsseq", bbsseq);
+                                    intent.putExtra("content", bbscontent);
+                                    intent.putExtra("isAdmin", isAdmin);
+                                    bbsType = "BBS";
 
-                                        if (creatorseq.equals(String.valueOf(user.getUser_seq()))) {
-                                            intent.putExtra("isCreator", true);
-                                        } else {
-                                            intent.putExtra("isCreator", false);
-                                        }
+                                    if (creatorseq.equals(String.valueOf(user.getUser_seq()))) {
+                                        intent.putExtra("isCreator", true);
+                                    } else {
+                                        intent.putExtra("isCreator", false);
+                                    }
 
-                                        startActivityForResult(intent, mBbsCreateResultCode);
+                                    startActivityForResult(intent, mBbsCreateResultCode);
 
-                                    });
-                                }
+                                });
+                            }
 
 
                                 // 댓글달기 이벤트
@@ -1512,26 +1520,26 @@ public class CafeDetailActivity extends BaseActivity {
 
     @Override
     protected void onStart() {
-        measureStart();
+        //measureStart();
         super.onStart();
     }
 
     @Override
     protected void onDestroy() {
-        measureStop();
+        //measureStop();
         super.onDestroy();
     }
 
     @Override
     protected void onPause() {
-        measureStop();
+        //measureStop();
         super.onPause();
     }
 
 
     @Override
     protected void onResume() {
-        measureStart();
+        //measureStart();
         super.onResume();
     }
 }
