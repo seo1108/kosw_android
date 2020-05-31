@@ -141,11 +141,7 @@ public class CafeDetailActivity extends BaseActivity {
 
         btn_config = findViewById(R.id.btn_config);
 
-        if ("Y".equals(isAdmin)) {
-            btn_config.setVisibility(View.VISIBLE);
-        } else {
-            btn_config.setVisibility(View.GONE);
-        }
+        showCafeConfig();
 
         tv_title = findViewById(R.id.tv_title);
         tv_title.setText(mCafe.getCafename());
@@ -384,11 +380,7 @@ public class CafeDetailActivity extends BaseActivity {
 
     @Override
     protected void setInitialData() {
-        if ("Y".equals(isAdmin)) {
-            btn_config.setVisibility(View.VISIBLE);
-        } else {
-            btn_config.setVisibility(View.GONE);
-        }
+        showCafeConfig();
     }
 
     @Override
@@ -613,11 +605,7 @@ public class CafeDetailActivity extends BaseActivity {
                 } else {
                 }
 
-                if ("Y".equals(isAdmin)) {
-                    btn_config.setVisibility(View.VISIBLE);
-                } else {
-                    btn_config.setVisibility(View.GONE);
-                }
+                showCafeConfig();
             }
 
             @Override
@@ -1268,6 +1256,14 @@ public class CafeDetailActivity extends BaseActivity {
         } else {
             ll_notice.setVisibility(View.VISIBLE);
             spinner.setVisibility(View.GONE);
+        }
+    }
+
+    private void showCafeConfig() {
+        if ("Y".equals(isAdmin)) {
+            btn_config.setVisibility(View.VISIBLE);
+        } else {
+            btn_config.setVisibility(View.GONE);
         }
     }
 
