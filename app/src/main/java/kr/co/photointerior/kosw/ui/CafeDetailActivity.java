@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
@@ -226,6 +227,46 @@ public class CafeDetailActivity extends BaseActivity {
             img_post.setVisibility(View.GONE);
         }
         btn_back = findViewById(R.id.btn_back);
+
+        new Handler().postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                Log.d("HHHHHHHH", "show1 " + isAdmin);
+                showCafeConfig();
+            }
+        }, 2000);
+
+        new Handler().postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                Log.d("HHHHHHHH", "show2 " + isAdmin);
+                showCafeConfig();
+            }
+        }, 5000);
+
+        new Handler().postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                Log.d("HHHHHHHH", "show3 " + isAdmin);
+                showCafeConfig();
+            }
+        }, 8000);
+
+        new Handler().postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                Log.d("HHHHHHHH", "show4 " + isAdmin);
+                showCafeConfig();
+            }
+        }, 10000);
 
     }
 
