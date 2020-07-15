@@ -400,15 +400,50 @@ public class StepThread extends Thread {
         }
 
         if (cnt >= 10 * 30 )  {
+            /******************************************************************************
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *
+             *******************************************************************************/
             // 30초마다 미전송 데이터 재전송하도록 처리
+            // 안정화까지 일단 막음 처리
+/*
             SharedPreferences pref = mContext.getSharedPreferences("unsent", MODE_PRIVATE);
             int unsent = pref.getInt("unsent", 0);
 
-           // Toast.makeText(mContext, "[미전송] " + unsent, Toast.LENGTH_SHORT).show();
 
             if (unsent > 0) {
                 sendDataToServer(unsent, "unsent", "");
             }
+*/
 
 
             if (mDebugMode)
@@ -1480,7 +1515,7 @@ public class StepThread extends Thread {
                 if (NetworkConnectivityReceiver.isConnected(mContext)) {
                     Call<BeaconUuid> call =
                             new DefaultRestClient<App>(mContext)
-                                    .getClient(App.class).sendStairGoUpAmountToServer(query);
+                                    .getClient(App.class).sendStairGoUpAmountToServer2(query);
                     final String goupSentTime = DateUtil.currentDate("yyyyMMdd HHmmss");
 
                     call.enqueue(new Callback<BeaconUuid>() {

@@ -87,6 +87,14 @@ public interface App {
     Call<BeaconUuid> sendStairGoUpAmountToServer(@QueryMap Map<String, Object> query);
 
     /**
+     * 올라간 층수 데이터 서버 전송
+     * @param query
+     * @return
+     */
+    @POST("api/user/floorUpa2")
+    Call<BeaconUuid> sendStairGoUpAmountToServer2(@QueryMap Map<String, Object> query);
+
+    /**
      * 사용자가 수신한 비콘이 현재 있는 건물의 비콘이 아닐 경우 정보를 바꾼다.
      * @param query
      * @return

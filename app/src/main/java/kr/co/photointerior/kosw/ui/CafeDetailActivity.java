@@ -141,6 +141,7 @@ public class CafeDetailActivity extends BaseActivity {
         sv = findViewById(R.id.sv);
 
         btn_config = findViewById(R.id.btn_config);
+        btn_config.setVisibility(View.VISIBLE);
 
         showCafeConfig();
 
@@ -412,10 +413,17 @@ public class CafeDetailActivity extends BaseActivity {
         });
 
         btn_config.setOnClickListener(v->{
-            Intent intent = new Intent(this, CafeConfigActivity.class);
-            intent.putExtra("cafeseq", mCafeseq);
-            intent.putExtra("type", "MODIFY");
-            startActivityForResult(intent, mCafeConfigurationResultCode);
+            if ("Y".equals(isAdmin)) {
+                Intent intent = new Intent(this, CafeConfigActivity.class);
+                intent.putExtra("cafeseq", mCafeseq);
+                intent.putExtra("type", "MODIFY");
+                startActivityForResult(intent, mCafeConfigurationResultCode);
+            } else {
+                //btn_config.setVisibility(View.GONE);
+                toast("카페 관리자만 이용하실 수 있습니다.");
+            }
+
+
         });
     }
 
@@ -1304,7 +1312,8 @@ public class CafeDetailActivity extends BaseActivity {
         if ("Y".equals(isAdmin)) {
             btn_config.setVisibility(View.VISIBLE);
         } else {
-            btn_config.setVisibility(View.GONE);
+            //btn_config.setVisibility(View.GONE);
+            btn_config.setVisibility(View.VISIBLE);
         }
     }
 
